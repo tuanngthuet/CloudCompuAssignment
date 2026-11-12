@@ -1,0 +1,55 @@
+{
+  "owner": "TV1",
+  "package_id": "W1-TV1",
+  "package_version": "1.0.0",
+  "contract_version": "3.0",
+  "status": "Code candidate; account and AWS checks pending",
+  "inputs_required": [
+    "project",
+    "environment",
+    "region",
+    "vpc_cidr",
+    "availability_zones",
+    "real account ID and state bucket name for deployment roots"
+  ],
+  "outputs_provided": [
+    "vpc_id",
+    "public_subnet_ids",
+    "app_subnet_ids",
+    "db_subnet_ids",
+    "alb_sg_id",
+    "app_sg_id",
+    "db_sg_id",
+    "s3_endpoint_id"
+  ],
+  "resource_ids": null,
+  "checks_passed": [
+    "terraform fmt -check -recursive",
+    "terraform init -backend=false for all three directories",
+    "HCL parse of 15 files",
+    "Source checks: subnet overlap, NAT count, DB routes, ingress ports, contract outputs",
+    "Provider lock checksums for Windows AMD64 and Linux AMD64"
+  ],
+  "checks_pending": [
+    "terraform validate and mock tests blocked here by provider Unix socket restriction; run check.ps1 on Windows",
+    "Windows PowerShell execution",
+    "CLI auth and IAM permissions",
+    "credit, expiry, quota and budget",
+    "CIDR overlap and AZ availability",
+    "AWS plan/apply",
+    "real network connectivity and integration",
+    "TV2 review and G1"
+  ],
+  "evidence_paths": [
+    "docs/tv1/evidence/validation.txt"
+  ],
+  "findings": [
+    "Single NAT is an AZ dependency; cross-AZ cost possible",
+    "Default endpoint policy relies on TV3 IAM/bucket policy",
+    "HTTP demo uses synthetic data only"
+  ],
+  "deadlines": {
+    "M4": "2026-11-23",
+    "M5": "2026-11-30"
+  }
+}
