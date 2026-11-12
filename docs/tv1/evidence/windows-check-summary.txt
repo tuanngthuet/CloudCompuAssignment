@@ -1,0 +1,36 @@
+TV1 Windows verification — user-provided evidence
+Recorded date: 2026-11-12 (Asia/Ho_Chi_Minh)
+Source: terminal excerpts pasted by the user in the conversation.
+This file is an evidence summary, NOT a complete raw execution log.
+No commands were executed on the user's computer by the assistant.
+
+User-reported tool versions:
+Terraform v1.17.2
+on windows_amd64
+aws-cli/2.40.1 Python/3.14.8 Windows/11 exe/AMD64
+
+User-provided result:
+PASS: fmt, validate and mocked contract tests. No AWS deployment performed.
+
+Git evidence supplied by user:
+9043e85 (HEAD -> tv1/w1-package) feat(tv1): add week 1 network and state bootstrap
+On branch tv1/w1-package
+nothing to commit, working tree clean
+
+Push excerpt supplied by user:
+To https://github.com/nguyendang44/labseat-tv1.git
+ * [new branch]      tv1/w1-package -> tv1/w1-package
+branch 'tv1/w1-package' set up to track 'origin/tv1/w1-package'.
+
+Interpretation:
+The Windows check script reported success for fmt, validate and mocked tests.
+The user then committed and pushed the package. The exact commit was not
+recorded during test execution; 9043e85 is the associated baseline supplied
+later, not a separately verified CI run on that commit.
+The assistant environment's earlier provider socket limitation remains in
+validation.txt as historical evidence. It does not contradict the later
+Windows PASS. Full Windows log and per-test output have not been supplied.
+
+NOT established by this evidence:
+CLI AWS authentication, real IAM create/delete permissions, account credit,
+quotas, budget, actual AWS plan/apply, network connectivity, or G1 acceptance.

@@ -15,7 +15,7 @@ Người dùng đã gửi bằng chứng Console đăng nhập IAM user tv1-netw
 | Plan / credit / expiry | Pending — xem Billing thực; không assume 100/200 USD |
 | Quota | Pending — VPC, EIP, NAT, AZ; TV2/3 kiểm EC2/RDS riêng |
 | Budget | Pending — tính theo credit thực còn hiệu lực |
-| Repo và remote | Gói độc lập; repo chung/nhánh/PR chờ nhóm chốt |
+| Repo và remote | Repo cá nhân labseat-tv1 đã push nhánh tv1/w1-package, commit nền 9043e85 theo log người dùng; repo tích hợp chung chưa chốt |
 
 Mật khẩu mặc định đã từng chia sẻ: từng thành viên đổi riêng; không lưu credential vào repo. Không tạo key root, không dùng chung mật khẩu root, không tự nâng Paid plan.
 
@@ -48,3 +48,7 @@ Chưa điền đơn giá vì chưa xác minh giá hiện hành, thời gian ch�
 So sánh phiên demo theo giờ với chạy thật 730 giờ/tháng trong AWS Pricing Calculator; tính cả app_b dùng NAT AZ A. Ghi URL estimate, ngày, Region, đơn vị và giả định vào report trước M4. Không kết luận credit đủ khi chưa tính.
 
 Nguồn: https://calculator.aws/ ; https://aws.amazon.com/vpc/pricing/ ; https://developer.hashicorp.com/terraform/language/backend/s3
+
+## Kiểm tra local mới nhất
+
+Windows Terraform 1.17.2: fmt, validate và mocked contract tests PASS theo tóm tắt Terminal người dùng cung cấp ngày 12/11/2026. AWS CLI 2.40.1 đã cài, nhưng chưa chứng minh CLI đã đăng nhập. Chi tiết ở `evidence/windows-check-summary.txt`. Các ô Pending về AWS/ngân sách ở trên vẫn giữ nguyên.
