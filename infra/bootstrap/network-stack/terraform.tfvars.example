@@ -1,0 +1,7 @@
+# Real configuration template; fill account ID before plan. No AWS resource IDs are fabricated.
+expected_account_id = "REPLACE_WITH_12_DIGIT_ACCOUNT_ID"
+project = "labseat"
+environment = "lab"
+region = "us-east-1"
+vpc_cidr = "10.20.0.0/16"
+availability_zones = ["us-east-1a", "us-east-1b"]

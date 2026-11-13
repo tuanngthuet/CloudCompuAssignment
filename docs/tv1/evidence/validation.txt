@@ -1,0 +1,95 @@
+Date: 2026-11-12
+Terraform CLI: 1.13.5 linux_amd64
+User machine reported: Terraform 1.17.2 windows_amd64, AWS CLI 2.40.1
+Provider: hashicorp/aws 6.73.0
+PASS: terraform fmt -check -recursive
+PASS: terraform init -backend=false for all three directories
+BLOCKED: provider schema validation and mock test execution: listen unix /tmp/plugin... socket: operation not permitted
+Mock network test invocation: 0 passed, no AWS resource created.
+NOT RUN: PowerShell script on Windows, real AWS plan/apply, account/quota/budget checks.
+
+COMMAND: terraform -chdir=infra/modules/network validate
+EXIT: 1
+
+Error: Failed to load plugin schemas
+
+Error while loading schemas for plugin components: Failed to obtain provider
+schema: Could not load the schema for provider
+registry.terraform.io/hashicorp/aws: failed to instantiate provider
+"registry.terraform.io/hashicorp/aws" to obtain schema: Unrecognized remote
+plugin message:
+Failed to read any lines from plugin's stdout
+This usually means
+  the plugin was not compiled for this architecture,
+  the plugin is missing dynamic-link libraries necessary to run,
+  the plugin is not executable by this process due to file permissions, or
+  the plugin failed to negotiate the initial go-plugin protocol handshake
+
+Additional notes about plugin:
+  Path: .terraform/providers/registry.terraform.io/hashicorp/aws/6.73.0/linux_amd64/terraform-provider-aws_v6.73.0_x5
+  Mode: -rwxr-xr-x
+  Owner: 1000 [agent] (current: 1000 [agent])
+  Group: 1000 [agent] (current: 1000 [agent])
+  ELF architecture: EM_X86_64 (current architecture: amd64)
+..
+
+COMMAND: terraform -chdir=infra/bootstrap/state validate
+EXIT: 1
+
+Error: Failed to load plugin schemas
+
+Error while loading schemas for plugin components: Failed to obtain provider
+schema: Could not load the schema for provider
+registry.terraform.io/hashicorp/aws: failed to instantiate provider
+"registry.terraform.io/hashicorp/aws" to obtain schema: Unrecognized remote
+plugin message:
+Failed to read any lines from plugin's stdout
+This usually means
+  the plugin was not compiled for this architecture,
+  the plugin is missing dynamic-link libraries necessary to run,
+  the plugin is not executable by this process due to file permissions, or
+  the plugin failed to negotiate the initial go-plugin protocol handshake
+
+Additional notes about plugin:
+  Path: /workspace/scratch/55de018b7de2/tv1-week1/infra/modules/network/.terraform/providers/registry.terraform.io/hashicorp/aws/6.73.0/linux_amd64/terraform-provider-aws_v6.73.0_x5
+  Mode: -rwxr-xr-x
+  Owner: 1000 [agent] (current: 1000 [agent])
+  Group: 1000 [agent] (current: 1000 [agent])
+  ELF architecture: EM_X86_64 (current architecture: amd64)
+..
+
+COMMAND: terraform -chdir=infra/bootstrap/network-stack validate
+EXIT: 1
+
+Error: Failed to load plugin schemas
+
+Error while loading schemas for plugin components: Failed to obtain provider
+schema: Could not load the schema for provider
+registry.terraform.io/hashicorp/aws: failed to instantiate provider
+"registry.terraform.io/hashicorp/aws" to obtain schema: Unrecognized remote
+plugin message:
+Failed to read any lines from plugin's stdout
+This usually means
+  the plugin was not compiled for this architecture,
+  the plugin is missing dynamic-link libraries necessary to run,
+  the plugin is not executable by this process due to file permissions, or
+  the plugin failed to negotiate the initial go-plugin protocol handshake
+
+Additional notes about plugin:
+  Path: /workspace/scratch/55de018b7de2/tv1-week1/infra/modules/network/.terraform/providers/registry.terraform.io/hashicorp/aws/6.73.0/linux_amd64/terraform-provider-aws_v6.73.0_x5
+  Mode: -rwxr-xr-x
+  Owner: 1000 [agent] (current: 1000 [agent])
+  Group: 1000 [agent] (current: 1000 [agent])
+  ELF architecture: EM_X86_64 (current architecture: amd64)
+..
+
+SOURCE CHECKS (python-hcl2):
+PASS: HCL parse of 15 Terraform/test files
+PASS: 6 non-overlapping /24 subnets within VPC /16
+PASS: exactly 1 NAT declaration; no declared DB default route
+PASS: ingress ports only 80/8000/5432; no SSH ingress
+PASS: public IP auto-assignment disabled; 8 exact contract output names
+PASS: no remote-state dependency
+These are source checks only; provider validation, mock execution and AWS runtime remain pending.
+
+PASS: Provider checksums obtained from registry for windows_amd64 and linux_amd64.
