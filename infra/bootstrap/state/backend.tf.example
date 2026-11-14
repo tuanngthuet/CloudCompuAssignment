@@ -1,0 +1,4 @@
+# Only copy to backend.tf AFTER creating the bucket successfully.
+terraform {
+  backend "s3" {}
+}
