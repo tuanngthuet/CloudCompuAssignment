@@ -1,0 +1,82 @@
+{
+  "owner": "TV1",
+  "package_id": "W1-TV1",
+  "package_version": "1.0.1",
+  "contract_version": "3.0",
+  "status": "Local checks passed (user-reported); account checklist and AWS deployment pending",
+  "inputs_required": [
+    "project",
+    "environment",
+    "region",
+    "vpc_cidr",
+    "availability_zones",
+    "real account ID and state bucket name for deployment roots"
+  ],
+  "outputs_provided": [
+    "vpc_id",
+    "public_subnet_ids",
+    "app_subnet_ids",
+    "db_subnet_ids",
+    "alb_sg_id",
+    "app_sg_id",
+    "db_sg_id",
+    "s3_endpoint_id"
+  ],
+  "resource_ids": null,
+  "checks_passed": [
+    {
+      "check": "Terraform fmt, validate and mocked contract tests via docs/tv1/check.ps1",
+      "environment": "Windows 11; Terraform 1.17.2; AWS CLI 2.40.1",
+      "result": "PASS",
+      "evidence_type": "User-provided terminal summary; complete Windows log not yet supplied",
+      "evidence_path": "docs/tv1/evidence/windows-check-summary.txt"
+    },
+    {
+      "check": "Git baseline commit and push",
+      "result": "PASS",
+      "commit": "9043e85",
+      "evidence_type": "User-provided git output",
+      "evidence_path": "docs/tv1/evidence/windows-check-summary.txt"
+    },
+    {
+      "check": "Initial HCL parsing, source checks and provider lock checksums",
+      "result": "PASS",
+      "evidence_path": "docs/tv1/evidence/validation.txt"
+    }
+  ],
+  "checks_pending": [
+    "Attach complete Windows test log for reviewer",
+    "CLI auth and IAM create/update/delete permissions",
+    "Actual credit, expiry, quotas, budget and root MFA confirmation",
+    "Real CIDR overlap and AZ availability",
+    "AWS plan/apply",
+    "Real network connectivity and integration",
+    "TV2 review and G1"
+  ],
+  "evidence_paths": [
+    "docs/tv1/evidence/validation.txt",
+    "docs/tv1/evidence/windows-check-summary.txt"
+  ],
+  "findings": [
+    "Single NAT is an AZ dependency; cross-AZ cost possible",
+    "Default endpoint policy relies on TV3 IAM/bucket policy",
+    "HTTP demo uses synthetic data only"
+  ],
+  "deadlines": {
+    "M4": "2026-11-23",
+    "M5": "2026-11-30"
+  },
+  "source_control": {
+    "repository": "https://github.com/nguyendang44/labseat-tv1",
+    "branch": "tv1/w1-package",
+    "tested_baseline_commit": "9043e85",
+    "push_status": "User supplied successful git push output",
+    "status_update_commit": null
+  },
+  "readiness": {
+    "local_checks": "Passed per user-provided output",
+    "ready_for_integration": "Not fully confirmed: account/credit/quota checklist pending",
+    "accepted": false,
+    "aws_deployed": false
+  }
+}
