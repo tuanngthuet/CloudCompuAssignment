@@ -1,0 +1,32 @@
+[Unit]
+Description=LabSeat application
+Wants=network-online.target
+After=network-online.target
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+User=labseat
+Group=labseat
+WorkingDirectory=/opt/labseat/app
+EnvironmentFile=/etc/labseat/image.env
+Environment=PATH=/opt/labseat/venv/bin:/usr/local/bin:/usr/bin
+Environment=PYTHONUNBUFFERED=1
+Environment=PYTHONDONTWRITEBYTECODE=1
+ExecStart=/usr/bin/python3.12 /usr/local/libexec/labseat/launch.py
+Restart=always
+RestartSec=10s
+TimeoutStopSec=30s
+LogsDirectory=labseat
+LogsDirectoryMode=0750
+StandardOutput=append:/var/log/labseat/app.log
+StandardError=inherit
+UMask=0027
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=strict
+ProtectHome=yes
+LimitCORE=0
+
+[Install]
+WantedBy=multi-user.target
