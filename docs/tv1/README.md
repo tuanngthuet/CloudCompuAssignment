@@ -4,9 +4,6 @@ Bộ chuẩn bị Terraform theo contract 3.0: mạng và S3 lưu state. Chưa t
 
 ## Bước bạn làm ngay trên Windows
 
-1. Giải nén thư mục `tv1-week1` vào `E:\dtđm\` hoặc thư mục bạn chọn.
-2. VS Code → File → Open Folder → chọn thư mục `tv1-week1` (có README.md).
-3. Terminal → New Terminal; chạy từ thư mục này:
 
 ```powershell
 terraform version
