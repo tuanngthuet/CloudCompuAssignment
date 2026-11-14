@@ -5,9 +5,10 @@
     "docs/tv1/check.ps1":  "cce28e4103f98899fcedbcc7c5efbfee1df79a8f12e2314c0778f0ae779f8627",
     "docs/tv1/check-source.py":  "6321f80b5213bbe3c20c2e8297922ed9917278136420c9bc7e094db631f61ae3",
     "docs/tv1/deploy-weekend.md":  "f3b9ddd55cfcaa18689266abe914f75f450f3593146d7283a22230f728c2533e",
-    "docs/tv1/evidence/validation.txt":  "902e582431c5fe13aa0d96ef6980cfd5ab32340ca03adbb59e573a25e9d9fea9",
+    "docs/tv1/evidence/validation.txt":  "c4d5aefc954120466ed21dde12a1a96a70da32e7a68179cee35b220a9c57b382",
     "docs/tv1/evidence/windows-check-summary.txt":  "1271f2f51610c9d0599e5f6d9dc850b2567686e5d45b957afccaceb225921151",
     "docs/tv1/network.md":  "0b4a3901c3c7594439d7a7fb814c44c1440d3bec04a8243d6d93f74d5fffce3a",
+    "docs/tv1/README.md":  "4dae610df2435a67dda3fbc695614520e04bcb7d25ea479f78b011acfd8994c4",
     "docs/tv1/refresh-checksums.ps1":  "369d477ef1158072ace90c8d7824c5cc4e4c85062df8b570f9fec27cf8f7956b",
     "docs/tv1/status-update.md":  "f035e53e42ef82c792faf6aec0bf8bff3b14dfd95cb3a5a1606b9a3736f24143",
     "handoff/tv1.json":  "fc6ea6e0a5ab0af97a35a1eddaf1d08091698c0c46b0d3fd1be0d30db60b52ff",
@@ -34,6 +35,6 @@
     "infra/modules/network/tests/network.tftest.hcl":  "4265fe49c40dd37f6abb7dc4c9da09669ad15b6169533ebf26b7c98894e88f80",
     "infra/modules/network/variables.tf":  "151d1f123171f20b7e50d25d6f5cc70dffe12a4d0a7468bdd8a91fbbfaf24050",
     "infra/modules/network/versions.tf":  "2d44d7aae15953201f7192b37006ace00c51ea8a7c29addfe8a947b0e2e4bf3b",
-    "README.md":  "a11df674cf38bce99430a3acdbbbaccce699ae3c87c0974a161789235d7c3de0",
+    "README.md":  "00fa788c637b7ffb633837ac528f121845eb6ec58505479cac1555bc311719a5",
     "report/parts/tv1.md":  "64bc3c26be204c416362251cbb86465081401028b1f58f719f171ab6ac517b48"
 }
