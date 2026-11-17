@@ -68,13 +68,90 @@ variable "app_instance_profile_name" {
   nullable    = false
 }
 
-variable "ami_id" {
-  description = "Available x86_64, HVM, EBS-backed LabSeat application AMI in the AWS provider region."
-  type        = string
-  nullable    = false
-
+variable "capacity" {
+  type    = object({ min = number, desired = number, max = number })
+  default = { min = 2, desired = 2, max = 6 }
   validation {
-    condition     = can(regex("^ami-([0-9a-f]{8}|[0-9a-f]{17})$", var.ami_id))
-    error_message = "ami_id must be an EC2 AMI ID."
+    condition     = var.capacity.min >= 2 && var.capacity.min <= var.capacity.desired && var.capacity.desired <= var.capacity.max && alltrue([for n in values(var.capacity) : n == floor(n)])
+    error_message = "Use ordered integer capacity min>=2, desired>=min, max>=desired."
   }
+}
+variable "instance_type" {
+  type    = string
+  default = "t3.small"
+}
+variable "db_pool_size" {
+  type    = number
+  default = 3
+  validation {
+    condition     = var.db_pool_size >= 1 && var.db_pool_size <= 3 && var.db_pool_size == floor(var.db_pool_size)
+    error_message = "Use a bounded integer pool1..3 per single worker."
+  }
+}
+variable "db_connection_budget" {
+  type    = number
+  default = 66
+  validation {
+    condition     = var.db_connection_budget >= 1 && var.db_connection_budget == floor(var.db_connection_budget)
+    error_message = "Supply the reviewed positive integer database connection budget."
+  }
+}
+variable "db_reserved_connections" {
+  type    = number
+  default = 12
+  validation {
+    condition     = var.db_reserved_connections >= 1 && var.db_reserved_connections == floor(var.db_reserved_connections)
+    error_message = "Reserve a positive integer number of database connections outside app pools."
+  }
+}
+variable "redis_enabled" {
+  type    = bool
+  default = false
+}
+variable "acm_certificate_arn" {
+  type    = string
+  default = null
+}
+variable "allow_http_demo" {
+  type    = bool
+  default = false
+}
+
+variable "image" { type = string }
+variable "execution_role_arn" { type = string }
+variable "app_role_arn" { type = string }
+variable "worker_role_arn" { type = string }
+variable "publisher_role_arn" { type = string }
+variable "log_group" { type = string }
+variable "region" { type = string }
+variable "runtime_secrets" { type = map(string) }
+variable "runtime_environment" { type = map(string) }
+variable "background_pool_size" { default = 1 }
+variable "api_tasks" {
+  type    = object({ min = number, max = number })
+  default = { min = 2, max = 8 }
+  validation {
+    condition     = var.api_tasks.min >= 2 && var.api_tasks.max >= var.api_tasks.min && alltrue([for n in values(var.api_tasks) : n == floor(n)])
+    error_message = "API task bounds must be integers, min >=2 and max >=min."
+  }
+}
+variable "target_capacity" {
+  default = 80
+  validation {
+    condition     = var.target_capacity >= 1 && var.target_capacity <= 100
+    error_message = "Target capacity must be 1..100."
+  }
+}
+variable "deployment_maximum_percent" {
+  default = 200
+  validation {
+    condition     = var.deployment_maximum_percent == 200
+    error_message = "This profile reserves 100/200 rolling deployment headroom."
+  }
+}
+variable "requests_per_target" { default = 300 }
+
+variable "bootstrap" {
+  type    = bool
+  default = false
 }

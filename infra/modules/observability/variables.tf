@@ -77,3 +77,21 @@ variable "scaling_target_requests_per_target" {
     error_message = "scaling_target_requests_per_target must be greater than zero."
   }
 }
+
+variable "redis_enabled" {
+  type    = bool
+  default = false
+}
+variable "redis_instance_id" {
+  type    = string
+  default = null
+}
+
+variable "workload_threshold" {
+  type    = number
+  default = 300
+  validation {
+    condition     = var.workload_threshold > 0
+    error_message = "Alarm request threshold must be positive."
+  }
+}

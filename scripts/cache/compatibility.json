@@ -1,0 +1,11 @@
+{
+  "checked_at": "2026-11-14T23:03:04.921975+07:00",
+  "redis_engine_version": "7.4.12",
+  "redis_source_url": "https://download.redis.io/releases/redis-7.4.12.tar.gz",
+  "source_sha256": "56588ee1648539556f2b6cf4e873e3734afbbe40fa952fec2fcd6b6d7dae2924",
+  "local_test_image": "redis@sha256:2e3eb11462c4e3759e6972678dd051d150ff54b1e60714b3c33b701260172a90",
+  "redis_client_version": "6.4.0",
+  "protocol": 2,
+  "scope": "Local Docker compatibility only; AL2023 source build and AWS runtime pending",
+  "aws_verified": false
+}

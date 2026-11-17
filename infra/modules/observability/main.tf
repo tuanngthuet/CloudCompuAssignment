@@ -1,7 +1,7 @@
 locals {
   name                = "labseat-${var.environment}"
   workload_alarm_name = "${local.name}-requests-per-target-high"
-  workload_threshold  = 300
+  workload_threshold  = var.workload_threshold
   alb_dimensions = {
     LoadBalancer = var.alb_arn_suffix
     TargetGroup  = var.target_group_arn_suffix
@@ -19,22 +19,6 @@ resource "aws_cloudwatch_log_group" "app" {
   retention_in_days = 7
 }
 
-resource "aws_autoscaling_policy" "request_count" {
-  name                   = "${local.name}-requests-per-target"
-  autoscaling_group_name = var.asg_name
-  policy_type            = "TargetTrackingScaling"
-
-  # The ASG supplies the default 120-second instance warmup.
-  target_tracking_configuration {
-    target_value = var.scaling_target_requests_per_target
-
-    predefined_metric_specification {
-      predefined_metric_type = "ALBRequestCountPerTarget"
-      resource_label         = "${var.alb_arn_suffix}/${var.target_group_arn_suffix}"
-    }
-  }
-}
-
 resource "aws_sns_topic" "workload" {
   name = "${local.name}-workload"
 }
@@ -50,7 +34,7 @@ resource "aws_sns_topic_policy" "workload" {
       Action    = "sns:Publish"
       Resource  = aws_sns_topic.workload.arn
       Condition = {
-        ArnEquals    = { "aws:SourceArn" = local.alarm_arn }
+        ArnLike      = { "aws:SourceArn" = [local.alarm_arn, "arn:${local.topic_arn_parts[1]}:cloudwatch:${local.region}:${local.account_id}:alarm:${local.name}-*"] }
         StringEquals = { "aws:SourceAccount" = local.account_id }
       }
     }]
@@ -79,4 +63,22 @@ resource "aws_cloudwatch_metric_alarm" "workload" {
   alarm_actions       = [aws_sns_topic.workload.arn]
 
   depends_on = [aws_sns_topic_policy.workload]
+}
+
+resource "aws_cloudwatch_log_group" "redis" {
+  count             = var.redis_enabled ? 1 : 0
+  name              = "/labseat/${var.environment}/redis"
+  retention_in_days = 7
+}
+
+resource "aws_cloudwatch_log_metric_filter" "application" {
+  for_each       = toset(["HoldSuccess", "HoldFailure", "ConfirmSuccess", "ConfirmFailure", "AdmissionGrant", "QueueWaitMs", "RedisLatencyMs", "RedisFailure", "BookingLockMs", "PoolCheckedOut", "PoolAcquireMs", "RedisAvailable", "OutboxPending", "OutboxPublishFailure", "OutboxPublished", "OutboxLoopFailure", "WorkerFailure", "EmailAttempt", "EmailAccepted", "EmailDuplicateSuppressed", "DBQueryError", "DBTransactionMs", "MaintenanceSuccess", "MaintenanceFailure", "GarbageCollectionFailure", "EmailUnknown"])
+  name           = "${local.name}-${each.value}"
+  log_group_name = aws_cloudwatch_log_group.app.name
+  pattern        = "{ $.metric = \"${each.value}\" }"
+  metric_transformation {
+    name      = each.value
+    namespace = "LabSeat/Application"
+    value     = "$.value"
+  }
 }

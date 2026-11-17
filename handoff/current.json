@@ -1,0 +1,18 @@
+{
+  "version": "0.6.0",
+  "schema_revision": "0002_platform",
+  "architecture": "FastAPI modular monolith; one ECS cluster/EC2 ASG; API/worker/publisher services and scheduled maintenance; PostgreSQL/Redis admission and PubSub/S3/SQS/Brevo",
+  "ui_entrypoint": "/",
+  "source": "app/",
+  "runbook": "docs/deployment/aws.md",
+  "product": "docs/labseat.md",
+  "source_map": "docs/implementation/ecs-audit.md",
+  "evidence": "evidence/current/README.md",
+  "aws_deployed": false,
+  "aws_verified": false,
+  "email_provider": "brevo",
+  "local_email_backend": "mock",
+  "specification": "docs/dac-ta-he-thong.md",
+  "maintenance_runbook": "docs/deployment/maintenance.md",
+  "recovery_runbook": "docs/deployment/recovery.md"
+}

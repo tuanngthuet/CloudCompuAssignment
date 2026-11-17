@@ -1,0 +1,31 @@
+# Explicit opt-in to real email. Main compose.yaml remains mock by default.
+services:
+  app:
+    environment:
+      AUTH_LINK_SIGNING_KEY: ''
+      AUTH_LINK_SIGNING_KEY_FILE: /run/secrets/auth_signing_key
+      BREVO_WEBHOOK_TOKEN: ''
+      BREVO_WEBHOOK_TOKEN_FILE: /run/secrets/brevo_webhook_token
+    secrets:
+      - auth_signing_key
+      - brevo_webhook_token
+  worker:
+    environment:
+      AUTH_LINK_SIGNING_KEY: ''
+      AUTH_LINK_SIGNING_KEY_FILE: /run/secrets/auth_signing_key
+      EMAIL_BACKEND: brevo
+      BREVO_API_KEY_FILE: /run/secrets/brevo_api_key
+      BREVO_FROM_EMAIL: ${BREVO_FROM_EMAIL:?Set BREVO_FROM_EMAIL in .env.brevo}
+      BREVO_FROM_NAME: ${BREVO_FROM_NAME:-LABSEAT}
+      EMAIL_PUBLIC_BASE_URL: ${EMAIL_PUBLIC_BASE_URL:?Set your public HTTPS LABSEAT URL}
+      EMAIL_SUPPORT_EMAIL: ${EMAIL_SUPPORT_EMAIL:-}
+    secrets:
+      - brevo_api_key
+      - auth_signing_key
+secrets:
+  auth_signing_key:
+    file: ./.local/secrets/brevo/auth-signing-key
+  brevo_webhook_token:
+    file: ./.local/secrets/brevo/webhook-token
+  brevo_api_key:
+    file: ./.local/secrets/brevo/api-key

@@ -1,7 +1,0 @@
-Terraform 1.12.2, hashicorp/aws 6.73.0. Both modules initialized separately with -backend=false.
-PASS: terraform fmt -check -recursive
-Module: data
-Success! The configuration is valid.
-
-Module: iam
-Success! The configuration is valid.

@@ -28,9 +28,9 @@ resource "aws_db_instance" "app" {
   db_subnet_group_name   = aws_db_subnet_group.app.name
   vpc_security_group_ids = [var.db_sg_id]
   publicly_accessible    = false
-  multi_az               = false
+  multi_az               = var.multi_az
 
-  backup_retention_period   = 7
+  backup_retention_period   = var.backup_retention_days
   copy_tags_to_snapshot     = true
   deletion_protection       = var.deletion_protection
   skip_final_snapshot       = false
@@ -83,4 +83,20 @@ resource "aws_s3_bucket_policy" "require_tls" {
       Condition = { Bool = { "aws:SecureTransport" = "false" } }
     }]
   })
+}
+
+resource "aws_s3_bucket_versioning" "app" {
+  bucket = aws_s3_bucket.app.id
+  versioning_configuration { status = "Enabled" }
+}
+resource "aws_s3_bucket_lifecycle_configuration" "app" {
+  bucket     = aws_s3_bucket.app.id
+  depends_on = [aws_s3_bucket_versioning.app]
+  rule {
+    id     = "recoverable-object-cleanup"
+    status = "Enabled"
+    filter { prefix = "" }
+    noncurrent_version_expiration { noncurrent_days = 30 }
+    abort_incomplete_multipart_upload { days_after_initiation = 7 }
+  }
 }

@@ -1,6 +1,6 @@
 locals {
   name = "${var.project}-${var.environment}"
-  tags = { Project = var.project, Environment = var.environment, Owner = "tv1", ManagedBy = "Terraform" }
+  tags = { Project = var.project, Environment = var.environment, Owner = "labseat", ManagedBy = "Terraform" }
   subnets = {
     public_a = { az = var.availability_zones[0], tier = "public", cidr = cidrsubnet(var.vpc_cidr, 8, 0) }
     public_b = { az = var.availability_zones[1], tier = "public", cidr = cidrsubnet(var.vpc_cidr, 8, 1) }
@@ -58,12 +58,33 @@ resource "aws_route" "app_default" {
 resource "aws_route_table_association" "this" {
   for_each       = local.subnets
   subnet_id      = aws_subnet.this[each.key].id
-  route_table_id = aws_route_table.tier[each.value.tier].id
+  route_table_id = var.multi_az_nat && each.key == "app_b" ? aws_route_table.app_b[0].id : aws_route_table.tier[each.value.tier].id
 }
 resource "aws_vpc_endpoint" "s3" {
   vpc_id            = aws_vpc.this.id
   service_name      = "com.amazonaws.${var.region}.s3"
   vpc_endpoint_type = "Gateway"
-  route_table_ids   = [aws_route_table.tier["app"].id]
+  route_table_ids   = concat([aws_route_table.tier["app"].id], aws_route_table.app_b[*].id)
   tags              = merge(local.tags, { Name = "${local.name}-s3" })
+}
+
+resource "aws_eip" "nat_b" {
+  count  = var.multi_az_nat ? 1 : 0
+  domain = "vpc"
+}
+resource "aws_nat_gateway" "b" {
+  count         = var.multi_az_nat ? 1 : 0
+  allocation_id = aws_eip.nat_b[0].id
+  subnet_id     = aws_subnet.this["public_b"].id
+  depends_on    = [aws_internet_gateway.this]
+}
+resource "aws_route_table" "app_b" {
+  count  = var.multi_az_nat ? 1 : 0
+  vpc_id = aws_vpc.this.id
+}
+resource "aws_route" "app_b" {
+  count                  = var.multi_az_nat ? 1 : 0
+  route_table_id         = aws_route_table.app_b[0].id
+  destination_cidr_block = "0.0.0.0/0"
+  nat_gateway_id         = aws_nat_gateway.b[0].id
 }

@@ -1,0 +1,18 @@
+# Used with -chdir=infra/integration. Fill account/network/certificate/image and optional Brevo inputs.
+production               = false
+managed_redis            = false
+redis_enabled            = true
+capacity                 = { min = 2, desired = 2, max = 6 }
+api_tasks                = { min = 2, max = 8 }
+instance_type            = "t3.small"
+db_pool_size             = 3
+db_connection_budget     = 66
+db_reserved_connections  = 12
+email_backend            = "disabled"
+# redis_ami_id and cache_compatibility_verified required for private EC2 Redis.
+# Choose managed_redis=true and supply TF_VAR_redis_auth_token and TF_VAR_redis_operator_password to avoid a cache AMI.
+
+# Optional simple HTTP demo: no ACM certificate provisioning needed.
+# Live camera works on localhost; a public/LAN HTTP origin uses photo QR import.
+allow_http_demo = true
+acm_certificate_arn = null

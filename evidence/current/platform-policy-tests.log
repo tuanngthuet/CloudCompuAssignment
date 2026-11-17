@@ -1,0 +1,10 @@
+ Container labseat-test-db-1 Running 
+ Container labseat-test-redis-1 Running 
+ Container labseat-test-db-1 Waiting 
+ Container labseat-test-redis-1 Waiting 
+ Container labseat-test-redis-1 Healthy 
+ Container labseat-test-db-1 Healthy 
+ Container labseat-test-run-bf1eb3b4b389 Creating 
+ Container labseat-test-run-bf1eb3b4b389 Created 
+.......................................                                  [100%]
+39 passed in 9.10s

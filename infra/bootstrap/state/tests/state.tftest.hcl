@@ -1,10 +1,19 @@
 mock_provider "aws" {}
 variables {
   expected_account_id = "000000000000" # MOCK_ONLY; never used by a deployment root.
-  state_bucket_name   = "mock-only-tv1-state"
+  state_bucket_name   = "mock-only-labseat-state"
 }
 run "state_protection" {
-  command = apply
+  # A plan-only check preserves prevent_destroy and avoids test teardown of the state bucket.
+  command = plan
+  override_resource {
+    target          = aws_s3_bucket.state
+    override_during = plan
+    values = {
+      id  = "mock-only-labseat-state"
+      arn = "arn:aws:s3:::mock-only-labseat-state"
+    }
+  }
   assert {
     condition     = aws_s3_bucket_versioning.state.versioning_configuration[0].status == "Enabled"
     error_message = "State versioning must be enabled."

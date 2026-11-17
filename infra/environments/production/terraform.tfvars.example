@@ -1,0 +1,13 @@
+# Alternative profile for the lab environment. Use separate AWS accounts to run demo and production simultaneously: resource names and metric namespaces are shared within one account.
+production              = true
+managed_redis           = true
+redis_enabled           = true
+capacity                = { min = 2, desired = 2, max = 6 }
+api_tasks               = { min = 2, max = 8 }
+instance_type           = "t3.medium"
+db_pool_size            = 3
+db_connection_budget    = 66
+db_reserved_connections = 12
+email_backend           = "brevo"
+# Supply redis_auth_token and redis_operator_password securely, plus Brevo sender/public URL and SSM BREVO_API_KEY, network, image and ACM inputs.
+# Network-stack must ALSO use multi_az_nat=true; production=true in integration cannot modify another state.

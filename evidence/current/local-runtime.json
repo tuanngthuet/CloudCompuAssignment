@@ -1,0 +1,17 @@
+{
+  "version": "0.6.0",
+  "schema_revision": "0002_platform",
+  "url": "http://localhost:8000",
+  "health": 200,
+  "readiness": 200,
+  "original_business_tables_preserved": 16,
+  "original_users_preserved": 2,
+  "original_reservations_preserved": 3,
+  "private_backup_created_and_archive_list_verified": true,
+  "local_email_backend": "mock",
+  "real_redis_sse_initial_invalidation_verified": true,
+  "serving_maintenance_dry_run_only": true,
+  "production_load_and_recovery_measured": false,
+  "real_email_sent": false,
+  "aws_applied_or_deployed": false
+}

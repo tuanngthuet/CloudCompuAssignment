@@ -22,3 +22,7 @@ output "db_sg_id" {
 output "s3_endpoint_id" {
   value = aws_vpc_endpoint.s3.id
 }
+
+output "redis_sg_id" {
+  value = try(aws_security_group.tier["redis"].id, null)
+}

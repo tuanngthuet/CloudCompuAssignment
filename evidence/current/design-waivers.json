@@ -1,0 +1,7 @@
+[
+ {"check":"moment-none","target":"(the page)","reason":"Ứng dụng đăng kí hiện có cần giữ luồng thao tác; thêm hiệu ứng trình diễn landing page nằm ngoài yêu cầu triển khai chức năng."},
+ {"check":"cta","target":"section#booking","reason":"Danh mục ca phụ thuộc dữ liệu thật và chỉ cho đăng kí khi có ca mở; không thêm CTA giả vào empty state để thỏa kiểm tra landing page."},
+ {"check":"text-only","target":"section#booking","reason":"Empty state danh mục ca là trạng thái hợp lệ của ứng dụng; không thêm ảnh marketing vào luồng tìm ca hiện có."},
+ {"check":"section-tile","target":"dialog#login-panel","reason":"Đây là hộp thoại đăng nhập vừa nội dung có focus trap, không phải một section marketing cần cao bằng màn hình."},
+ {"check":"copy-fact","target":"div.discovery > div.discovery-top > div > h1","reason":"Trang thao tác không được bịa số liệu hay địa điểm khi database chưa có ca phù hợp; đây không phải headline bán hàng."}
+]

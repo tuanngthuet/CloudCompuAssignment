@@ -1,0 +1,33 @@
+labseat-platform-validate-bootstrap-network-stack.log
+Success! The configuration is valid.
+
+labseat-platform-validate-bootstrap-state.log
+Success! The configuration is valid.
+
+labseat-platform-validate-integration.log
+Success! The configuration is valid.
+
+labseat-platform-validate-modules-cache.log
+Success! The configuration is valid.
+
+labseat-platform-validate-modules-compute.log
+Success! The configuration is valid.
+
+labseat-platform-validate-modules-data.log
+Success! The configuration is valid.
+
+labseat-platform-validate-modules-iam.log
+Success! The configuration is valid.
+
+labseat-platform-validate-modules-managed_cache.log
+Success! The configuration is valid.
+
+labseat-platform-validate-modules-messaging.log
+Success! The configuration is valid.
+
+labseat-platform-validate-modules-network.log
+Success! The configuration is valid.
+
+labseat-platform-validate-modules-observability.log
+Success! The configuration is valid.
+

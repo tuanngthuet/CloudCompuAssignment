@@ -22,3 +22,7 @@ output "db_sg_id" {
 output "s3_endpoint_id" {
   value = module.network.s3_endpoint_id
 }
+
+output "redis_sg_id" {
+  value = module.network.redis_sg_id
+}

@@ -1,0 +1,164 @@
+name: labseat
+x-app: &app
+  image: labseat-app:0.6.0
+  build:
+    context: .
+    dockerfile: app/Dockerfile
+  environment: &env
+    APP_ENV: local
+    DATABASE_URL: postgresql+psycopg://labseat:localonly@db:5432/labseat
+    STORAGE_BACKEND: local
+    LOCAL_STORAGE_PATH: /data/images
+    COOKIE_SECURE: 'false'
+    DB_POOL_SIZE: ${DB_POOL_SIZE:-3}
+    DB_MAX_OVERFLOW: '0'
+    REDIS_URL: ${REDIS_URL:-redis://redis:6379/0}
+    SQS_ENDPOINT_URL: http://sqs:9324
+    SQS_QUEUE_URL: http://sqs:9324/000000000000/notifications
+    AWS_REGION: us-east-1
+    AUTH_LINK_SIGNING_KEY: ${AUTH_LINK_SIGNING_KEY:-}
+    BREVO_WEBHOOK_TOKEN: ${BREVO_WEBHOOK_TOKEN:-}
+    EMAIL_BACKEND: mock
+  volumes:
+    - images:/data/images
+  depends_on:
+    db:
+      condition: service_healthy
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: labseat
+      POSTGRES_PASSWORD: localonly
+      POSTGRES_DB: labseat
+    ports: ['127.0.0.1:${LABSEAT_DB_PORT:-5432}:5432']
+    volumes: ['db:/var/lib/postgresql/data']
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U labseat -d labseat']
+      interval: 2s
+      timeout: 3s
+      retries: 30
+  app:
+    <<: *app
+    ports: ['127.0.0.1:${LABSEAT_HTTP_PORT:-8000}:8000']
+  redis:
+    image: redis:7.4.12@sha256:2e3eb11462c4e3759e6972678dd051d150ff54b1e60714b3c33b701260172a90
+    profiles: [queue, multi]
+    command: ['redis-server','--appendonly','yes','--appendfsync','everysec','--maxmemory','256mb','--maxmemory-policy','noeviction']
+    volumes: ['queue-data:/data']
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 2s
+      timeout: 2s
+      retries: 30
+  sqs:
+    image: softwaremill/elasticmq-native:1.6.9@sha256:6f2349015bd4814d81bacedfc7192facb16a6897fcc5e20e4e1a676913ee78db
+    profiles: [events]
+    volumes: ['./deploy/elasticmq.conf:/opt/elasticmq.conf:ro']
+  publisher:
+    <<: *app
+    profiles: [events]
+    environment:
+      <<: *env
+      DB_POOL_SIZE: '1'
+    command: ['python','-m','app.events','publisher']
+    healthcheck:
+      disable: true
+    depends_on:
+      db:
+        condition: service_healthy
+      sqs:
+        condition: service_started
+  worker:
+    <<: *app
+    profiles: [events]
+    environment:
+      <<: *env
+      DB_POOL_SIZE: '1'
+    command: ['python','-m','app.events','worker']
+    healthcheck:
+      disable: true
+    depends_on:
+      db:
+        condition: service_healthy
+      sqs:
+        condition: service_started
+  app-peer:
+    <<: *app
+    profiles: [multi]
+    ports: ['127.0.0.1:${LABSEAT_PEER_PORT:-8001}:8000']
+  migrate:
+    <<: *app
+    profiles: [tools]
+    command: ['python','-m','app.migrate']
+  seed:
+    <<: *app
+    profiles: [tools]
+    environment:
+      <<: *env
+      SEED_PASSWORD: ${SEED_PASSWORD:-}
+    command: ['python','-m','app.cli','seed']
+  maintenance:
+    <<: *app
+    profiles: [tools]
+    environment:
+      <<: *env
+      DB_POOL_SIZE: '1'
+    command: ['python','-m','app.maintenance']
+  test-db:
+    image: postgres:16
+    profiles: [test]
+    environment:
+      POSTGRES_USER: labseat
+      POSTGRES_PASSWORD: localonly
+      POSTGRES_DB: labseat_test
+    tmpfs: ['/var/lib/postgresql/data']
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U labseat -d labseat_test']
+      interval: 2s
+      timeout: 3s
+      retries: 30
+  test-redis:
+    image: redis:7.4.12@sha256:2e3eb11462c4e3759e6972678dd051d150ff54b1e60714b3c33b701260172a90
+    profiles: [test]
+    command: ['redis-server','--maxmemory','256mb','--maxmemory-policy','noeviction']
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 2s
+      timeout: 2s
+      retries: 30
+  test:
+    <<: *app
+    profiles: [test]
+    volumes: ['.:/srv/labseat']
+    environment:
+      APP_ENV: test
+      DATABASE_URL: postgresql+psycopg://labseat:localonly@test-db:5432/labseat_test
+      TEST_DATABASE_URL: postgresql+psycopg://labseat:localonly@test-db:5432/labseat_test
+      REDIS_URL: redis://test-redis:6379/15
+      TEST_REDIS_URL: redis://test-redis:6379/15
+      TEST_SQS_ENDPOINT_URL: ${TEST_SQS_ENDPOINT_URL:-}
+      PYTHONDONTWRITEBYTECODE: '1'
+      LOCAL_STORAGE_PATH: /tmp/labseat-test-images
+    depends_on:
+      test-db:
+        condition: service_healthy
+      test-redis:
+        condition: service_healthy
+    command: ['python','-m','pytest','tests/app','-v','-p','no:cacheprovider']
+  browser:
+    build:
+      context: .
+      dockerfile: tests/app/browser.Dockerfile
+    profiles: [browser]
+    environment:
+      BROWSER_BASE_URL: http://app:8000
+      BROWSER_TEST_ALLOWED: local-demo-only
+      BROWSER_TEST_PASSWORD: ${SEED_PASSWORD:-}
+    depends_on:
+      - app
+    command: ['python','-m','pytest','tests/app/test_browser.py','-v','-p','no:cacheprovider']
+volumes:
+  db:
+  images:
+  queue-data:

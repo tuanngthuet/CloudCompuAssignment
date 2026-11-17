@@ -29,7 +29,7 @@ variable "db_subnet_ids" {
 }
 
 variable "db_sg_id" {
-  description = "DB security group allowing TCP 5432 from the app security group."
+  description = "DB security group allowing TCP 5432 from the API task security group."
   type        = string
 
   validation {
@@ -58,4 +58,19 @@ variable "final_snapshot_identifier" {
   description = "Unique identifier for the final snapshot, chosen before approved cleanup."
   type        = string
   default     = null
+}
+
+variable "multi_az" {
+  type    = bool
+  default = false
+}
+
+variable "backup_retention_days" {
+  description = "Automated backup retention; keep backups enabled even on restricted account plans."
+  type        = number
+  default     = 30
+  validation {
+    condition     = var.backup_retention_days >= 1 && var.backup_retention_days <= 35 && floor(var.backup_retention_days) == var.backup_retention_days
+    error_message = "Keep automated backups enabled with 1 to 35 whole days of retention."
+  }
 }

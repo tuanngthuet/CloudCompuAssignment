@@ -18,8 +18,8 @@ variable "region" {
   type    = string
   default = "us-east-1"
   validation {
-    condition     = var.region == "us-east-1"
-    error_message = "Contract v3 uses us-east-1. Agree a contract change before using another Region."
+    condition     = contains(["us-east-1", "ap-southeast-2"], var.region)
+    error_message = "Use a supported LABSEAT region: us-east-1 or ap-southeast-2."
   }
 }
 variable "vpc_cidr" {
@@ -34,8 +34,8 @@ variable "availability_zones" {
   type    = list(string)
   default = ["us-east-1a", "us-east-1b"]
   validation {
-    condition     = length(var.availability_zones) == 2 && length(distinct(var.availability_zones)) == 2 && alltrue([for az in var.availability_zones : can(regex("^us-east-1[a-z]$", az))])
-    error_message = "Provide two different standard Availability Zones in us-east-1."
+    condition     = length(var.availability_zones) == 2 && length(distinct(var.availability_zones)) == 2 && alltrue([for az in var.availability_zones : can(regex("^${var.region}[a-z]$", az))])
+    error_message = "Provide two different standard Availability Zones in the selected region."
   }
 }
 
@@ -46,4 +46,14 @@ variable "expected_account_id" {
     condition     = can(regex("^[0-9]{12}$", var.expected_account_id))
     error_message = "Use the real 12-digit AWS account ID."
   }
+}
+
+variable "redis_enabled" {
+  type    = bool
+  default = false
+}
+
+variable "multi_az_nat" {
+  type    = bool
+  default = false
 }

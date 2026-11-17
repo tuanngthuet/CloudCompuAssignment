@@ -3,7 +3,7 @@ resource "aws_cloudwatch_dashboard" "labseat" {
 
   dashboard_body = jsonencode({
     periodOverride = "inherit"
-    widgets = [
+    widgets = concat([
       {
         type = "metric", x = 0, y = 0, width = 12, height = 6
         properties = {
@@ -28,6 +28,7 @@ resource "aws_cloudwatch_dashboard" "labseat" {
           stat   = "Minimum"
           metrics = [
             ["AWS/ApplicationELB", "HealthyHostCount", "LoadBalancer", var.alb_arn_suffix, "TargetGroup", var.target_group_arn_suffix],
+            ["AWS/ApplicationELB", "UnHealthyHostCount", "LoadBalancer", var.alb_arn_suffix, "TargetGroup", var.target_group_arn_suffix],
           ]
         }
       },
@@ -93,6 +94,29 @@ resource "aws_cloudwatch_dashboard" "labseat" {
           ]
         }
       },
-    ]
+      ], var.redis_enabled && var.redis_instance_id != null ? [
+      {
+        type = "metric", x = 12, y = 18, width = 12, height = 6
+        properties = {
+          region = local.region, title = "Redis memory / clients / CPU", period = 60, stat = "Maximum"
+          metrics = [
+            ["LabSeat/Redis", "used_memory_rss", "InstanceId", var.redis_instance_id],
+            ["LabSeat/Redis", "used_memory", "InstanceId", var.redis_instance_id],
+            ["LabSeat/Redis", "connected_clients", "InstanceId", var.redis_instance_id, { yAxis = "right" }],
+            ["AWS/EC2", "CPUUtilization", "InstanceId", var.redis_instance_id, { stat = "Average", yAxis = "right" }]
+          ]
+        }
+      }
+      ] : [], [
+      {
+        type = "metric", x = 0, y = 24, width = 24, height = 6
+        properties = {
+          region = local.region, title = "Booking, queue and pool telemetry", period = 60, stat = "Sum"
+          metrics = [for name in ["HoldSuccess", "HoldFailure", "ConfirmSuccess", "ConfirmFailure", "AdmissionGrant", "QueueWaitMs", "RedisLatencyMs", "BookingLockMs", "PoolCheckedOut", "PoolAcquireMs", "RedisAvailable"] : ["LabSeat/Application", name, {
+            stat = contains(["QueueWaitMs", "RedisLatencyMs", "BookingLockMs", "PoolAcquireMs"], name) ? "p95" : name == "PoolCheckedOut" ? "Maximum" : name == "RedisAvailable" ? "Minimum" : "Sum"
+          }]]
+        }
+      }
+    ])
   })
 }

@@ -1,55 +1,44 @@
-# Local configuration and credentials
+# Local configuration, credentials and generated previews
 .env
 .env.*
 !.env.example
 !.env.*.example
+.local/
 .aws/
 *.pem
 *.key
 *.ppk
 
-# Terraform and Packer local inputs and generated files
-.terraform/
-*.tfstate
-*.tfstate.*
-*.tfplan
-tfplan
-*.tfvars
-*.tfvars.json
-*.pkrvars.hcl
-*.pkrvars.json
-crash.log
-crash.*.log
-packer_cache/
-
-# Python caches and virtual environments
-__pycache__/
-*.py[cod]
-.pytest_cache/
-.venv/
-venv/
-**/.terraform/*
+# Terraform / Packer local state and inputs
+**/.terraform/
 *.tfstate
 *.tfstate.*
 *.tfplan
 *.tfplan.*
+tfplan
 *.tfvars
 *.tfvars.json
 !*.tfvars.example
 !*.tfvars.json.example
+*.pkrvars.hcl
+*.pkrvars.json
 backend.hcl
 backend.tf
 !infra/bootstrap/network-stack/backend.tf
 crash.log
 crash.*.log
-.env
-.env.*
-!.env.example
-*.pem
-*.ppk
-.aws/
+packer_cache/
+
+# Development caches and generated archives
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.venv/
+venv/
+.vs/
 local-evidence/
 *.zip
 
-# Visual Studio cache
-.vs/
+# Local frontend checker artifacts
+.taste-skill/

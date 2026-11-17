@@ -8,7 +8,7 @@ resource "aws_s3_bucket" "state" {
   lifecycle {
     prevent_destroy = true
   }
-  tags = { Project = "labseat", Environment = "lab", Owner = "tv1", ManagedBy = "Terraform", Purpose = "terraform-state" }
+  tags = { Project = "labseat", Environment = "lab", Owner = "labseat", ManagedBy = "Terraform", Purpose = "terraform-state" }
 }
 resource "aws_s3_bucket_versioning" "state" {
   bucket = aws_s3_bucket.state.id

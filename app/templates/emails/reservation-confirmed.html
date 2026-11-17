@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="vi">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>LABSEAT — Đăng kí thành công</title></head>
+<body style="margin:0;padding:0;background-color:#f1f2f4;color:#172033;font-family:Arial,Helvetica,sans-serif;">
+  <div style="display:none;max-height:0;overflow:hidden;opacity:0;">Đăng kí của bạn đã được xác nhận. Thông tin ca và mã QR check-in được gửi kèm trong email này.</div>
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color:#f1f2f4;">
+    <tr><td align="center" style="padding:16px 12px;">
+      <table role="presentation" width="700" cellspacing="0" cellpadding="0" border="0" style="width:100%;max-width:700px;background-color:#ffffff;">
+        <tr><td style="padding:20px 24px 18px;border-bottom:5px solid #253557;">
+          <table role="presentation" cellspacing="0" cellpadding="0" border="0"><tr>
+            <td width="58" style="vertical-align:middle;"><a href="{{ website }}" style="text-decoration:none;"><img src="{{ logo_url }}" width="48" height="48" alt="LABSEAT" style="display:block;border:0;border-radius:10px;"></a></td>
+            <td style="vertical-align:middle;padding-left:6px;"><a href="{{ website }}" style="font-size:20px;line-height:26px;letter-spacing:1px;font-weight:bold;color:#172033;text-decoration:none;">LABSEAT</a><br><span style="font-size:12px;line-height:20px;color:#5d6778;">Đăng kí ca thi &amp; thực hành</span></td>
+          </tr></table>
+        </td></tr>
+        <tr><td style="padding:32px 24px 16px;">
+          <h1 style="margin:0 0 30px;text-align:center;font-size:23px;line-height:32px;font-weight:normal;color:#172033;">Đăng kí {{ ticket.session_kind }} <span style="white-space:nowrap;">thành công</span></h1>
+          <p style="margin:0 0 16px;font-size:14px;line-height:23px;">Xin chào bạn,</p>
+          <p style="margin:0 0 20px;font-size:14px;line-height:23px;">Bạn đã xác nhận đăng kí <strong>{{ ticket.event_name }}</strong> trên <a href="{{ website }}" style="color:#234f96;text-decoration:underline;">LABSEAT</a>. Thông tin đăng kí của bạn:</p>
+          <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="font-size:14px;line-height:22px;">
+            <tr><td width="90" style="padding:4px 0;color:#647084;vertical-align:top;">Ngày</td><td style="padding:4px 0;">{{ date }}</td></tr>
+            <tr><td style="padding:4px 0;color:#647084;vertical-align:top;">Thời gian</td><td style="padding:4px 0;">{{ time }} <span style="color:#647084;">(giờ Việt Nam)</span></td></tr>
+            <tr><td style="padding:4px 0;color:#647084;vertical-align:top;">Phòng</td><td style="padding:4px 0;">{{ ticket.seat_code }} · {{ ticket.room_name }}</td></tr>
+          </table>
+        </td></tr>
+        <tr><td align="center" style="padding:12px 24px 24px;">
+          <p style="margin:0 0 16px;font-size:12px;line-height:20px;color:#48556c;word-break:break-all;">Mã đăng kí: {{ ticket.id }}</p>
+          <img src="{{ qr_url }}" width="184" height="184" alt="Mã QR check-in — xem thêm tệp labseat-qr.png đính kèm" style="display:block;width:184px;height:184px;max-width:100%;border:1px solid #253557;">
+          <p style="margin:16px 0 6px;font-size:14px;line-height:22px;">Xuất trình mã QR này khi check-in tại phòng.</p>
+          <p style="margin:0;font-size:12px;line-height:20px;color:#647084;">Nếu ảnh chưa hiển thị, mở tệp <strong>labseat-qr.png</strong> đính kèm.<br>Vé và trạng thái đăng kí luôn có trong tài khoản LABSEAT của bạn.</p>
+        </td></tr>
+        <tr><td style="padding:8px 24px 40px;">
+          <p style="margin:0 0 4px;font-size:14px;line-height:23px;">Trân trọng,<br><strong>LABSEAT</strong></p>
+          <p style="margin:8px 0 0;font-size:13px;line-height:22px;">Website: <a href="{{ website }}" style="color:#234f96;text-decoration:underline;word-break:break-all;">{{ website }}</a></p>
+          {% if support_email %}<p style="margin:4px 0 0;font-size:13px;line-height:22px;">Hỗ trợ: <a href="mailto:{{ support_email }}" style="color:#234f96;">{{ support_email }}</a></p>{% endif %}
+        </td></tr>
+        <tr><td align="center" style="padding:20px 24px;background-color:#253557;color:#ffffff;">
+          <p style="margin:0 0 8px;font-size:13px;line-height:21px;font-weight:bold;">LABSEAT — Hệ thống đăng kí ca thi và thực hành</p>
+          <p style="margin:0;font-size:11px;line-height:18px;color:#c5cede;">Email tự động được gửi sau khi bạn xác nhận đăng kí trên LABSEAT.<br>Vui lòng giữ riêng mã QR; vé đã huỷ không còn giá trị check-in.</p>
+        </td></tr>
+      </table>
+    </td></tr>
+  </table>
+</body>
+</html>

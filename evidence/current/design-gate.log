@@ -1,0 +1,51 @@
+gate: rounds used up; 14 FAIL open (page unchanged since the last run)
+  FAIL section-tile     div#notice "Cơ sở dữ liệu chưa sẵn sàng"  [1440]
+       the header and the first section fill 167px (0.19 screens at 1440x900; the section is 50px), shorter than the screen: the first screen shows 50px of it and 613px of the next section, its heading "Chào mừng bạn trở lại" o
+       fix: make the hero exactly one screen (height: 100svh) with its content between the nav and 24px above the fold
+  FAIL hero-screen      section#booking "Đăng kí ca thi và thực hành.Tìm ca Ca th"  [1440]
+       the hero ends at 388px on a 900px screen, 512px above the fold: it ends at the fold, 1px either way (SR-1)
+       fix: make the hero exactly one screen (height: 100svh, its content fitted inside), never taller or shorter
+  FAIL hero-screen      main#main-content > footer "LABSEAT"  [1440]
+       472px of the next section shows on the first screen (from 428px on a 900px screen): nothing below the hero shows at load (SR-1)
+       fix: end the hero at the fold so nothing of the next section shows at load (hero height: 100svh)
+  FAIL section-height   main#main-content > footer "LABSEAT"  [1440]
+       the section is 86px tall (0.1 screens), 814px short of one screen (900px): every section after the hero is one screen or two, 2px either way (SR-2)
+       fix: set the section to one screen or two (height: calc(var(--h,1) * 100vh), --h 1 or 2) and cut or split its content to fit
+  FAIL section-height   section#booking "Đăng kí ca thi và thực hành.Tìm ca Ca th"  [1440]
+       the section starts at 117px, 117px below the screen grid (0 x 900px): sections start on whole screens (SR-2)
+       fix: make every section above it exactly one or two screens tall, so this one starts on a whole screen
+  FAIL section-height   div#sessions-open  [1440]
+       scroll-snap-type: x on the <div>: sections are one or two screens by their height and padding, the scroll is the browser's own (SR-2)
+       fix: take scroll-snap-type off (html, body and every scroller): sections are one or two screens by height and padding, never snapped
+  FAIL section-height   div#sessions-soon  [1440]
+       scroll-snap-type: x on the <div>: sections are one or two screens by their height and padding, the scroll is the browser's own (SR-2)
+       fix: take scroll-snap-type off (html, body and every scroller): sections are one or two screens by height and padding, never snapped
+  FAIL section-height   div#sessions-closed  [1440]
+       scroll-snap-type: x on the <div>: sections are one or two screens by their height and padding, the scroll is the browser's own (SR-2)
+       fix: take scroll-snap-type off (html, body and every scroller): sections are one or two screens by height and padding, never snapped
+  FAIL one-section      main#main-content > footer "LABSEAT"  [1440]
+       the screen at scroll 0px (stride 0) shows 86px of section 2 beside section 1: a screen shows one section (another may peek 8px, 24px WARN) (SR-4)
+       fix: make each section exactly one screen or two, so a screen shows one section and no neighbour peeks
+  FAIL container-edges  a.skip-link "Đến nội dung chính"  [1440]
+       a <a> at the top of the page, outside header.nav, main, footer.closing and nav.actionbar (SR-6)
+       fix: build the page as header.nav, a main of sections (each one in-flow .wrap plus background layers) and footer.closing
+  FAIL container-edges  header "LABSEAT Danh sách caCa đã đăng kíCa được"  [1440]
+       a <header> at the top of the page, outside header.nav, main, footer.closing and nav.actionbar (SR-6)
+       fix: build the page as header.nav, a main of sections (each one in-flow .wrap plus background layers) and footer.closing
+  FAIL container-edges  section#booking "Đăng kí ca thi và thực hành.Tìm ca Ca th"  [1440]
+       the section needs exactly one in-flow child .wrap (it has 1 in-flow child, 0 .wrap) (and 1 more like it: "LABSEAT") (SR-6)
+       fix: build the page as header.nav, a main of sections (each one in-flow .wrap plus background layers) and footer.closing
+  FAIL container-edges  p#events-empty "Chưa có ca phù hợp."  [1440]
+       1 text block starts on a left line at x 648, 528px from the container's left: text starts on the container's left, or on one split line (x 630, 732, 834) (SR-6)
+       fix: start the text on the container's left, or on the one split line every split shares
+  FAIL container        page  [1440, 390]
+       no .wrap
+       fix: put the content in one .wrap
+  WAIVED cta section#booking: Danh mục ca phụ thuộc dữ liệu thật và chỉ cho đăng kí khi có ca mở; không thêm CTA giả vào empty state để thỏa kiểm tra landing page.
+  WAIVED copy-fact div.discovery > div.discovery-top > div > h1 "Đăng kí ca thi và thực hành.": Trang thao tác không được bịa số liệu hay địa điểm khi database chưa có ca phù hợp; đây không phải headline bán hàng.
+  WAIVED section-tile dialog#login-panel "Chào mừng bạn trở lại": Đây là hộp thoại đăng nhập vừa nội dung có focus trap, không phải một section marketing cần cao bằng màn hình.
+  WAIVED moment-none (the page): Ứng dụng đăng kí hiện có cần giữ luồng thao tác; thêm hiệu ứng trình diễn landing page nằm ngoài yêu cầu triển khai chức năng.
+  WAIVED text-only section#booking "Đăng kí ca thi và thực hành.": Empty state danh mục ca là trạng thái hợp lệ của ứng dụng; không thêm ảnh marketing vào luồng tìm ca hiện có.
+  15 WARN (not blocking), first: assets (the page); flush nav#session-types > button:nth-of-type(1; copy-buttons header > div.header-inner > nav.primary-; links section#admin-panel > div.admin-layout >; links section#admin-panel > div.admin-layout >
+Stop fixing: put these open FAILs and the waivers in your report, then finish.
+GATE: OPEN 14 (rounds used up)

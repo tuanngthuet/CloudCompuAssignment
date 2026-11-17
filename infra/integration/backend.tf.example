@@ -1,0 +1,4 @@
+# Copy to backend.tf and configure the reviewed S3 state bucket before deployment.
+terraform {
+  backend "s3" {}
+}

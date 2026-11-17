@@ -23,7 +23,6 @@ output "workload_alarm_name" {
   value       = aws_cloudwatch_metric_alarm.workload.alarm_name
 }
 
-output "scaling_policy_name" {
-  description = "Name of the Auto Scaling target tracking policy."
-  value       = aws_autoscaling_policy.request_count.name
+output "redis_log_group_arn" {
+  value = try(aws_cloudwatch_log_group.redis[0].arn, null)
 }

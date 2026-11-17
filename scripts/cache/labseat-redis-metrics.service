@@ -1,0 +1,13 @@
+[Unit]
+Description=LabSeat Redis metrics
+After=labseat-redis.service
+[Service]
+Type=oneshot
+User=labseat-redis
+Group=labseat-redis
+EnvironmentFile=/etc/labseat-cache/image.env
+ExecStart=/usr/bin/python3.12 /usr/local/libexec/labseat-cache/metrics.py
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=yes
+PrivateTmp=yes

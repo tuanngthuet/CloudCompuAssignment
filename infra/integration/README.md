@@ -1,0 +1,5 @@
+# ECS integration root
+
+Reuse reviewed outputs of bootstrap/network-stack; do not duplicate VPC/RDS/S3 resources or assume remote state is empty. One ECS EC2 ASG/cluster, API task autoscaling, capacity provider EC2 scaling, worker/publisher services, ECR, messaging, IAM, private DB/storage, optional EC2 or managed Redis. Default 100/200 rollout; bounded pools checked against rolling task budget. Exactly one ASG; private Redis EC2 demo is an individual instance, not another application ASG.
+
+[First deployment](../../docs/deployment/aws.md), [capacity](../../docs/deployment/capacity.md). Profiles: environments/demo and environments/production provide tfvars examples used as alternative settings for this same lab environment. Simultaneous demo/production installations need separate AWS accounts: names and metric namespaces are shared. Separate state alone does not prevent name collisions. First bootstrap=true creates zero desired tasks; local deploy migrates before enabling services. After success reconcile bootstrap=false and actual image digest. Never terraform apply or live AWS calls as part of repository tests.

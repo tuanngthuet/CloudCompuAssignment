@@ -1,6 +1,6 @@
 output "alb_url" {
   description = "HTTP endpoint for the LabSeat lab deployment using test data."
-  value       = "http://${aws_lb.app.dns_name}"
+  value       = "${var.acm_certificate_arn != null ? "https" : "http"}://${aws_lb.app.dns_name}"
 }
 
 output "alb_arn_suffix" {

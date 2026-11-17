@@ -4,6 +4,8 @@ provider "aws" {
 }
 module "network" {
   source             = "../../modules/network"
+  multi_az_nat       = var.multi_az_nat
+  redis_enabled      = var.redis_enabled
   project            = var.project
   environment        = var.environment
   region             = var.region

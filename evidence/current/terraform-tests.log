@@ -1,0 +1,79 @@
+
+integration
+tests/wiring.tftest.hcl... in progress
+  run "application_without_cache"... pass
+  run "application_with_cache"... pass
+  run "production_managed_cache"... pass
+  run "brevo_provider_configuration"... pass
+  run "platform_realtime_and_maintenance"... pass
+tests/wiring.tftest.hcl... tearing down
+tests/wiring.tftest.hcl... pass
+
+Success! 5 passed, 0 failed.
+
+compute
+tests/compute.tftest.hcl... in progress
+  run "private_app"... pass
+  run "optional_redis_same_compute"... pass
+  run "reject_excess_database_connections"... pass
+  run "https"... pass
+  run "reject_implicit_plain_http"... pass
+  run "first_deployment_stays_stopped"... pass
+  run "release_health_and_roles"... pass
+  run "brevo_key_only_in_worker"... pass
+tests/compute.tftest.hcl... tearing down
+tests/compute.tftest.hcl... pass
+
+Success! 8 passed, 0 failed.
+
+iam
+tests/iam.tftest.hcl... in progress
+  run "least_privilege"... pass
+  run "event_and_room_images"... pass
+  run "prefixed_event_images"... pass
+  run "reject_wildcard_prefix"... pass
+  run "separate_task_permissions"... pass
+  run "brevo_secret_is_execution_only"... pass
+tests/iam.tftest.hcl... tearing down
+tests/iam.tftest.hcl... pass
+
+Success! 6 passed, 0 failed.
+
+observability
+tests/observability.tftest.hcl... in progress
+  run "application_monitoring"... pass
+  run "redis_monitoring"... pass
+tests/observability.tftest.hcl... tearing down
+tests/observability.tftest.hcl... pass
+
+Success! 2 passed, 0 failed.
+
+cache
+tests/cache.tftest.hcl... in progress
+  run "require_compatibility_gate"... pass
+  run "private_pinned_cache"... pass
+tests/cache.tftest.hcl... tearing down
+tests/cache.tftest.hcl... pass
+
+Success! 2 passed, 0 failed.
+
+network
+tests/network.tftest.hcl... in progress
+  run "network_contract"... pass
+  run "reject_duplicate_az"... pass
+  run "reject_other_region"... pass
+  run "reject_small_cidr"... pass
+  run "optional_redis_private_paths"... pass
+  run "production_nat_per_az"... pass
+tests/network.tftest.hcl... tearing down
+tests/network.tftest.hcl... pass
+
+Success! 6 passed, 0 failed.
+
+state
+tests/state.tftest.hcl... in progress
+  run "state_protection"... pass
+tests/state.tftest.hcl... tearing down
+tests/state.tftest.hcl... pass
+
+Success! 1 passed, 0 failed.

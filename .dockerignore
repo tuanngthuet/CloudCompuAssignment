@@ -1,0 +1,12 @@
+**
+!requirements.lock
+!app/
+!app/**
+!migrations/
+!migrations/**
+!tests/
+!tests/app/
+!tests/app/*.py
+!tests/app/requirements-browser.lock
+**/__pycache__
+**/*.pyc

@@ -1,0 +1,33 @@
+[Unit]
+Description=LabSeat private Redis (queue readiness requires operator recovery)
+Wants=network-online.target
+After=network-online.target
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+User=labseat-redis
+Group=labseat-redis
+EnvironmentFile=/etc/labseat-cache/image.env
+RuntimeDirectory=labseat-cache
+RuntimeDirectoryMode=0700
+StateDirectory=labseat-redis
+StateDirectoryMode=0700
+ExecStartPre=/usr/bin/python3.12 /usr/local/libexec/labseat-cache/bootstrap.py
+ExecStart=/usr/local/bin/redis-server /run/labseat-cache/redis.conf
+Restart=on-failure
+RestartSec=10
+TimeoutStopSec=120
+UMask=0077
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=yes
+PrivateTmp=yes
+LimitCORE=0
+LogsDirectory=labseat-redis
+LogsDirectoryMode=0700
+StandardOutput=append:/var/log/labseat-redis/server.log
+StandardError=inherit
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,8 @@
+ Container labseat-db-1 Running 
+ Container labseat-db-1 Waiting 
+ Container labseat-db-1 Healthy 
+ Container labseat-migrate-run-e5016dc4b032 Creating 
+ Container labseat-migrate-run-e5016dc4b032 Created 
+{"metric":"PoolCheckedOut","value":1}
+{"metric":"PoolCheckedOut","value":0}
+LABSEAT database is at 0002_platform

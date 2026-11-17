@@ -1,0 +1,30 @@
+BEGIN
+ session_id | seat_id | count 
+------------+---------+-------
+(0 rows)
+
+ session_id | seat_id | slot | count 
+------------+---------+------+-------
+(0 rows)
+
+ id 
+----
+(0 rows)
+
+ session_id | user_id | count 
+------------+---------+-------
+(0 rows)
+
+ id 
+----
+(0 rows)
+
+ id 
+----
+(0 rows)
+
+ event_id | user_id | count 
+----------+---------+-------
+(0 rows)
+
+COMMIT

@@ -2,8 +2,8 @@ variable "region" {
   type    = string
   default = "us-east-1"
   validation {
-    condition     = var.region == "us-east-1"
-    error_message = "Contract v3 requires us-east-1."
+    condition     = contains(["us-east-1", "ap-southeast-2"], var.region)
+    error_message = "Use a supported LABSEAT region: us-east-1 or ap-southeast-2."
   }
 }
 variable "expected_account_id" {
