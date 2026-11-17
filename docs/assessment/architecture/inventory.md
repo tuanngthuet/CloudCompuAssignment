@@ -255,3 +255,27 @@ nội dung quyền. Quyền metadata không bao gồm yêu cầu đọc giá tr�
 - Bàn giao bản inventory cho nhóm, kèm blocker cụ thể; chưa đánh A1 hoàn tất.
 - A2 Hava, A3 sơ đồ/ADR và A4 bằng chứng sự cố/restore chưa được xác minh
   trong lần cập nhật này.
+
+  ### Image và vị trí ECS task — đã đối chiếu
+
+Nguồn: ecs-definition-0/1/2.json và ecs-tasks-0.json
+của run `20261117T103450Z-A1-200da2`.
+
+- API, worker và publisher đều dùng task definition revision 9.
+- Cả ba definition ghim image bằng digest; cả 4 task chạy thực tế
+  có digest trùng với cấu hình:
+
+  sha256:fe6118739b4c12b2c2f170c26601db59080144ecdbb415b70c53655041073d08
+
+- Hai API task RUNNING/HEALTHY, mỗi AZ một task.
+- IP hai API task khớp hai target ALB healthy đã thu thập.
+- Worker và publisher RUNNING tại AZ 2b, Health = UNKNOWN.
+- Worker và API tại AZ 2b cùng nằm trên một EC2;
+  publisher nằm trên EC2 khác trong AZ 2b.
+- Cả ba service dùng network mode awsvpc.
+- API, worker và publisher có task role riêng; dùng chung execution role.
+  Chưa xác minh đầy đủ nội dung quyền IAM.
+- BREVO_API_KEY chỉ xuất hiện trong danh sách secret injection của worker
+  trong ba definition đã thu thập; không đọc giá trị secret.
+- Chưa đối chiếu digest với Git commit/release.
+- Chưa kiểm thử xử lý queue/email hoặc phục hồi khi mất AZ 2b.
