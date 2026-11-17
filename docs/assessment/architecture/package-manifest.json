@@ -1,0 +1,17 @@
+{
+  "task": "A1",
+  "baseline_commit": "b29675d0e22bf76e2a4b3c91e04f1bb68193c891",
+  "prepared_at_utc": "2026-11-17T06:58:16.411875+00:00",
+  "source_review": "COMPLETED",
+  "aws_collection": "NOT_RUN",
+  "aws_blocker": "No AWS CLI or user profile available in authoring environment",
+  "hava": "NOT_RUN",
+  "acceptance": "NOT_RUN",
+  "files": {
+    "docs/assessment/architecture/README-A1.md": "93bf7aab7896b3c764cce55def5856c90f0c7e147f5eb08c1c1264676a0fa9fa",
+    "docs/assessment/architecture/collect-a1.py": "12e4cebf604204184be389854dbe82d06576321233e6a7058468a5a382f8f3e6",
+    "docs/assessment/architecture/inventory.md": "5540f46c561f1407246a7b8a01df24a9737d083844b81e2a1b68d1adfce2f9a5",
+    "docs/assessment/architecture/test-collector.py": "30982f4951f2541e9bcbf23dc6d723caa12250baf5d6b5f4b57c216cbea5f49d",
+    "docs/assessment/architecture/validation.md": "1f0db92f5bead54e05306cc0d8567aed2a52328bde51ccc15b743dcbf63e580d"
+  }
+}
