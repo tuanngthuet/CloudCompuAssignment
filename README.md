@@ -20,6 +20,7 @@ Check-in: vào **Quản lí ca → Mở check-in**. Quét QR hoặc nhập mã �
 
 ## Tài liệu
 
+- [Kế hoạch nghiệm thu 4 ngày cho 3 người](docs/sprints/ke-hoach-nghiem-thu-4-ngay.md): chia task, prompt AI, đầu ra/Git, tiêu chí hoàn thành và diễn tập tải/failover/restore.
 - [Đặc tả hệ thống chi tiết](docs/dac-ta-he-thong.md): nghiệp vụ, phân quyền, dữ liệu, API, kiến trúc và nghiệm thu.
 - [Kiến trúc](docs/architecture/current.md), [quyết định](docs/architecture/decisions.md), [bản đồ source](docs/implementation/ecs-audit.md), [hướng dẫn cho AI](docs/tu-duy-he-thong-hien-tai-cho-ai.md).
 - [AWS deployment](docs/deployment/aws.md), [capacity](docs/deployment/capacity.md), [rollback](docs/deployment/rollback.md), [event pipeline](docs/deployment/events.md).
