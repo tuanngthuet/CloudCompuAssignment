@@ -36,7 +36,7 @@ def login(data: LoginInput, request: Request, response: Response, db=DB):
 @router.post('/auth/register',status_code=201)
 def register(data: RegisterInput, request: Request, response: Response, db=DB):
     pre_auth_csrf(request)
-    result=auth.register(db,data.username,data.password,response)
+    result=auth.register(db,data.username,data.password,data.email,response)
     discard_previous_session(db,request)
     return result
 
@@ -53,6 +53,6 @@ def logout(request: Request, response: Response, db=DB):
 @router.get('/me')
 def me(request: Request, db=DB):
     user, _ = auth.authenticate(db, request)
-    return {'id':user.id, 'username':user.username, 'role':user.role, 'profile_complete':profiles.complete(user),'full_name':user.full_name,'avatar_url':profiles.avatar_url(user),'email_verified':bool(user.email_verified_at),'account_status':user.status}
+    return {'id':user.id, 'username':user.username, 'role':user.role, 'profile_complete':profiles.complete(user),'full_name':user.full_name,'avatar_url':profiles.avatar_url(user),'email_verified':bool(user.email_verified_at) and not user.pending_email,'account_status':user.status}
 
 

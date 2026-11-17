@@ -2,6 +2,11 @@
 
 Ứng dụng0.6.0, schema `0002_platform`; kiểm tra local ngày17/11/2026. Bản local tại http://localhost:8000 dùng HTTP và email mock. Các kết quả local bên dưới được chốt trước triển khai cloud. AWS đã được triển khai và kiểm chứng bước đầu: [biên bản AWS](aws-deployment.md); chưa kiểm chứng email đến inbox thật.
 
+## Cập nhật luồng tài khoản và cache ảnh
+
+- [Đăng kí/email/CCCD/mật khẩu](account-flow.md): production đã triển khai, 90 backend +39 JavaScript +5 browser checks đạt.
+- [Cache ảnh công khai](image-cache.md): cache 24 giờ theo phiên bản; dữ liệu nghiệp vụ và ảnh riêng vẫn no-store.
+
 | Phạm vi | Kết quả |
 |---|---|
 | Backend PostgreSQL/Redis/ElasticMQ | 265 passed toàn suite;14 skipped,33 botocore deprecation warnings. Auth/policy rerun22 passed sau guard token bị purge đồng thời |

@@ -1,0 +1,47 @@
+✔ late availability response never replaces the currently selected session (19.728459ms)
+✔ confirming via ticket card clears the corresponding hold panel (1.925429ms)
+✔ stopping camera while permission request is pending stops late stream (2.452653ms)
+✔ camera unsupported offers manual entry without making a check-in request (1.344398ms)
+✔ room names are rendered as text and login uses pre-login CSRF (2.09936ms)
+✔ CSV parser supports BOM, commas, multiline and escaped quotes (2.143173ms)
+✔ availability restores own held registration without renewing it (1.565146ms)
+✔ admin registrations use their own session selector independently of booking (1.588772ms)
+✔ late registrations response cannot replace a newly selected session (4.567322ms)
+✔ waiting queue hides the catalogue and map and restores without joining (4.993872ms)
+✔ expired admission disables hold even with a selected seat (1.261556ms)
+✔ late queue response cannot change the newly selected session (1.444265ms)
+✔ selecting an open session automatically restores then joins using CSRF (3.771346ms)
+✔ guest selecting a session requests login and resumes that session after identity (4.013977ms)
+✔ server expired lease automatically rejoins, local clock alone cannot create another lease (6.139216ms)
+✔ leaving clears the selected session and never automatically rejoins (4.614512ms)
+✔ switching sessions waits for an in-flight join, leaves old session, then joins new (3.81589ms)
+✔ unknown join result is checked with heartbeat before any retry (3.166955ms)
+✔ existing hold bypasses admission even after selection expires (1.665401ms)
+✔ leaving booking screen stops admission and returning does not auto rejoin (1.443756ms)
+✔ an in-flight hold prevents automatic admission changes and duplicate hold requests (3.039644ms)
+✔ ticket names and seat labels load without catalogue metadata or displaying internal codes (1.569681ms)
+✔ ticket missing metadata never falls back to UUID text (1.692131ms)
+✔ signup submits prelogin CSRF, refreshes identity and clears password fields (1.403897ms)
+✔ signup mismatch never sends account creation and preserves input (1.155629ms)
+✔ profile reads private fields and saves with authenticated CSRF (1.440788ms)
+✔ late profile save cannot refill private fields after logout (1.985454ms)
+✔ account header uses full name, avatar and default person after logout or image failure (1.122321ms)
+✔ availability polling keeps room nodes and reuses geometry until revision changes (1.850278ms)
+✔ a slow background poll does not clear the visible room list while waiting (1.672121ms)
+✔ mutation retries reuse a key after uncertain failure and new intents get new keys (1.662747ms)
+✔ camera permission errors explain recovery and release the controls (1.906427ms)
+✔ camera blocks insecure origins before requesting device access (3.438944ms)
+✔ scanned ticket fills the form and stops the stream without auto check-in (1.739818ms)
+✔ native decoder completion after stopping cannot fill a ticket (1.133397ms)
+✔ ticket lookup shows private profile and requires a separate check-in action (2.055083ms)
+✔ closed session hides check-in action but still shows ticket information (1.349459ms)
+✔ late ticket lookup never exposes the previous registrant after input changes (1.402796ms)
+✔ unverified account banner follows identity and remains hidden for guests (1.029877ms)
+ℹ tests 39
+ℹ suites 0
+ℹ pass 39
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 115.540195

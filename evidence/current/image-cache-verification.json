@@ -1,0 +1,58 @@
+{
+  "verified_at": "2026-11-17T06:08:17.658748+00:00",
+  "release": "ecs-0.6.0-image-cache-20261117T060424Z",
+  "checks": [
+    {
+      "check": "poster-version",
+      "status": 200,
+      "cache_control": "public, max-age=86400"
+    },
+    {
+      "check": "poster-unversioned",
+      "status": 200,
+      "cache_control": "no-store"
+    },
+    {
+      "check": "poster-stale",
+      "status": 200,
+      "cache_control": "no-store"
+    },
+    {
+      "check": "map-version",
+      "status": 200,
+      "cache_control": "public, max-age=86400"
+    },
+    {
+      "check": "map-unversioned",
+      "status": 200,
+      "cache_control": "no-store"
+    },
+    {
+      "check": "map-key",
+      "status": 200,
+      "cache_control": "no-store"
+    },
+    {
+      "check": "events",
+      "status": 200,
+      "cache_control": "no-store"
+    },
+    {
+      "check": "availability",
+      "status": 200,
+      "cache_control": "no-store"
+    },
+    {
+      "check": "profile-unauthenticated",
+      "status": 401,
+      "cache_control": "no-store"
+    },
+    {
+      "check": "image-error",
+      "status": 404,
+      "cache_control": "no-store"
+    }
+  ],
+  "demo_rooms": 25,
+  "demo_total_capacity": 1125
+}

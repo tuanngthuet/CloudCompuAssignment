@@ -1,0 +1,11 @@
+ Container labseat-auth-change-test-db-1 Running
+ Container labseat-auth-change-test-redis-1 Running
+ Container labseat-auth-change-test-db-1 Waiting
+ Container labseat-auth-change-test-redis-1 Waiting
+ Container labseat-auth-change-test-db-1 Healthy
+ Container labseat-auth-change-test-redis-1 Healthy
+ Container labseat-auth-change-test-run-5f3232a363c0 Creating
+ Container labseat-auth-change-test-run-5f3232a363c0 Created
+........................................................................ [ 80%]
+..................                                                       [100%]
+90 passed in 10.37s

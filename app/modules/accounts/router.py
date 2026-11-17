@@ -32,15 +32,15 @@ class TokenInput(Input):
 
 class ResetInput(TokenInput):
     model_config = ConfigDict(extra="forbid", str_strip_whitespace=False)
-    password: str = Field(min_length=12, max_length=1024)
-    password_confirm: str = Field(min_length=12, max_length=1024)
+    password: str = Field(min_length=1, max_length=1024)
+    password_confirm: str = Field(min_length=1, max_length=1024)
 
 
 class PasswordInput(Input):
     model_config = ConfigDict(extra="forbid", str_strip_whitespace=False)
     current_password: str = Field(min_length=1, max_length=1024)
-    password: str = Field(min_length=12, max_length=1024)
-    password_confirm: str = Field(min_length=12, max_length=1024)
+    password: str = Field(min_length=1, max_length=1024)
+    password_confirm: str = Field(min_length=1, max_length=1024)
 
 
 class UserUpdate(Input):

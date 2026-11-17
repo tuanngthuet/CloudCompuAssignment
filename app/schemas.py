@@ -11,8 +11,14 @@ class LoginInput(Input):
 
 class RegisterInput(LoginInput):
     username: str = Field(min_length=3, max_length=100, pattern=r'^[A-Za-z0-9][A-Za-z0-9_.-]*$')
-    password: str = Field(min_length=12, max_length=1024)
-    password_confirm: str = Field(min_length=12, max_length=1024)
+    email: str = Field(min_length=1, max_length=254)
+    password: str = Field(min_length=1, max_length=1024)
+    password_confirm: str = Field(min_length=1, max_length=1024)
+
+    @field_validator('email')
+    @classmethod
+    def valid_email(cls, value):
+        return ProfileInput.valid_email(value.strip()).lower()
 
     @model_validator(mode='after')
     def matching_passwords(self):

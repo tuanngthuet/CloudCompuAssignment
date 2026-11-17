@@ -152,6 +152,9 @@ def read_map_image(room_id: UUID, request: Request, key: str | None=None, db=DB)
     try:data=storage().get(key)
     except FileNotFoundError:raise svc.Problem(404,'not_found','Không có ảnh sơ đồ') from None
     except Exception:raise svc.Problem(503,'storage_unavailable','Không thể tải ảnh sơ đồ') from None
-    return Response(data,media_type='image/png')
+    headers = {}
+    if 'key' not in request.query_params and request.query_params.get('v') == published.rsplit('/', 1)[-1]:
+        headers['Cache-Control'] = 'public, max-age=86400'
+    return Response(data,media_type='image/png',headers=headers)
 
 

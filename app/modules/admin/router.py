@@ -30,7 +30,7 @@ def update_event(event_id: UUID, request: Request, data: str=Form(...), poster: 
 
 
 @router.get('/events/{event_id}/images/{slot}')
-def read_event_image(event_id: UUID, slot: str, db=DB):
+def read_event_image(event_id: UUID, slot: str, request: Request, db=DB):
     svc.require(slot == 'poster', 404, 'not_found', 'Không có ảnh')
     event = db.get(Event, event_id)
     key = getattr(event, slot + '_key') if event else None
@@ -39,6 +39,9 @@ def read_event_image(event_id: UUID, slot: str, db=DB):
         data = storage().get(key)
     except Exception:
         raise svc.Problem(503, 'storage_unavailable', 'Không thể đọc ảnh') from None
-    return Response(data, media_type='image/jpeg')
+    headers = {}
+    if request.query_params.get('v') == key.rsplit('/', 1)[-1]:
+        headers['Cache-Control'] = 'public, max-age=86400'
+    return Response(data, media_type='image/jpeg', headers=headers)
 
 

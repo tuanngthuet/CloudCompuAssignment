@@ -145,20 +145,23 @@ flowchart TD
 
 ## 5. Tài khoản, đăng nhập và hồ sơ
 
+Luồng hiện tại: email bắt buộc khi đăng kí và được lưu chưa xác minh; mật khẩu không rỗng, không yêu cầu tối thiểu 12 ký tự. Banner đầu trang dẫn đến `#email-verification` để gửi liên kết xác minh. Chỉ yêu cầu gửi thư khi người dùng bấm gửi liên kết; không tự gửi khi tạo tài khoản. Đổi/đặt lại mật khẩu cũng chấp nhận mật khẩu ngắn không rỗng.
+
 ### 5.1. Đăng kí tài khoản — FR-AUTH-01
 
-Khách mở `/` để nhận cookie CSRF trước đăng nhập. Form đăng kí gửi `username`, `password`, `password_confirm` cùng header `X-CSRF-Token` khớp cookie `labseat_pre_csrf`.
+Khách mở `/` để nhận cookie CSRF trước đăng nhập. Form đăng kí gửi `username`, `email`, `password`, `password_confirm` cùng header `X-CSRF-Token` khớp cookie `labseat_pre_csrf`.
 
 | Trường | Ràng buộc |
 |---|---|
 | Username | 3–100 ký tự; bắt đầu chữ/số ASCII; phần còn lại chữ/số hoặc `_`, `.`, `-`; không trùng username đã lưu |
-| Password | 12–1024 ký tự; không chỉ gồm khoảng trắng |
+| Password | 1–1024 ký tự; không chỉ gồm khoảng trắng |
+| Email đăng kí | Bắt buộc, đúng định dạng; trim+lower; không trùng email chính đã lưu; ban đầu chưa xác minh |
 | Password confirm | Khớp nguyên giá trị password |
 | Role | Server luôn tạo `student`; client không được truyền thêm role |
 
 Password không tự trim. Unique constraint giải quyết cả trường hợp hai yêu cầu đăng kí cùng username đồng thời. Thành công trả HTTP201 và tạo phiên đăng nhập; nếu request mang một phiên tài khoản trước đó thì phiên đó được loại bỏ sau khi đăng nhập tài khoản mới thành công.
 
-Đăng kí tài khoản hiện chỉ yêu cầu thông tin xác thực. Email bắt buộc ở bước **lưu hồ sơ**, không phải trường của form đăng kí tài khoản. Mật khẩu được băm bằng Argon2, không lưu plaintext.
+Đăng kí tài khoản yêu cầu username, email, mật khẩu và xác nhận mật khẩu. Email được lưu ngay nhưng chưa được xác minh; banner dẫn đến phần yêu cầu gửi liên kết xác minh. Email cũng bắt buộc khi lưu hồ sơ. Mật khẩu được băm bằng Argon2, không lưu plaintext.
 
 ### 5.2. Đăng nhập và phiên — FR-AUTH-02
 
@@ -175,12 +178,12 @@ Hồ sơ được đọc bằng GET và lưu bằng **PUT `/me/profile`**. PUT l
 | Trường | Bắt buộc khi lưu | Quy tắc |
 |---|---|---|
 | `full_name` | Không bắt buộc để lưu; cần cho ca thi | Tối đa150 ký tự; chuẩn hóa Unicode NFC và khoảng trắng; nếu có phải có chữ và không chứa ký tự điều khiển |
-| `cccd` | Không bắt buộc để lưu; cần cho ca thi | Rỗng hoặc đúng12 chữ số ASCII |
+| `cccd` | Không bắt buộc, kể cả ca thi | Rỗng hoặc đúng12 chữ số ASCII |
 | `email` | Có | 1–254 ký tự, đúng mẫu định dạng email của ứng dụng |
 | `phone` | Không | Có thể rỗng; nhận khoảng trắng, dấu cách số, ngoặc, chấm/gạch; đổi `+84` thành `0`, sau chuẩn hóa phải là10 chữ số bắt đầu0 |
 | Avatar | Không | Lưu qua API ảnh riêng |
 
-`profile_complete = bool(full_name and cccd and (email or pending_email))` chỉ mô tả đủ thông tin; không thay thế `email_verified`. Mọi ca đều yêu cầu email đã xác minh trước queue join, hold và confirm mới. Ca thi còn yêu cầu họ tên và CCCD; điện thoại/avatar tùy chọn. API kiểm lại trong transaction, trả409 `profile_required` hoặc `email_verification_required`.
+`profile_complete = bool(full_name and (email or pending_email))` chỉ mô tả đủ thông tin; không thay thế `email_verified`. Mọi ca đều yêu cầu email đã xác minh trước queue join, hold và confirm mới. Ca thi còn yêu cầu họ tên; CCCD/điện thoại/avatar tùy chọn. API kiểm lại trong transaction, trả409 `profile_required` hoặc `email_verification_required`.
 
 Email chuẩn hóa trim+lower; không gộp dấu chấm hoặc dấu cộng của Gmail. Email chính khác rỗng unique theo lower(btrim(email)); CCCD khác rỗng unique. Pending email chưa chiếm quyền sở hữu địa chỉ; nhiều tài khoản có thể yêu cầu cùng địa chỉ nhưng chỉ tài khoản xác minh thành công đầu tiên nhận được nó. CCCD đúng định dạng chưa chứng minh danh tính ngoài đời.
 
@@ -676,7 +679,7 @@ Framework cung cấp thêm `/docs/oauth2-redirect` và HEAD cho các route tài 
 
 | Method | Path | Quyền | Input/kết quả chính |
 |---|---|---|---|
-| POST | `/auth/register` | Pre-CSRF | username/password/password_confirm →201, user identity, role, CSRF và cookies |
+| POST | `/auth/register` | Pre-CSRF | username/email/password/password_confirm →201, user identity, role, CSRF và cookies |
 | POST | `/auth/login` | Pre-CSRF | username/password →user identity, role, CSRF và cookies |
 | POST | `/auth/logout` | User+CSRF | Hủy phiên hiện tại |
 | GET | `/me` | User | id, username, role, profile_complete, full_name, avatar_url; không trả toàn bộ hồ sơ |
@@ -1008,7 +1011,7 @@ Maintenance áp dụng retention/purge theo từng loại dữ liệu; pending k
 |---|---|---|
 | AC-01 | Hai đăng kí cùng username đồng thời: chỉ một user, response còn lại conflict | test_registration.py |
 | AC-02 | Student không gọi được API admin; ghi thiếu/sai CSRF bị từ chối | test_db.py, test_checkin_control.py và tests auth/profile |
-| AC-03 | Lưu hồ sơ thiếu email bị từ chối; phone rỗng hợp lệ; ca thi thiếu full_name/cccd/email bị chặn | test_profiles.py |
+| AC-03 | Lưu hồ sơ thiếu email bị từ chối; phone rỗng hợp lệ; ca thi thiếu full_name/email bị chặn; CCCD rỗng vẫn hợp lệ | test_profiles.py |
 | AC-04 | Hold cuối phòng bị tranh chấp: số reservation hiệu lực không vượt capacity | test_db.py, test_image_maps_db.py |
 | AC-05 | Một người/nhiều request/phòng không có hai đăng kí hiệu lực cùng lịch | test_booking_concurrency.py |
 | AC-06 | Confirm sau hold expiry/close_at thất bại; retry confirm không đổi mã vé | test_db.py, tests booking |

@@ -5,7 +5,7 @@ from datetime import timedelta
 from argon2 import PasswordHasher
 from argon2.exceptions import VerificationError, InvalidHashError
 from fastapi import Request
-from sqlalchemy import select
+from sqlalchemy import select, func
 from sqlalchemy.exc import IntegrityError
 from app.models import User, LoginSession
 from app.modules.booking.service import now, require
@@ -64,16 +64,22 @@ def create_session(db, user, response):
 
 
 
-def register(db, username, password, response):
+def register(db, username, password, email, response):
     require(db.scalar(select(User.id).where(User.username==username)) is None,
             409,'username_taken','Tên tài khoản đã tồn tại.')
-    user=User(username=username,password_hash=hasher.hash(password),role='student')
+    from app.modules.accounts.service import normalize_email
+    email=normalize_email(email)
+    require(db.scalar(select(User.id).where(func.lower(func.btrim(User.email))==email)) is None,
+            409,'email_taken','Email đã được sử dụng cho tài khoản khác.')
+    user=User(username=username,password_hash=hasher.hash(password),email=email,role='student')
     try:
         with db.begin_nested():
             db.add(user)
             db.flush()
     except IntegrityError as exc:
         # The unique constraint also resolves two simultaneous registrations.
+        if getattr(getattr(exc.orig,'diag',None),'constraint_name',None)=='uq_users_email':
+            raise Problem(409,'email_taken','Email đã được sử dụng cho tài khoản khác.') from None
         if getattr(getattr(exc.orig,'diag',None),'constraint_name',None)=='users_username_key':
             raise Problem(409,'username_taken','Tên tài khoản đã tồn tại.') from None
         raise

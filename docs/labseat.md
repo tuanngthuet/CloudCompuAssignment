@@ -10,7 +10,7 @@ Chạy các lệnh trong [README](../README.md). Docker Compose cung cấp app, 
 
 ## Tài khoản và hồ sơ
 
-Đăng kí tài khoản, đăng nhập, mở Tài khoản để chỉnh hồ sơ. Email bắt buộc khi lưu; điện thoại tùy chọn, có nhập phải hợp lệ. Ca thi yêu cầu họ tên, CCCD 12 chữ số và email trước khi vào hàng chờ, giữ suất hoặc xác nhận. Ca thực hành không áp điều kiện hồ sơ ca thi. Email/CCCD/điện thoại chỉ hiển thị cho chủ tài khoản và quản trị khi tra cứu vé.
+Đăng kí tài khoản phải nhập email hợp lệ; mật khẩu không rỗng, không yêu cầu tối thiểu 12 ký tự. Tài khoản chưa xác minh hiển thị banner dẫn đến phần gửi liên kết xác minh email; không tự gửi email khi chỉ tạo tài khoản. Mở Tài khoản để chỉnh hồ sơ. Email bắt buộc khi lưu; điện thoại và CCCD tùy chọn, có nhập phải hợp lệ. Ca thi yêu cầu họ tên và email đã xác minh trước khi vào hàng chờ, giữ suất hoặc xác nhận; để trống CCCD vẫn được đăng kí. Ca thực hành không áp điều kiện hồ sơ ca thi. Email/CCCD/điện thoại chỉ hiển thị cho chủ tài khoản và quản trị khi tra cứu vé.
 
 Ảnh đại diện nhận JPEG/PNG/WebP tối đa 5 MB, chuẩn hóa thành JPEG vuông 256×256. Menu tài khoản hiển thị ảnh/họ tên hoặc tên tài khoản, hỗ trợ bàn phím và đóng bằng Escape. API hồ sơ: GET/PUT `/me/profile`; ảnh: GET/POST/DELETE `/me/avatar`. Mọi thao tác ghi cần phiên đăng nhập và CSRF.
 

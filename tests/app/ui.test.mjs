@@ -269,19 +269,19 @@ test('ticket missing metadata never falls back to UUID text',async()=>{
 
 test('signup submits prelogin CSRF, refreshes identity and clears password fields',async()=>{
   const h=await harness();
-  h.nodes.register.fields={username:'new-user',password:'new-password-123',password_confirm:'new-password-123'};
+  h.nodes.register.fields={username:'new-user',email:'new-user@example.test',password:'short',password_confirm:'short'};
   await h.nodes.register.onsubmit();
   const request=h.requests.find(r=>r.path==='/auth/register');
   assert.equal(request.headers['X-CSRF-Token'],'pre-value');
-  assert.deepEqual(JSON.parse(request.body),{username:'new-user',password:'new-password-123',password_confirm:'new-password-123'});
+  assert.deepEqual(JSON.parse(request.body),{username:'new-user',email:'new-user@example.test',password:'short',password_confirm:'short'});
   assert.deepEqual(h.nodes.register.fields,{});
   assert.equal(h.nodes['register-submit'].disabled,false);
-  assert.equal(h.nodes.notice.textContent,'Đã tạo tài khoản.');
+  assert.equal(h.nodes.notice.textContent,'Đã tạo tài khoản. Xác minh email để đăng kí ca.');
 });
 
 test('signup mismatch never sends account creation and preserves input',async()=>{
   const h=await harness();
-  h.nodes.register.fields={username:'new-user',password:'new-password-123',password_confirm:'different-password'};
+  h.nodes.register.fields={username:'new-user',email:'new-user@example.test',password:'short',password_confirm:'different-password'};
   await h.nodes.register.onsubmit();
   assert.equal(h.requests.some(r=>r.path==='/auth/register'),false);
   assert.equal(h.nodes.notice.textContent,'Mật khẩu chưa khớp.');
@@ -441,4 +441,15 @@ test('late ticket lookup never exposes the previous registrant after input chang
   await h.nodes['checkin-form'].onsubmit();resolveOld(inspectedTicket(old,true,false,'Người cũ'));await pending;
   assert.ok(h.nodes['checkin-profile-info'].children.some(n=>n.textContent==='Người mới'));
   assert.equal(h.nodes['checkin-profile-info'].children.some(n=>n.textContent==='Người cũ'),false);
+});
+
+
+test('unverified account banner follows identity and remains hidden for guests',async()=>{
+  const h=await harness();
+  h.run("me={id:'u1',username:'student',email_verified:false};renderAccount()");
+  assert.equal(h.nodes['email-verification-banner'].hidden,false);
+  h.run('me.email_verified=true;renderAccount()');
+  assert.equal(h.nodes['email-verification-banner'].hidden,true);
+  h.run('me=null;renderAccount()');
+  assert.equal(h.nodes['email-verification-banner'].hidden,true);
 });

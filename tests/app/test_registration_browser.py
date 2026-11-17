@@ -15,7 +15,7 @@ pw = pytest.importorskip('playwright.sync_api')
 @pytest.mark.parametrize('width,height', [(1440,900), (1024,768), (768,1024), (390,844), (320,740)])
 def test_registration_real_http_password_errors_session_and_login(width, height):
     username = 'new-user-' + uuid.uuid4().hex[:12]
-    password = 'browser-signup-password'
+    password = 'short'
     with pw.sync_playwright() as p:
         browser = p.chromium.launch(executable_path=os.getenv('BROWSER_EXECUTABLE') or None)
         context = browser.new_context(viewport={'width':width, 'height':height})
@@ -41,6 +41,7 @@ def test_registration_real_http_password_errors_session_and_login(width, height)
             pw.expect(page.locator('#login')).to_be_visible()
             page.locator('#show-register').click()
             form.locator('[name=username]').fill(username)
+            form.locator('[name=email]').fill(username+'@example.test')
             form.locator('[name=password]').fill(password)
             form.locator('[name=password_confirm]').fill(password + 'mismatch')
             page.locator('#register-submit').click()
@@ -56,19 +57,29 @@ def test_registration_real_http_password_errors_session_and_login(width, height)
             page.locator('#register-submit').click()
             pw.expect(page.locator('#login-panel')).to_be_hidden()
             pw.expect(page.locator('#identity')).to_have_text(username)
+            pw.expect(page.locator('#email-verification-banner')).to_be_visible()
+            if shot_dir:
+                page.screenshot(path=str(Path(shot_dir) / f'unverified-banner-{width}.png'))
             pw.expect(page.locator('#tickets-link')).to_be_visible()
             pw.expect(page.locator('#admin-link')).to_be_hidden()
             assert context.request.get(BASE + '/me').json()['username'] == username
             assert form.locator('[name=password]').input_value() == ''
+            page.locator('#email-verification-banner a').click()
+            pw.expect(page.locator('#profile-panel')).to_be_visible()
+            pw.expect(page.locator('#verify-email')).to_be_visible()
+            pw.expect(page.locator('#profile-form [name=email]')).to_have_value(username+'@example.test')
+            assert not page.locator('#profile-form [name=cccd]').evaluate('(e)=>e.required')
             page.locator('#tickets-link').click()
             pw.expect(page.locator('#tickets-panel')).to_be_visible()
             page.locator('#account-toggle').click();page.locator('#logout').click()
             pw.expect(page.locator('#login-link')).to_be_visible()
+            pw.expect(page.locator('#email-verification-banner')).to_be_hidden()
             assert context.request.get(BASE + '/me').status == 401
             if not page.locator('#login-panel').is_visible():
                 page.locator('#login-link').click()
             page.locator('#show-register').click()
             form.locator('[name=username]').fill(username)
+            form.locator('[name=email]').fill(username+'@example.test')
             form.locator('[name=password]').fill(password)
             form.locator('[name=password_confirm]').fill(password)
             page.locator('#register-submit').click()

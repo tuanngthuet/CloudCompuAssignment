@@ -149,8 +149,8 @@ def test_reset_revokes_all_sessions_and_token_replay(data):
         payload = {
             "challenge_id": str(c.id),
             "token": challenge_token(c),
-            "password": "new-password-1234",
-            "password_confirm": "new-password-1234",
+            "password": "short",
+            "password_confirm": "short",
         }
     guest = TestClient(app)
     guest.get("/")
@@ -172,8 +172,8 @@ def test_change_password_rotates_current_and_revokes_other(data):
         "/auth/password/change",
         json={
             "current_password": "current-password",
-            "password": "new-password-1234",
-            "password_confirm": "new-password-1234",
+            "password": "short",
+            "password_confirm": "short",
         },
     )
     assert response.status_code == 200

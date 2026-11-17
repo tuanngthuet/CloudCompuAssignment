@@ -27,7 +27,7 @@ def test_profile_exam_gate_resume_and_persistence(width,height):
             response=admin.request.post(BASE+'/admin/rooms/'+e['schedule']['room_id']+'/seats',data={'seat_code':'A01'},headers=headers);assert response.ok,response.text()
             page.goto(BASE+'/');page.locator('#login-link').click();page.locator('#show-register').click()
             form=page.locator('#register');username='profile-'+uuid.uuid4().hex[:10]
-            form.locator('[name=username]').fill(username);form.locator('[name=password]').fill('profile-browser-password');form.locator('[name=password_confirm]').fill('profile-browser-password');page.locator('#register-submit').click()
+            form.locator('[name=username]').fill(username);form.locator('[name=email]').fill(username+'@example.test');form.locator('[name=password]').fill('profile-browser-password');form.locator('[name=password_confirm]').fill('profile-browser-password');page.locator('#register-submit').click()
             pw.expect(page.locator('#login-panel')).to_be_hidden()
             page.locator('#session-grid').get_by_role('button',name='Xem Ca thi · '+name,exact=True).click();page.locator('#event-session-list button').click()
             pw.expect(page.locator('#profile-panel')).to_be_visible();pw.expect(page.locator('#profile-status')).to_have_text('Cần bổ sung thông tin')
@@ -38,18 +38,18 @@ def test_profile_exam_gate_resume_and_persistence(width,height):
             def shot(name):
                 if folder:Path(folder).mkdir(parents=True,exist_ok=True);page.screenshot(path=str(Path(folder)/f'{name}-{width}.png'),full_page=True)
             shot('profile-required')
-            profile.locator('[name=full_name]').fill('Nguyễn Văn An');profile.locator('[name=cccd]').fill('012345678901');profile.locator('[name=email]').fill('an@example.test')
+            profile.locator('[name=full_name]').fill('Nguyễn Văn An');profile.locator('[name=cccd]').fill('012345678901');profile.locator('[name=email]').fill(username+'@example.test')
             # Phone deliberately remains empty; email is mandatory.
             page.locator('#profile-save').click()
             pw.expect(page.locator('#booking-map')).to_be_visible();pw.expect(page.locator('#session')).to_have_value(e['schedule']['id'])
             page.locator('#seats button').first.click();page.locator('#hold-selected').click();pw.expect(page.locator('#hold-panel')).to_be_visible();page.locator('#confirm').click();pw.expect(page.locator('#hold-panel')).to_be_hidden()
             page.locator('#account-toggle').click();page.locator('#profile-link').click();pw.expect(profile.locator('[name=full_name]')).to_have_value('Nguyễn Văn An');pw.expect(page.locator('#profile-status')).to_have_text('Đã đủ thông tin')
             shot('profile-complete')
-            profile.locator('[name=email]').fill('an@example.test');page.locator('#profile-save').click();pw.expect(page.locator('#profile-message')).to_have_text('Đã lưu hồ sơ.')
-            page.reload();pw.expect(profile.locator('[name=email]')).to_have_value('an@example.test');pw.expect(profile.locator('[name=cccd]')).to_have_value('012345678901')
+            profile.locator('[name=email]').fill(username+'@example.test');page.locator('#profile-save').click();pw.expect(page.locator('#profile-message')).to_have_text('Đã lưu hồ sơ.')
+            page.reload();pw.expect(profile.locator('[name=email]')).to_have_value(username+'@example.test');pw.expect(profile.locator('[name=cccd]')).to_have_value('012345678901')
             assert page.evaluate('document.documentElement.scrollWidth<=innerWidth')
             profile.locator('[name=phone]').fill('');page.locator('#profile-save').click();pw.expect(page.locator('#profile-status')).to_have_text('Đã đủ thông tin')
-            page.reload();pw.expect(profile.locator('[name=phone]')).to_have_value('');pw.expect(profile.locator('[name=email]')).to_have_value('an@example.test')
+            page.reload();pw.expect(profile.locator('[name=phone]')).to_have_value('');pw.expect(profile.locator('[name=email]')).to_have_value(username+'@example.test')
             page.locator('#account-toggle').click();page.locator('#logout').click();pw.expect(page.locator('#login-link')).to_be_visible()
             assert profile.locator('[name=cccd]').input_value()==''
             assert context.request.get(BASE+'/me/profile').status==401

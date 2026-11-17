@@ -43,7 +43,7 @@
   });
   function navigate(focus = false) {
     const target = location.hash.slice(1) || 'booking';
-    let screen = adminIds.has(target) ? 'admin-panel' : target;
+    let screen = target === 'email-verification' ? 'profile-panel' : adminIds.has(target) ? 'admin-panel' : target;
     let promptLogin = target === 'login-panel' && !authenticated;
     if (target === 'login-panel') screen = currentScreen;
     if (!screens.some(node => node.id === screen)) screen = 'booking';
@@ -83,6 +83,10 @@
       window.scrollTo({top:0, behavior:'instant'});
     }
     if(previousScreen!==screen)window.dispatchEvent(new CustomEvent('labseat-screen',{detail:screen}));
+    if(target==='email-verification'&&authenticated){
+      const verification=document.getElementById('email-verification');
+      verification.focus({preventScroll:true});verification.scrollIntoView({block:'center'});
+    }
     if (screen !== 'staff-panel' && (screen !== 'admin-panel' || adminView !== 'checkin-form')) stopCamera();
   }
   document.getElementById('close-login').addEventListener('click', closeLogin);

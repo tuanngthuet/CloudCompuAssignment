@@ -27,7 +27,7 @@ def reset(execute=False, password=None):
     with Session.begin() as db:
         counts={table:db.scalar(text(f'SELECT count(*) FROM {table}')) for table in TABLES}
         if not execute:return counts
-        if not password or len(password)<12 or not password.strip():raise ValueError('Mật khẩu admin tối thiểu 12 ký tự')
+        if not password or not password.strip():raise ValueError('Mật khẩu admin không được để trống')
         encoded=hasher.hash(password)
         policy=db.get(QueueSettings,1,with_for_update=True)
         # Clear only this application's queue keys; never FLUSHDB.

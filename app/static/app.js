@@ -32,6 +32,7 @@ function button(text, fn) {const b=document.createElement('button');b.textConten
 function line(parent,text,tag='p'){const e=document.createElement(tag);e.textContent=text;parent.append(e);return e;}
 function values(form) {return Object.fromEntries(new FormData(form));}
 function renderAccount(){
+  $('email-verification-banner').hidden=!me||me.email_verified!==false;
   $('identity').textContent=me?(me.full_name||me.username):'';
   $('account-toggle').hidden=!me;$('account-menu').hidden=true;$('account-toggle').setAttribute('aria-expanded','false');
   const url=me?.avatar_url||'/static/user-default.svg';
@@ -118,7 +119,7 @@ $('register').onsubmit=action(async()=>{
   $('register-submit').disabled=true;
   try{
     await api('/auth/register','POST',data);
-    form.reset();await identity();await catalogue();notice('Đã tạo tài khoản.');
+    form.reset();await identity();await catalogue();notice('Đã tạo tài khoản. Xác minh email để đăng kí ca.');
   }finally{$('register-submit').disabled=false;}
 });
 async function loadProfile(){
@@ -130,7 +131,8 @@ async function loadProfile(){
     const data=await api('/me/profile');if(revision!==profileRevision||!me)return;me.email_verified=data.email_verified;window.dispatchEvent(new CustomEvent('labseat-profile',{detail:data}));
     me.full_name=data.full_name;me.avatar_url=data.avatar_url;renderAccount();
     for(const key of fields)$('profile-form').elements[key].value=data[key]||'';
-    for(const key of ['full_name','cccd'])$('profile-form').elements[key].required=!!pendingProfileSession;
+    $('profile-form').elements.full_name.required=!!pendingProfileSession;
+    $('profile-form').elements.cccd.required=false;
     $('profile-form').elements.email.required=true;$('profile-form').elements.phone.required=false;
     $('profile-status').textContent=data.profile_complete?'Đã đủ thông tin':'Cần bổ sung thông tin';
     $('profile-status').dataset.complete=String(data.profile_complete);
@@ -140,7 +142,7 @@ async function loadProfile(){
 }
 async function openExamProfile(id){
   await exitQueue();pendingProfileSession=id;location.hash='#profile-panel';
-  notice(me?.email_verified===false?'Lưu hồ sơ và xác minh email trước khi đăng kí.':'Bổ sung họ tên, CCCD và email để đăng kí ca thi.');
+  notice(me?.email_verified===false?'Xác minh email trước khi đăng kí.':'Bổ sung họ tên và email để đăng kí ca thi.');
 }
 async function startRegistration(id,type){
   if(me?.email_verified===false||(me?.profile_complete===false&&type==='exam')){await openExamProfile(id);return;}

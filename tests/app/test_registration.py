@@ -28,7 +28,7 @@ def migrate():
 
 def payload(**changes):
     return dict(username='signup-' + uuid.uuid4().hex, password='  local-signup-password  ',
-                password_confirm='  local-signup-password  ') | changes
+                password_confirm='  local-signup-password  ', email=uuid.uuid4().hex+'@example.test') | changes
 
 
 def signup(client, data):
@@ -82,7 +82,8 @@ def test_duplicate_username_does_not_change_account_or_session():
 @pytest.mark.parametrize('changes', [
     dict(username='ab'), dict(username='bad name'), dict(username='bad/name'),
     dict(username=' user'), dict(username='a' * 101),
-    dict(password='short', password_confirm='short'),
+    dict(password='', password_confirm=''),
+    dict(email=''), dict(email='bad-email'), dict(email='a@b.test\nBcc:x@y.test'),
     dict(password=' ' * 12, password_confirm=' ' * 12),
     dict(password_confirm='not-the-same-password'), dict(role='admin'),
 ])
@@ -131,3 +132,58 @@ def test_signup_replaces_previous_authenticated_session():
         assert client.get('/me').json()['username'] == new['username']
         with Session() as db:
             assert db.scalar(select(LoginSession).where(LoginSession.token_hash == digest(previous))) is None
+
+
+@pytest.mark.parametrize('password', ['x', 'short', 'a b'])
+def test_short_password_and_signup_email_are_saved_unverified(password):
+    data=payload(password=password,password_confirm=password)
+    data['email']='  '+data['email'].upper()+'  '
+    with TestClient(app) as client:
+        assert signup(client,data).status_code==201
+        assert client.get('/me').json()['email_verified'] is False
+        profile=client.get('/me/profile').json()
+        assert profile['email']==data['email'].strip().lower()
+        assert profile['pending_email'] is None
+        assert profile['cccd']==''
+        response=client.post('/auth/email-verification/request',headers={'X-CSRF-Token':client.cookies['labseat_csrf']})
+        assert response.status_code==202,response.text
+        from app.models import AuthChallenge
+        from app.modules.accounts.service import challenge_token
+        with Session() as db:
+            user=db.scalar(select(User).where(User.username==data['username']))
+            challenge=db.scalar(select(AuthChallenge).where(AuthChallenge.user_id==user.id,AuthChallenge.purpose=='verify',AuthChallenge.consumed_at.is_(None)))
+            confirmation={'challenge_id':str(challenge.id),'token':challenge_token(challenge)}
+        response=client.post('/auth/email-verification/confirm',json=confirmation,headers={'X-CSRF-Token':client.cookies['labseat_pre_csrf']})
+        assert response.status_code==200,response.text
+        assert client.get('/me').json()['email_verified'] is True
+
+
+def test_registration_requires_email():
+    data=payload();data.pop('email')
+    with TestClient(app) as client:
+        assert signup(client,data).status_code==422
+
+
+def test_duplicate_normalized_email_preserves_existing_account_and_session():
+    data=payload()
+    with TestClient(app) as client:
+        assert signup(client,data).status_code==201
+        token=client.cookies['labseat_session']
+        duplicate=payload(email=' '+data['email'].upper()+' ')
+        response=signup(client,duplicate)
+        assert response.status_code==409 and response.json()['code']=='email_taken'
+        assert client.cookies['labseat_session']==token
+        assert client.get('/me').json()['username']==data['username']
+
+
+def test_concurrent_registration_same_email_is_atomic():
+    first=payload();second=payload(email=first['email'])
+    barrier=Barrier(2)
+    def attempt(data):
+        with TestClient(app) as client:
+            client.get('/');barrier.wait(timeout=10)
+            return client.post('/auth/register',json=data,headers={'X-CSRF-Token':client.cookies['labseat_pre_csrf']})
+    with ThreadPoolExecutor(max_workers=2) as pool:
+        responses=list(pool.map(attempt,[first,second]))
+    assert sorted(r.status_code for r in responses)==[201,409], [r.text for r in responses]
+    assert next(r for r in responses if r.status_code==409).json()['code']=='email_taken'

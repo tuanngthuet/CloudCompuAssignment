@@ -109,10 +109,10 @@ def eligible(db, user_id, lab):
     )
     if event and event.session_type == "exam":
         require(
-            bool(user.full_name and user.cccd and (user.email or user.pending_email)),
+            bool(user.full_name and (user.email or user.pending_email)),
             409,
             "profile_required",
-            "Bổ sung họ tên, CCCD và email để đăng kí ca thi.",
+            "Bổ sung họ tên và email để đăng kí ca thi.",
         )
     require(
         bool(user.email and user.email_verified_at),

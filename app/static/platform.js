@@ -7,7 +7,7 @@
   formAction('password-change',async(f,status)=>{await api('/auth/password/change','POST',values(f));f.reset();status.textContent='Đã đổi mật khẩu và thu hồi các phiên khác.';await identity();});
   const statusLabels={PENDING:'Đang chờ',SENDING:'Đang gửi',ACCEPTED:'Brevo đã tiếp nhận',DELIVERED:'Đã giao thư',DEFERRED:'Tạm hoãn',SOFT_BOUNCE:'Tạm thời chưa giao được',HARD_BOUNCE:'Địa chỉ bị từ chối',BLOCKED:'Bị chặn',COMPLAINT:'Có phản ánh spam',UNKNOWN:'Cần đối chiếu kết quả gửi',FAILED:'Gửi lỗi',SKIPPED:'Không gửi'};
   $('verify-email').onclick=action(async()=>{const b=$('verify-email');if(b.disabled)return;b.disabled=true;try{await api('/auth/email-verification/request','POST');$('email-verification-status').textContent='Đã xếp hàng gửi liên kết xác minh. Kiểm tra hộp thư và thư rác.';}finally{b.disabled=false;}});
-  window.addEventListener('labseat-profile',e=>{$('email-verification-status').textContent=e.detail.email_verified?'Email đã xác minh.':'Email chưa xác minh. Lưu hồ sơ rồi gửi liên kết xác minh.';$('verify-email').hidden=e.detail.email_verified;});
+  window.addEventListener('labseat-profile',e=>{$('email-verification-banner').hidden=!me||e.detail.email_verified;$('email-verification-status').textContent=e.detail.email_verified?'Email đã xác minh.':'Email chưa xác minh. Bấm gửi liên kết, sau đó mở email để xác nhận. Nếu chưa có email, hãy lưu email trong hồ sơ trước.';$('verify-email').hidden=e.detail.email_verified;});
   let challenge=null;
   function parseAuthLink(){
     if(!location.hash.startsWith('#auth-action?'))return;

@@ -1,0 +1,12 @@
+{
+  "verified_at": "2026-11-17T06:30:29.188272+00:00",
+  "release": "ecs-0.6.0-account-flow-20261117T062419Z",
+  "registration_email_required": true,
+  "password_min_length": 1,
+  "cccd_optional_ui": true,
+  "unverified_banner_link": true,
+  "banner_hidden_for_guest_and_after_logout": true,
+  "browser_console_errors": [],
+  "production_accounts_created": 0,
+  "verification_emails_sent": 0
+}

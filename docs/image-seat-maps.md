@@ -31,4 +31,6 @@ Nhận diện dùng OpenCV headless và NumPy, pin trong requirements. Phân tí
 
 ## Cập nhật số suất khi đang chọn
 
+Ảnh sơ đồ đã công bố và ảnh đại diện ca dùng cache trình duyệt 24 giờ (`Cache-Control: public, max-age=86400`) khi tham số `v` khớp tên file của ảnh hiện tại. URL do ứng dụng tạo đã có phiên bản; thay ảnh sẽ đổi URL. URL không có/sai phiên bản, ảnh preview qua tham số `key`, response lỗi và dữ liệu nghiệp vụ vẫn `no-store`. Cache chỉ áp dụng nội dung ảnh, không áp dụng số suất còn lại hoặc JSON sơ đồ; lần tải đầu vẫn đọc S3 qua API, không dùng Redis cache ảnh.
+
 Số suất vẫn được cập nhật nền. Ảnh, SVG và các nút danh sách giữ nguyên khi chỉ thay số suất/trạng thái/lựa chọn; không tải lại cả sơ đồ mỗi 5 giây. API `/lab-sessions/{id}/seats` trả thêm `layout_revision`; geometry chỉ tải lại khi đổi ca hoặc revision thay đổi. Nếu một phòng thật sự hết suất, lựa chọn phòng đó sẽ bị bỏ để tránh thao tác dựa trên dữ liệu cũ. Xem [kiểm thử](testing/concurrency.md).

@@ -32,8 +32,8 @@ def main():
     if args.command=='seed' and os.getenv('APP_ENV','local') not in ('local','test'):
         parser.error('Seed is restricted to local/test')
     password=os.getenv('SEED_PASSWORD') or getpass.getpass('Password (not recorded): ')
-    if len(password)<12:
-        parser.error('Password needs at least 12 characters')
+    if not password.strip():
+        parser.error('Password must not be empty')
     with Session.begin() as db:
         if args.command=='create-user':
             if not args.username:

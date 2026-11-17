@@ -4,7 +4,7 @@ from sqlalchemy import select
 from app.errors import Problem
 
 def complete(user):
-    return bool(user and user.full_name and user.cccd and (user.email or user.pending_email))
+    return bool(user and user.full_name and (user.email or user.pending_email))
 
 def avatar_url(user):
     return '/me/avatar?v='+user.avatar_key.rsplit('/',1)[-1] if user.avatar_key else None

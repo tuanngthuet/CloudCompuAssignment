@@ -40,7 +40,7 @@ async def request_context(request, call_next):
     if os.getenv('COOKIE_SECURE','false').lower()=='true':response.headers['Strict-Transport-Security']='max-age=31536000'
     response.headers['X-Request-ID'] = request.state.request_id
     response.headers['X-Content-Type-Options'] = 'nosniff'
-    response.headers['Cache-Control'] = 'no-store'
+    response.headers.setdefault('Cache-Control', 'no-store')
     response.headers['Content-Security-Policy'] = "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: blob:; connect-src 'self'; frame-ancestors 'none'"
     from .infrastructure.observability.metrics import emit
     path = request.url.path
