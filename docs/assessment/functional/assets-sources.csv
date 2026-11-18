@@ -1,0 +1,34 @@
+asset_id,source,license_note,width,height,zones,processing
+map-01,app/assessment_seed.py,Original synthetic drawing based on user-provided SPT demo reference,1096,752,4,Generated raster with configured booking polygons
+map-02,app/assessment_seed.py,Original synthetic drawing based on user-provided SPT demo reference,1096,752,6,Generated raster with configured booking polygons
+map-03,app/assessment_seed.py,Original synthetic drawing based on user-provided SPT demo reference,1096,752,8,Generated raster with configured booking polygons
+map-04,app/assessment_seed.py,Original synthetic drawing based on user-provided SPT demo reference,1096,752,4,Generated raster with configured booking polygons
+map-05,app/assessment_seed.py,Original synthetic drawing based on user-provided SPT demo reference,1096,752,6,Generated raster with configured booking polygons
+map-06,app/assessment_seed.py,Original synthetic drawing based on user-provided SPT demo reference,1096,752,8,Generated raster with configured booking polygons
+hsa-exam-01,hsa_room.jpg (user attachment),User-provided image for Exam 01 demo,2048,1137,4,Marked four rectangles P.002 through P.005
+hsa-exam-01-poster,hsa-hcm.jpg (user attachment),User-provided VNU-HCM assessment artwork for Exam 01 demo,1280,720,0,Centered full artwork on a 16:9 blue backdrop
+ielts-exam-02,IETLS.webp (user attachment),User-provided image for Exam 02 demo,1080,834,5,Aligned five selectable rectangles for P.1 through P.5
+ielts-exam-02-poster,IELTS.jpg (user attachment),User-provided IELTS artwork for Exam 02 demo,1280,720,0,Centered complete artwork on a 16:9 white canvas
+tsa-exam-03,tsa-room.png (user attachment),User-provided TSA room map for Exam 03 demo,1500,947,12,Aligned twelve selectable rectangles for P.36 through P.47
+tsa-exam-03-poster,tsa.png (user attachment),User-provided TSA artwork for Exam 03 demo,1280,720,0,Centered complete artwork on a 16:9 white canvas
+sat-exam-04,SAT-room.png (user attachment),User-provided SAT room map for Exam 04 demo,1200,760,11,Aligned eleven selectable numbered room rectangles
+sat-exam-04-poster,SAT.jpg (user attachment),User-provided SAT artwork for Exam 04 demo,1280,720,0,Center crop of blue background retaining full SAT mark
+hsa-exam-05,HSA-room.jpg (user attachment),User-provided HSA room map for Exam 05 demo,2048,1041,26,Aligned 26 rectangles for P.001 through P.026
+hsa-exam-05-poster,hsa.jpg (user attachment),User-provided HSA VNU logo for Exam 05 demo,1280,720,0,Centered complete logo on a 16:9 white canvas
+hsa-exam-05-dongda,hsa_room.jpg (latest user attachment),User-provided cropped THPT Dong Da map for Exam 05 demo,454,305,25,Aligned rectangles for the numbered rooms 01 through 25
+hsa-exam-05-house-a,hsa_room.jpg (replacement user attachment),User-provided House A map for Exam 05 demo,1450,2048,33,Aligned rooms P.001 through P.033 after proportional resizing
+toeic-exam-06,SAT-room.png (user attachment),User-provided room map for Exam 06 demo,1200,760,11,Aligned numbered room rectangles
+toeic-exam-06-poster,TOEIC.webp (user attachment),User-provided TOEIC artwork for Exam 06 demo,1280,720,0,Centered complete ETS and TOEIC logos on a 16:9 white canvas
+bio-practice-07,BioRoom.png (replacement user attachment),User-provided campus map for Practice 07 demo,659,405,4,Outlined laboratory K and rooms H204 H104 H104a
+bio-practice-07-poster,BioLab.jpg (user attachment),User-provided Biochemistry artwork for Practice 07 demo,1280,720,0,Centered complete artwork on a 16:9 white canvas
+com-practice-08,ComRoom.jpg (user attachment),User-provided room map for Practice 08 demo,2048,1394,20,Aligned numbered room rectangles after proportional resizing
+com-practice-08-poster,ComLab.jpg (user attachment),User-provided computer lab artwork for Practice 08 demo,1280,720,0,Centered complete laptop symbol on a 16:9 white canvas
+bio-practice-07-tower-a,BioRoom-da-cat.png (replacement user attachment),User-provided cropped Tower A map for Practice 07,1084,1451,6,Rooms 1 to 6 on floors 09 to 11; poster preserved
+elec-practice-09,ElecRoom.jpg (user attachment),User-provided room map for Practice 09,725,466,18,Only P.01 to P.18 are selectable; support and spare rooms excluded
+elec-practice-09-poster,ElectricLab.avif (user attachment),User-provided Electric artwork for Practice 09,1280,720,0,AVIF decoded to PNG by Edge before centering complete artwork on white canvas
+mechanic-practice-10,MachanicRoom.png (user attachment),User-provided floor 1 map for Practice 10,1183,1083,4,Quadrilateral regions P.6225 to P.6228; 17 places each as printed in the image
+mechanic-practice-10-poster,MechanicLab.jpg (user attachment),User-provided mechanic artwork for Practice 10,1280,720,0,Complete wrench and gears centered on a white 16:9 canvas
+physics-practice-11,PhysicsRoom-da-chinh-sua.png (user attachment),User-provided room map for Practice 11,1491,1055,34,Aligned HN582 to HN615; unnumbered rooms and support areas excluded
+physics-practice-11-poster,PhysicsLab.png (user attachment),User-provided Physics artwork for Practice 11,1280,720,0,Complete atom artwork centered on white 16:9 canvas
+chemistry-practice-12,ChemisRoom-da-chinh-sua.png (user attachment),User-provided room map for Practice 12,1491,1055,42,Aligned HN060 to HN101 across D1 D2 and D4; support areas excluded
+chemistry-practice-12-poster,ChemisLab.jpg (user attachment),User-provided Chemistry artwork for Practice 12,1280,720,0,Complete chemistry symbol centered on white 16:9 canvas
