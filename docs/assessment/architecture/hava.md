@@ -45,8 +45,8 @@ Các đường dẫn dưới đây cần khớp với tên file thực tế tron
 - Mỗi AZ có ba subnet: public, app và DB; tổng cộng sáu subnet.
 - Nhận diện được IGW, ALB và hai NAT tại hai public subnet.
 - Có biểu tượng S3 endpoint, Redis và PostgreSQL/RDS.
-- Số lượng và vị trí EC2 cần đối chiếu theo thời điểm import thực tế.
-  Không suy số máy chỉ từ biểu tượng được nhóm.
+- Ảnh List hiển thị 4 EC2 loại t3.small: 2 tại ap-southeast-2a và 2 tại ap-southeast-2b.
+- Bằng chứng: diagrams/a2-hava-ec2-list.png.
 - Hai biểu tượng PostgreSQL không tự chứng minh có hai database độc lập. A1 ghi nhận một RDS instance cấu hình Multi-AZ.
 
 ### 3.2. Security Group
@@ -108,6 +108,10 @@ Các snapshot phản ánh từng thời điểm riêng. Nếu tài nguyên thay 
 - Last imported trên Hava: 36 minutes ago.
 - Thời điểm đọc Last imported: 11:37 PM 17/11/2026.
 - Thời gian chụp ảnh: 11:37 PM 17/11/2026.
+- View List ghi nhận 4 EC2 loại t3.small: 2 tại ap-southeast-2a và 2 tại ap-southeast-2b.
+- Tổng số khớp A1 đã ghi nhận trước đó, nhưng phân bố AZ khác (A1: 1/3; Hava: 2/2). Chưa xác định nguyên nhân sai khác.
+- Hai nguồn được ghi nhận tại các thời điểm khác nhau.
+- Bằng chứng: diagrams/a2-hava-ec2-list.png.
 
 Còn cần hoàn thiện:
 A2 ghi nhận sơ đồ và phạm vi hiển thị, không thay thế kiểm thử tải, autoscaling, failover, restore hoặc nghiệm thu nghiệp vụ.
