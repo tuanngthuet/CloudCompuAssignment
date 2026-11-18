@@ -452,37 +452,21 @@ Nguồn: `app/models.py:10`.
 
 | Cột | Kiểu Python/logic | Nullable | Khóa |
 |---|---|---|---|
-
 | id | uuid | Không | PK |
-
 | username | str | Không | — |
-
 | password_hash | str | Không | — |
-
 | role | str | Không | — |
-
 | avatar_key | str | Có | — |
-
 | full_name | str | Không | — |
-
 | cccd | str | Không | — |
-
 | phone | str | Không | — |
-
 | email | str | Không | — |
-
 | status | str | Không | — |
-
 | email_verified_at | timestamp | Có | — |
-
 | pending_email | str | Có | — |
-
 | email_version | int | Không | — |
-
 | last_activity_at | timestamp | Không | — |
-
 | anonymization_notice_at | timestamp | Có | — |
-
 | anonymization_notice_delivered_at | timestamp | Có | — |
 
 ```python
@@ -500,15 +484,10 @@ Nguồn: `app/models.py:34`.
 
 | Cột | Kiểu Python/logic | Nullable | Khóa |
 |---|---|---|---|
-
 | id | uuid | Không | PK |
-
 | user_id | uuid | Không | FK → users.id |
-
 | token_hash | str | Không | — |
-
 | csrf_hash | str | Không | — |
-
 | expires_at | timestamp | Không | — |
 
 ### rooms
@@ -517,11 +496,8 @@ Nguồn: `app/models.py:41`.
 
 | Cột | Kiểu Python/logic | Nullable | Khóa |
 |---|---|---|---|
-
 | id | uuid | Không | PK |
-
 | name | str | Không | — |
-
 | image_key | str | Có | — |
 
 ### seats
@@ -530,13 +506,9 @@ Nguồn: `app/models.py:46`.
 
 | Cột | Kiểu Python/logic | Nullable | Khóa |
 |---|---|---|---|
-
 | id | uuid | Không | PK |
-
 | room_id | uuid | Không | FK → rooms.id |
-
 | seat_code | str | Không | — |
-
 | capacity | int | Không | — |
 
 ```python
@@ -552,33 +524,19 @@ Nguồn: `app/models.py:53`.
 
 | Cột | Kiểu Python/logic | Nullable | Khóa |
 |---|---|---|---|
-
 | id | uuid | Không | PK |
-
 | name | str | Không | — |
-
 | session_type | str | Có | — |
-
 | description | str | Không | — |
-
 | venue | str | Không | — |
-
 | address | str | Không | — |
-
 | poster_key | str | Có | — |
-
 | status | str | Không | — |
-
 | lifecycle_reason | str | Không | — |
-
 | lifecycle_at | timestamp | Có | — |
-
 | lifecycle_actor | uuid | Có | FK → users.id |
-
 | cancelled_at | timestamp | Có | — |
-
 | cancelled_by | uuid | Có | FK → users.id |
-
 | cancellation_reason | str | Không | — |
 
 ```python
@@ -593,27 +551,16 @@ Nguồn: `app/models.py:70`.
 
 | Cột | Kiểu Python/logic | Nullable | Khóa |
 |---|---|---|---|
-
 | id | uuid | Không | PK |
-
 | event_id | uuid | Có | FK → events.id |
-
 | room_id | uuid | Không | FK → rooms.id |
-
 | checkin_enabled | bool | Không | — |
-
 | checkin_close_mode | str | Không | — |
-
 | checkin_closes_at | timestamp | Có | — |
-
 | checkin_revision | int | Không | — |
-
 | open_at | timestamp | Không | — |
-
 | close_at | timestamp | Không | — |
-
 | start_at | timestamp | Không | — |
-
 | end_at | timestamp | Không | — |
 
 ```python
@@ -628,11 +575,8 @@ Nguồn: `app/models.py:84`.
 
 | Cột | Kiểu Python/logic | Nullable | Khóa |
 |---|---|---|---|
-
 | id | uuid | Không | PK |
-
 | session_id | uuid | Không | FK → lab_sessions.id |
-
 | seat_id | uuid | Không | FK → seats.id |
 
 ```python
@@ -647,23 +591,14 @@ Nguồn: `app/models.py:90`.
 
 | Cột | Kiểu Python/logic | Nullable | Khóa |
 |---|---|---|---|
-
 | id | uuid | Không | PK |
-
 | slot | int | Không | — |
-
 | user_id | uuid | Không | FK → users.id |
-
 | session_id | uuid | Không | FK → lab_sessions.id |
-
 | seat_id | uuid | Không | FK → seats.id |
-
 | status | str | Không | — |
-
 | hold_expires_at | timestamp | Không | — |
-
 | ticket_code | str | Có | — |
-
 | checked_in_at | timestamp | Có | — |
 
 ```python
@@ -684,15 +619,10 @@ Nguồn: `app/models.py:110`.
 
 | Cột | Kiểu Python/logic | Nullable | Khóa |
 |---|---|---|---|
-
 | id | uuid | Không | PK |
-
 | actor_id | uuid | Không | FK → users.id |
-
 | reservation_id | uuid | Không | FK → reservations.id |
-
 | action | str | Không | — |
-
 | created_at | timestamp | Không | — |
 
 ### room_layouts
@@ -701,11 +631,8 @@ Nguồn: `app/models.py:118`.
 
 | Cột | Kiểu Python/logic | Nullable | Khóa |
 |---|---|---|---|
-
 | room_id | uuid | Không | PK, FK → rooms.id |
-
 | revision | int | Không | — |
-
 | layout | jsonb | Không | — |
 
 ### booking_queue_settings
@@ -714,29 +641,17 @@ Nguồn: `app/models.py:125`.
 
 | Cột | Kiểu Python/logic | Nullable | Khóa |
 |---|---|---|---|
-
 | id | int | Không | PK |
-
 | enabled | bool | Không | — |
-
 | recovery_pending | bool | Không | — |
-
 | policy_version | int | Không | — |
-
 | epoch | uuid | Không | — |
-
 | capacity | int | Không | — |
-
 | selection_seconds | int | Không | — |
-
 | heartbeat_seconds | int | Không | — |
-
 | waiting_grace_seconds | int | Không | — |
-
 | recovery_not_before | timestamp | Có | — |
-
 | updated_at | timestamp | Không | — |
-
 | updated_by | str | Không | — |
 
 ```python
@@ -755,17 +670,11 @@ Nguồn: `app/models.py:148`.
 
 | Cột | Kiểu Python/logic | Nullable | Khóa |
 |---|---|---|---|
-
 | id | uuid | Không | PK |
-
 | actor | str | Không | — |
-
 | reason | str | Không | — |
-
 | before | jsonb | Không | — |
-
 | after | jsonb | Không | — |
-
 | created_at | timestamp | Không | — |
 
 ### idempotency_records
@@ -774,15 +683,10 @@ Nguồn: `app/models.py:157`.
 
 | Cột | Kiểu Python/logic | Nullable | Khóa |
 |---|---|---|---|
-
 | user_id | uuid | Không | PK, FK → users.id |
-
 | key_hash | str | Không | PK |
-
 | fingerprint | str | Không | — |
-
 | response | jsonb | Không | — |
-
 | created_at | timestamp | Không | — |
 
 ### outbox_events
@@ -791,19 +695,12 @@ Nguồn: `app/models.py:167`.
 
 | Cột | Kiểu Python/logic | Nullable | Khóa |
 |---|---|---|---|
-
 | id | uuid | Không | PK |
-
 | reservation_id | uuid | Không | FK → reservations.id |
-
 | event_type | str | Không | — |
-
 | created_at | timestamp | Không | — |
-
 | published_at | timestamp | Có | — |
-
 | attempts | int | Không | — |
-
 | available_at | timestamp | Không | — |
 
 ```python
@@ -819,15 +716,10 @@ Nguồn: `app/models.py:181`.
 
 | Cột | Kiểu Python/logic | Nullable | Khóa |
 |---|---|---|---|
-
 | reservation_id | uuid | Không | PK, FK → reservations.id |
-
 | notification_type | str | Không | PK |
-
 | status | str | Không | — |
-
 | provider_message_id | str | Có | — |
-
 | completed_at | timestamp | Có | — |
 
 ```python
@@ -842,19 +734,12 @@ Nguồn: `app/models.py:191`.
 
 | Cột | Kiểu Python/logic | Nullable | Khóa |
 |---|---|---|---|
-
 | id | uuid | Không | PK |
-
 | session_id | uuid | Không | FK → lab_sessions.id |
-
 | actor_id | uuid | Có | FK → users.id |
-
 | enabled | bool | Không | — |
-
 | source | str | Không | — |
-
 | effective_at | timestamp | Có | — |
-
 | created_at | timestamp | Không | — |
 
 ### staff_assignments
@@ -863,13 +748,9 @@ Nguồn: `app/models.py:201`.
 
 | Cột | Kiểu Python/logic | Nullable | Khóa |
 |---|---|---|---|
-
 | session_id | uuid | Không | PK, FK → lab_sessions.id |
-
 | user_id | uuid | Không | PK, FK → users.id |
-
 | assigned_by | uuid | Không | FK → users.id |
-
 | created_at | timestamp | Không | — |
 
 ### admin_audits
@@ -878,17 +759,11 @@ Nguồn: `app/models.py:209`.
 
 | Cột | Kiểu Python/logic | Nullable | Khóa |
 |---|---|---|---|
-
 | id | uuid | Không | PK |
-
 | actor_id | uuid | Không | FK → users.id |
-
 | action | str | Không | — |
-
 | subject_id | uuid | Không | — |
-
 | details | jsonb | Không | — |
-
 | created_at | timestamp | Không | — |
 
 ### auth_challenges
@@ -897,25 +772,15 @@ Nguồn: `app/models.py:218`.
 
 | Cột | Kiểu Python/logic | Nullable | Khóa |
 |---|---|---|---|
-
 | id | uuid | Không | PK |
-
 | user_id | uuid | Không | FK → users.id |
-
 | purpose | str | Không | — |
-
 | email | str | Không | — |
-
 | email_version | int | Không | — |
-
 | nonce | str | Không | — |
-
 | token_hash | str | Không | — |
-
 | expires_at | timestamp | Không | — |
-
 | consumed_at | timestamp | Có | — |
-
 | created_at | timestamp | Không | — |
 
 ### rate_limits
@@ -924,11 +789,8 @@ Nguồn: `app/models.py:231`.
 
 | Cột | Kiểu Python/logic | Nullable | Khóa |
 |---|---|---|---|
-
 | key_hash | str | Không | PK |
-
 | window_at | timestamp | Không | — |
-
 | attempts | int | Không | — |
 
 ### email_jobs
@@ -937,35 +799,20 @@ Nguồn: `app/models.py:238`.
 
 | Cột | Kiểu Python/logic | Nullable | Khóa |
 |---|---|---|---|
-
 | id | uuid | Không | PK |
-
 | user_id | uuid | Không | FK → users.id |
-
 | reservation_id | uuid | Có | FK → reservations.id |
-
 | kind | str | Không | — |
-
 | recipient | str | Không | — |
-
 | context | jsonb | Không | — |
-
 | status | str | Không | — |
-
 | provider_message_id | str | Có | — |
-
 | send_started_at | timestamp | Có | — |
-
 | last_attempt_at | timestamp | Có | — |
-
 | provider_event_at | timestamp | Có | — |
-
 | attempts | int | Không | — |
-
 | last_error | str | Không | — |
-
 | completed_at | timestamp | Có | — |
-
 | created_at | timestamp | Không | — |
 
 ### platform_events
@@ -974,15 +821,10 @@ Nguồn: `app/models.py:256`.
 
 | Cột | Kiểu Python/logic | Nullable | Khóa |
 |---|---|---|---|
-
 | id | uuid | Không | PK |
-
 | kind | str | Không | — |
-
 | subject_id | uuid | Không | — |
-
 | published_at | timestamp | Có | — |
-
 | created_at | timestamp | Không | — |
 
 ### webhook_inbox
@@ -991,19 +833,12 @@ Nguồn: `app/models.py:264`.
 
 | Cột | Kiểu Python/logic | Nullable | Khóa |
 |---|---|---|---|
-
 | fingerprint | str | Không | PK |
-
 | job_id | uuid | Có | FK → email_jobs.id |
-
 | provider_message_id | str | Không | — |
-
 | event | str | Không | — |
-
 | occurred_at | timestamp | Không | — |
-
 | created_at | timestamp | Không | — |
-
 | processed_at | timestamp | Có | — |
 
 ### email_suppressions
@@ -1012,11 +847,8 @@ Nguồn: `app/models.py:275`.
 
 | Cột | Kiểu Python/logic | Nullable | Khóa |
 |---|---|---|---|
-
 | email | str | Không | PK |
-
 | reason | str | Không | — |
-
 | created_at | timestamp | Không | — |
 
 ### storage_objects
@@ -1025,17 +857,11 @@ Nguồn: `app/models.py:282`.
 
 | Cột | Kiểu Python/logic | Nullable | Khóa |
 |---|---|---|---|
-
 | key | str | Không | PK |
-
 | state | str | Không | — |
-
 | created_at | timestamp | Không | — |
-
 | quarantine_at | timestamp | Có | — |
-
 | deleted_at | timestamp | Có | — |
-
 | failures | int | Không | — |
 
 ### maintenance_states
@@ -1044,11 +870,7 @@ Nguồn: `app/models.py:292`.
 
 | Cột | Kiểu Python/logic | Nullable | Khóa |
 |---|---|---|---|
-
 | key | str | Không | PK |
-
 | cursor | str | Không | — |
-
 | lease_owner | uuid | Có | — |
-
 | lease_until | timestamp | Có | — |
