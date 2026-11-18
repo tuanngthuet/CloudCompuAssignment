@@ -1,0 +1,16 @@
+sequenceDiagram
+    participant W as Publisher
+    participant P as PostgreSQL
+    participant Q as SQS adapter
+    loop Mỗi dòng trong batch
+        W->>P: BEGIN, SELECT pending FOR UPDATE SKIP LOCKED
+        P-->>W: OutboxEvent tới available_at
+        W->>P: Tăng attempts
+        W->>Q: publish event_id, event_type, reservation_id
+        alt Publish trả thành công
+            W->>P: published_at bằng DB clock rồi commit
+        else Publish ném lỗi
+            W->>P: available_at cộng backoff rồi commit
+        end
+    end
+    Note over P,Q: SQS nhận nhưng DB chưa commit có thể gây publish trùng

@@ -1,0 +1,50 @@
+sequenceDiagram
+    actor U as Sinh viên
+    participant A as Booking API
+    participant P as PostgreSQL
+    participant R as Redis admission
+    U->>A: POST /holds và CSRF
+    A->>P: Đọc login_sessions, user
+    opt Có Idempotency-Key
+        A->>P: Khóa User, đọc key_hash và fingerprint
+        alt Key đã có và fingerprint khớp
+            P-->>A: Response đã lưu
+            A-->>U: Trả response, không gia hạn hold
+        else Key đã có nhưng fingerprint khác
+            A-->>U: 409 idempotency_key_reused
+        end
+    end
+    Note over A,P: Các bước dưới chỉ cho yêu cầu chưa replay và chưa lỗi
+    A->>P: Khóa Users theo ID, SHARE LabSession, khóa SessionSeats theo seat_id
+    A->>P: Đọc clock_timestamp, kiểm tra hồ sơ và cửa sổ đăng ký
+    A->>P: Đổi HELD quá hạn liên quan thành EXPIRED, ghi audit
+    alt Đã có HELD hợp lệ cùng chỗ
+        A-->>U: Trả hold hiện có, không gia hạn
+    else Tạo hold mới
+        A->>P: Kiểm tra đăng ký khác cùng event, tìm slot trống
+        alt Không còn slot
+            A-->>U: 409 sold_out
+        else Có slot
+            A->>P: Đọc queue policy với shared lock
+            opt Queue enabled
+                A->>R: guard user và session
+                alt WAITING hoặc NONE hoặc hết lượt
+                    R-->>A: Không được admission
+                    A-->>U: 409 queue_waiting hoặc queue_expired
+                else Redis không khả dụng
+                    A-->>U: 503 queue_unavailable
+                else ADMITTED
+                    R-->>A: generation
+                end
+            end
+            Note over A,P: Chỉ đi tiếp nếu guard thành công hoặc queue tắt
+            A->>P: Thêm HELD và audit, PlatformEvent
+            A->>P: Lưu response idempotency nếu có key
+            Note over A,P: Caller sở hữu commit/rollback, chưa có shared/http.py để kiểm tra
+            opt Sau commit và có admission
+                A->>R: consume generation
+                Note over A,R: Lỗi consume được log, không hoàn tác vé đã commit
+            end
+            A-->>U: hold_id, expires_at, server_time
+        end
+    end

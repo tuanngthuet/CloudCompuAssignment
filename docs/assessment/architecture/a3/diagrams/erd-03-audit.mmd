@@ -1,0 +1,75 @@
+erDiagram
+    direction TB
+    users {
+        uuid id PK
+        str username
+        str password_hash
+        str role
+        str avatar_key "nullable"
+        str full_name
+        str cccd
+        str phone
+        str email
+        str status
+        timestamp email_verified_at "nullable"
+        str pending_email "nullable"
+        int email_version
+        timestamp last_activity_at
+        timestamp anonymization_notice_at "nullable"
+        timestamp anonymization_notice_delivered_at "nullable"
+    }
+    reservations {
+        uuid id PK
+        int slot
+        uuid user_id FK
+        uuid session_id FK
+        uuid seat_id FK
+        str status
+        timestamp hold_expires_at
+        str ticket_code "nullable"
+        timestamp checked_in_at "nullable"
+    }
+    lab_sessions {
+        uuid id PK
+        uuid event_id FK "nullable"
+        uuid room_id FK
+        bool checkin_enabled
+        str checkin_close_mode
+        timestamp checkin_closes_at "nullable"
+        int checkin_revision
+        timestamp open_at
+        timestamp close_at
+        timestamp start_at
+        timestamp end_at
+    }
+    audit_events {
+        uuid id PK
+        uuid actor_id FK
+        uuid reservation_id FK
+        str action
+        timestamp created_at
+    }
+    checkin_policy_events {
+        uuid id PK
+        uuid session_id FK
+        uuid actor_id FK "nullable"
+        bool enabled
+        str source
+        timestamp effective_at "nullable"
+        timestamp created_at
+    }
+    admin_audits {
+        uuid id PK
+        uuid actor_id FK
+        str action
+        uuid subject_id
+        jsonb details
+        timestamp created_at
+    }
+    users ||..o{ reservations : "user_id"
+    lab_sessions ||..o{ reservations : "session_id"
+    users ||..o{ audit_events : "actor_id"
+    reservations ||..o{ audit_events : "reservation_id"
+    lab_sessions ||..o{ checkin_policy_events : "session_id"
+    users |o..o{ checkin_policy_events : "actor_id"
+    users ||..o{ admin_audits : "actor_id"

@@ -1,0 +1,19 @@
+erDiagram
+    direction TB
+    rate_limits {
+        str key_hash PK
+        timestamp window_at
+        int attempts
+    }
+    email_suppressions {
+        str email PK
+        str reason
+        timestamp created_at
+    }
+    platform_events {
+        uuid id PK
+        str kind
+        uuid subject_id
+        timestamp published_at "nullable"
+        timestamp created_at
+    }

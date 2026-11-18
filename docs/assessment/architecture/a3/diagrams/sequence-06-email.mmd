@@ -1,0 +1,30 @@
+sequenceDiagram
+    participant W as Worker consume
+    participant P as PostgreSQL
+    participant E as Email adapter
+    W->>P: Kiểm tra envelope và OutboxEvent
+    W->>P: Upsert rồi khóa NotificationDelivery
+    alt Delivery SENT hoặc SKIPPED
+        W-->>W: Bỏ qua bản trùng
+    else Chưa hoàn tất
+        W->>P: Tạo EmailJob với UUID5 từ reservation nếu chưa có, commit
+        W->>P: dispatch khóa EmailJob và kiểm tra trạng thái, người nhận, vé
+        alt Không đủ điều kiện
+            W->>P: SKIPPED và commit
+        else Đang gửi gần đây
+            W-->>W: Ném lỗi để xử lý lại
+        else Đã qua cửa sổ 29 phút kể từ send_started_at
+            W->>P: UNKNOWN và commit
+        else Có thể gửi
+            W->>P: Đóng băng nội dung, SENDING, tăng attempts, commit
+            W->>E: Gửi với job_id
+            alt Provider trả thành công
+                W->>P: Lưu provider_message_id, ACCEPTED và commit
+            else Provider hoặc I/O lỗi
+                W->>P: PENDING hoặc UNKNOWN theo loại lỗi
+                W-->>W: Ném lỗi
+            end
+        end
+        W->>P: Ánh xạ trạng thái job thành delivery SENT hoặc SKIPPED
+    end
+    Note over W,E: ACCEPTED hoặc delivery SENT chưa chứng minh email tới hộp thư

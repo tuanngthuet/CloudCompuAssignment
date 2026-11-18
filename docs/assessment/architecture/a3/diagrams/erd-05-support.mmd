@@ -1,0 +1,35 @@
+erDiagram
+    direction TB
+    rooms {
+        uuid id PK
+        str name
+        str image_key "nullable"
+    }
+    room_layouts {
+        uuid room_id PK, FK
+        int revision
+        jsonb layout
+    }
+    booking_queue_settings {
+        int id PK
+        bool enabled
+        bool recovery_pending
+        int policy_version
+        uuid epoch
+        int capacity
+        int selection_seconds
+        int heartbeat_seconds
+        int waiting_grace_seconds
+        timestamp recovery_not_before "nullable"
+        timestamp updated_at
+        str updated_by
+    }
+    queue_policy_events {
+        uuid id PK
+        str actor
+        str reason
+        jsonb before
+        jsonb after
+        timestamp created_at
+    }
+    rooms ||--o| room_layouts : "room_id"

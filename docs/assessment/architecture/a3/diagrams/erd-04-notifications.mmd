@@ -1,0 +1,79 @@
+erDiagram
+    direction TB
+    users {
+        uuid id PK
+        str username
+        str password_hash
+        str role
+        str avatar_key "nullable"
+        str full_name
+        str cccd
+        str phone
+        str email
+        str status
+        timestamp email_verified_at "nullable"
+        str pending_email "nullable"
+        int email_version
+        timestamp last_activity_at
+        timestamp anonymization_notice_at "nullable"
+        timestamp anonymization_notice_delivered_at "nullable"
+    }
+    reservations {
+        uuid id PK
+        int slot
+        uuid user_id FK
+        uuid session_id FK
+        uuid seat_id FK
+        str status
+        timestamp hold_expires_at
+        str ticket_code "nullable"
+        timestamp checked_in_at "nullable"
+    }
+    outbox_events {
+        uuid id PK
+        uuid reservation_id FK
+        str event_type
+        timestamp created_at
+        timestamp published_at "nullable"
+        int attempts
+        timestamp available_at
+    }
+    notification_deliveries {
+        uuid reservation_id PK, FK
+        str notification_type PK
+        str status
+        str provider_message_id "nullable"
+        timestamp completed_at "nullable"
+    }
+    email_jobs {
+        uuid id PK
+        uuid user_id FK
+        uuid reservation_id FK "nullable"
+        str kind
+        str recipient
+        jsonb context
+        str status
+        str provider_message_id "nullable"
+        timestamp send_started_at "nullable"
+        timestamp last_attempt_at "nullable"
+        timestamp provider_event_at "nullable"
+        int attempts
+        str last_error
+        timestamp completed_at "nullable"
+        timestamp created_at
+    }
+    webhook_inbox {
+        str fingerprint PK
+        uuid job_id FK "nullable"
+        str provider_message_id
+        str event
+        timestamp occurred_at
+        timestamp created_at
+        timestamp processed_at "nullable"
+    }
+    users ||..o{ reservations : "user_id"
+    reservations ||..o{ outbox_events : "reservation_id"
+    reservations ||--o{ notification_deliveries : "reservation_id"
+    users ||..o{ email_jobs : "user_id"
+    reservations |o..o{ email_jobs : "reservation_id"
+    email_jobs |o..o{ webhook_inbox : "job_id"

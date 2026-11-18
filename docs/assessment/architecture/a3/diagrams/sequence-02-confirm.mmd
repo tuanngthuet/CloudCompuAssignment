@@ -1,0 +1,20 @@
+sequenceDiagram
+    actor U as Sinh viên
+    participant A as Booking API
+    participant P as PostgreSQL
+    U->>A: POST /holds/{hold_id}/confirm
+    A->>P: Xác thực phiên, CSRF và idempotency nếu có
+    A->>P: Tìm reservation thuộc user
+    A->>P: Khóa Users, LabSession, SessionSeats rồi refresh reservation
+    alt Đã CONFIRMED hoặc CHECKED_IN
+        A-->>U: Trả vé hiện có
+    else HELD còn hạn và chưa close_at
+        A->>P: Kiểm tra hồ sơ, đổi thành CONFIRMED và tạo ticket_code
+        A->>P: Thêm OutboxEvent ReservationConfirmed
+        A->>P: Thêm AuditEvent và PlatformEvent availability
+        A->>P: Lưu response idempotency nếu có key
+        Note over A,P: Các ghi dùng cùng session; commit do caller quản lý
+        A-->>U: Vé xác nhận
+    else Trạng thái hoặc thời gian không hợp lệ
+        A-->>U: 409 conflict
+    end

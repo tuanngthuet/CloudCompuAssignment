@@ -1,0 +1,87 @@
+erDiagram
+    direction TB
+    users {
+        uuid id PK
+        str username
+        str password_hash
+        str role
+        str avatar_key "nullable"
+        str full_name
+        str cccd
+        str phone
+        str email
+        str status
+        timestamp email_verified_at "nullable"
+        str pending_email "nullable"
+        int email_version
+        timestamp last_activity_at
+        timestamp anonymization_notice_at "nullable"
+        timestamp anonymization_notice_delivered_at "nullable"
+    }
+    events {
+        uuid id PK
+        str name
+        str session_type "nullable"
+        str description
+        str venue
+        str address
+        str poster_key "nullable"
+        str status
+        str lifecycle_reason
+        timestamp lifecycle_at "nullable"
+        uuid lifecycle_actor FK "nullable"
+        timestamp cancelled_at "nullable"
+        uuid cancelled_by FK "nullable"
+        str cancellation_reason
+    }
+    rooms {
+        uuid id PK
+        str name
+        str image_key "nullable"
+    }
+    seats {
+        uuid id PK
+        uuid room_id FK
+        str seat_code
+        int capacity
+    }
+    lab_sessions {
+        uuid id PK
+        uuid event_id FK "nullable"
+        uuid room_id FK
+        bool checkin_enabled
+        str checkin_close_mode
+        timestamp checkin_closes_at "nullable"
+        int checkin_revision
+        timestamp open_at
+        timestamp close_at
+        timestamp start_at
+        timestamp end_at
+    }
+    session_seats {
+        uuid id PK
+        uuid session_id FK
+        uuid seat_id FK
+    }
+    reservations {
+        uuid id PK
+        int slot
+        uuid user_id FK
+        uuid session_id FK
+        uuid seat_id FK
+        str status
+        timestamp hold_expires_at
+        str ticket_code "nullable"
+        timestamp checked_in_at "nullable"
+    }
+    rooms ||..o{ seats : "room_id"
+    users |o..o{ events : "lifecycle_actor"
+    users |o..o{ events : "cancelled_by"
+    events |o..o{ lab_sessions : "event_id"
+    rooms ||..o{ lab_sessions : "room_id"
+    lab_sessions ||..o{ session_seats : "session_id"
+    seats ||..o{ session_seats : "seat_id"
+    users ||..o{ reservations : "user_id"
+    lab_sessions ||..o{ reservations : "session_id"
+    seats ||..o{ reservations : "seat_id"
+    session_seats ||..o{ reservations : "session_id + seat_id"

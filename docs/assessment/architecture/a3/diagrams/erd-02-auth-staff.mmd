@@ -1,0 +1,71 @@
+erDiagram
+    direction TB
+    users {
+        uuid id PK
+        str username
+        str password_hash
+        str role
+        str avatar_key "nullable"
+        str full_name
+        str cccd
+        str phone
+        str email
+        str status
+        timestamp email_verified_at "nullable"
+        str pending_email "nullable"
+        int email_version
+        timestamp last_activity_at
+        timestamp anonymization_notice_at "nullable"
+        timestamp anonymization_notice_delivered_at "nullable"
+    }
+    login_sessions {
+        uuid id PK
+        uuid user_id FK
+        str token_hash
+        str csrf_hash
+        timestamp expires_at
+    }
+    auth_challenges {
+        uuid id PK
+        uuid user_id FK
+        str purpose
+        str email
+        int email_version
+        str nonce
+        str token_hash
+        timestamp expires_at
+        timestamp consumed_at "nullable"
+        timestamp created_at
+    }
+    idempotency_records {
+        uuid user_id PK, FK
+        str key_hash PK
+        str fingerprint
+        jsonb response
+        timestamp created_at
+    }
+    staff_assignments {
+        uuid session_id PK, FK
+        uuid user_id PK, FK
+        uuid assigned_by FK
+        timestamp created_at
+    }
+    lab_sessions {
+        uuid id PK
+        uuid event_id FK "nullable"
+        uuid room_id FK
+        bool checkin_enabled
+        str checkin_close_mode
+        timestamp checkin_closes_at "nullable"
+        int checkin_revision
+        timestamp open_at
+        timestamp close_at
+        timestamp start_at
+        timestamp end_at
+    }
+    users ||..o{ login_sessions : "user_id"
+    users ||--o{ idempotency_records : "user_id"
+    lab_sessions ||--o{ staff_assignments : "session_id"
+    users ||--o{ staff_assignments : "user_id"
+    users ||..o{ staff_assignments : "assigned_by"
+    users ||..o{ auth_challenges : "user_id"

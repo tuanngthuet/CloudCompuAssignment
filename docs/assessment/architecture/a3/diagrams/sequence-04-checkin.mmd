@@ -1,0 +1,22 @@
+sequenceDiagram
+    actor O as Admin hoặc staff
+    participant A as Check-in API
+    participant P as PostgreSQL
+    O->>A: POST /admin/check-ins hoặc /staff/check-ins
+    A->>P: Xác thực phiên, CSRF và vai trò
+    A->>P: Tìm ticket theo ticket_code hoặc UUID
+    opt Staff
+        A->>P: Kiểm tra email_verified_at và StaffAssignment
+    end
+    A->>P: Khóa owner và actor theo ID, SHARE ca, khóa SessionSeats
+    A->>P: Refresh reservation, kiểm tra scope lần nữa
+    alt Đã CHECKED_IN
+        A-->>O: Trả vé đã check-in
+    else CONFIRMED và chính sách check-in hiệu lực
+        A->>P: status CHECKED_IN, checked_in_at bằng DB clock
+        A->>P: Ghi AuditEvent và PlatformEvent
+        Note over A,P: Caller sở hữu commit/rollback
+        A-->>O: Vé CHECKED_IN
+    else Không đủ điều kiện
+        A-->>O: ticket_not_eligible hoặc checkin_closed
+    end

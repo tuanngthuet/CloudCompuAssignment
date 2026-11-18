@@ -1,0 +1,16 @@
+erDiagram
+    direction TB
+    storage_objects {
+        str key PK
+        str state
+        timestamp created_at
+        timestamp quarantine_at "nullable"
+        timestamp deleted_at "nullable"
+        int failures
+    }
+    maintenance_states {
+        str key PK
+        str cursor
+        uuid lease_owner "nullable"
+        timestamp lease_until "nullable"
+    }

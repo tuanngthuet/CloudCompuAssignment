@@ -1,0 +1,154 @@
+{
+  "source_commit": "UNKNOWN",
+  "date": "2026-11-18",
+  "files": [
+    {
+      "input_path": "a3src/auth/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "input_path": "a3src/auth/router.py",
+      "sha256": "db109f517da2a511e73e4af81988b8d1bec0e55b471f386aaeb79d1875cabee7"
+    },
+    {
+      "input_path": "a3src/auth/service.py",
+      "sha256": "c15be780d24f9dd501057ca3c44f130884c9e706265a084c84951c3ec42455ce"
+    },
+    {
+      "input_path": "a3src/booking/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "input_path": "a3src/booking/idempotency.py",
+      "sha256": "25a7924085e7475c954a9dfa2fd8c427ca1f7fcee759e12d4f5abe2a91220c48"
+    },
+    {
+      "input_path": "a3src/booking/repository.py",
+      "sha256": "6939cb65a056e5013159f94fe45e32b236d2ea6d120a1f040491a883566ed883"
+    },
+    {
+      "input_path": "a3src/booking/router.py",
+      "sha256": "70909b6d90a83560de56ed8f90ed9bc7a77ec6179858392d3d545081efe568c9"
+    },
+    {
+      "input_path": "a3src/booking/service.py",
+      "sha256": "23f36953b1697ecf4816af92200f8cad23c6208ad2b13d38ffc1ab288af9f60d"
+    },
+    {
+      "input_path": "a3src/checkin/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "input_path": "a3src/checkin/policy.py",
+      "sha256": "d81e34e2f10d4d56b2ba39c477a2cf4166d1de4cb5c07a812264dc1112566c77"
+    },
+    {
+      "input_path": "a3src/checkin/router.py",
+      "sha256": "685f8c85e19235f46d5a170524e56ec6263a5f3d87329b0ff166ab7962a38b0a"
+    },
+    {
+      "input_path": "a3src/checkin/service.py",
+      "sha256": "2cf8a794ff480337cde001ebe6166e0ce4eba9ec5a995ffb8d394cf23e6d424d"
+    },
+    {
+      "input_path": "a3src/checkin/staff.py",
+      "sha256": "9d1c5cabb4c3189c11fdadee419a7479d20bc9fa52942c4349fa19741d800866"
+    },
+    {
+      "input_path": "a3src/events.py",
+      "sha256": "e93eace5f7f541f7a6df9b5641e8c192c94db1fcf47d9f4cf638b75668af5d37"
+    },
+    {
+      "input_path": "a3src/notifications/__init__.py",
+      "sha256": "3fb7c298b9917c80cb97214233169c443e742319ae2c9390ad3a92c32636b19a"
+    },
+    {
+      "input_path": "a3src/notifications/adapters.py",
+      "sha256": "f6a7853f36281b548a4af2d6222ca9ed49cca16af27e192180928fa5ca3e95e4"
+    },
+    {
+      "input_path": "a3src/notifications/brevo.py",
+      "sha256": "5b38ae4f7cb524b15b4a2350141986287bdf94b475ddaab5f3ce65c090ea20a9"
+    },
+    {
+      "input_path": "a3src/notifications/content.py",
+      "sha256": "e0d30bcda38be7fa39b6e648d64492f483ee698e58ee39b8c750121b25c327fc"
+    },
+    {
+      "input_path": "a3src/notifications/jobs.py",
+      "sha256": "fadb01ed9fd5c445d857d774b28e4da7fbdd62e73f10988d7b9f8f331bf85e19"
+    },
+    {
+      "input_path": "a3src/notifications/preview.py",
+      "sha256": "02607f6ae4d027a6323e9027e08529dcee6179bd6654384bd3778b9f5f87a854"
+    },
+    {
+      "input_path": "a3src/notifications/router.py",
+      "sha256": "d21d48ffe1455bfd6c8ab14e552c200adea26f0da65ca6d918fe795dcb550720"
+    },
+    {
+      "input_path": "a3src/notifications/service.py",
+      "sha256": "a4772e5c3617507e70ed27295e61941478fdf2b5d370f5aec3b71659def789e5"
+    },
+    {
+      "input_path": "a3src/queue/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "input_path": "a3src/queue/router.py",
+      "sha256": "7a41bc52b3dcd46e92f221a9378fa555f5e95fea3ec6025b5ba181dced9d5159"
+    },
+    {
+      "input_path": "a3src/queue_admin.py",
+      "sha256": "c8859953641de0f7c91aa9224736789ac81728cf04380a02a0a8f5fc24d4fd28"
+    },
+    {
+      "input_path": "a3src/realtime.py",
+      "sha256": "81aa84b47544df6997b2a509c227fe9f959fd209d8be03670930897571977b95"
+    },
+    {
+      "input_path": "a3src/redis/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "input_path": "a3src/redis/admission.py",
+      "sha256": "39ae9ed4163e8c0c64f77117f9619e458683e525fc3685297461a4d40bd849d1"
+    },
+    {
+      "input_path": "a3src/schemas.py",
+      "sha256": "676b1592e95f0a055a49ddabfca6650bed1bf12f85b859151010b62d5256f9bd"
+    },
+    {
+      "input_path": "a3src/session.py",
+      "sha256": "643a25daf5951b0acc4e0353e556c9023efd93232b8a11953284872cabee3ae1"
+    },
+    {
+      "input_path": "a3src/tickets/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "input_path": "a3src/tickets/router.py",
+      "sha256": "1ce8817975de8b398e7d771386d4a24e1a135ad8f38955c980dfe4aa300f5145"
+    },
+    {
+      "input_path": "a3src/tickets/service.py",
+      "sha256": "9eadad79be34864687a5a07615f66d7ef91727dc725436920269e636a93452ed"
+    },
+    {
+      "input_path": "a3src/queue_scripts/admission.lua",
+      "sha256": "9d1a0c203adda9dd6fda8b9ac2b126fed5b1fe9fbaaf1a99994ce8134a597078"
+    },
+    {
+      "input_path": "upload/models.py",
+      "sha256": "a983f7997e9e2f0217d62107be353aebee9c9c9611c7f9b5fcd593b5060d4fcc"
+    },
+    {
+      "input_path": "upload/0001_labseat.py",
+      "sha256": "904aefa611e16d7e3e027383ee7b15d8ee27c39306e30647d81fc8184c2acada"
+    },
+    {
+      "input_path": "upload/0002_platform.py",
+      "sha256": "dc6bea3c3676c5059b0a6c749958e286c54bc1414f3645f8af58447efabb715d"
+    }
+  ]
+}

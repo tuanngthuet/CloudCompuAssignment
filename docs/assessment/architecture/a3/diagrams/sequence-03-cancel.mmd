@@ -1,0 +1,19 @@
+sequenceDiagram
+    actor U as Chủ vé
+    participant A as Booking API
+    participant P as PostgreSQL
+    U->>A: POST /reservations/{id}/cancel
+    A->>P: Xác thực phiên, CSRF và idempotency nếu có
+    A->>P: Tìm vé thuộc user và khóa theo thứ tự booking
+    A->>P: Refresh reservation, lấy DB clock
+    alt Đã CANCELLED
+        A-->>U: Trả vé đã hủy
+    else HELD chưa hết hạn hoặc CONFIRMED trước start_at
+        A->>P: Đổi status thành CANCELLED
+        A->>P: Ghi AuditEvent và PlatformEvent availability
+        A->>P: Lưu response idempotency nếu có key
+        Note over A,P: Caller sở hữu transaction
+        A-->>U: Vé CANCELLED
+    else CHECKED_IN hoặc quá hạn điều kiện hủy
+        A-->>U: 409 conflict
+    end
