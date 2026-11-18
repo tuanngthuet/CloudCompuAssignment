@@ -20,4 +20,4 @@ Khóa chỉ trong bộ nhớ của một API instance không phối hợp đư�
 app/modules/booking/repository.py:lock; service.py:hold,transition; app/models.py:Reservation,SessionSeat; migrations/versions/0001_labseat.py.
 
 ## Kiểm chứng còn cần
-Chạy concurrent same-slot/same-user/different-slot; kiểm tra invariant DB, timeout, deadlock và p95 theo VU/RPS. Kiểm tra shared/http.py commit/rollback trước khi coi HTTP transaction đã xác minh.
+Chạy concurrent same-slot/same-user/different-slot; kiểm tra invariant DB, timeout, deadlock và p95 theo VU/RPS. Đã đọc shared/http.py xác nhận transaction context; vẫn cần test lỗi commit và rollback qua HTTP.

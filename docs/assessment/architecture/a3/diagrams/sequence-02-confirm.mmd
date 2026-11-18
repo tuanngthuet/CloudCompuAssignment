@@ -13,7 +13,7 @@ sequenceDiagram
         A->>P: Thêm OutboxEvent ReservationConfirmed
         A->>P: Thêm AuditEvent và PlatformEvent availability
         A->>P: Lưu response idempotency nếu có key
-        Note over A,P: Các ghi dùng cùng session; commit do caller quản lý
+        Note over A,P: db_session commit transaction khi thoát bình thường
         A-->>U: Vé xác nhận
     else Trạng thái hoặc thời gian không hợp lệ
         A-->>U: 409 conflict

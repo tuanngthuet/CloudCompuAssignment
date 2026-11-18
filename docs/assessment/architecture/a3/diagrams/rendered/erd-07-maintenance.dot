@@ -1,0 +1,7 @@
+digraph ERD {
+graph [rankdir=TB, bgcolor="white", pad="0.3", nodesep="0.5", ranksep="1", dpi=140];
+node [shape=plain, fontname="DejaVu Sans"];
+edge [fontname="DejaVu Sans", fontsize=10, color="#64748b", arrowsize=0.6];
+storage_objects [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="5" COLOR="#cbd5e1"><TR><TD COLSPAN="2" BGCOLOR="#193751"><FONT COLOR="white"><B>storage_objects</B></FONT></TD></TR><TR><TD ALIGN="LEFT">key</TD><TD ALIGN="LEFT">str PK</TD></TR><TR><TD ALIGN="LEFT">state</TD><TD ALIGN="LEFT">str </TD></TR><TR><TD ALIGN="LEFT">created_at</TD><TD ALIGN="LEFT">timestamp </TD></TR><TR><TD ALIGN="LEFT">quarantine_at</TD><TD ALIGN="LEFT">timestamp &quot;nullable&quot;</TD></TR><TR><TD ALIGN="LEFT">deleted_at</TD><TD ALIGN="LEFT">timestamp &quot;nullable&quot;</TD></TR><TR><TD ALIGN="LEFT">failures</TD><TD ALIGN="LEFT">int </TD></TR></TABLE>>];
+maintenance_states [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="5" COLOR="#cbd5e1"><TR><TD COLSPAN="2" BGCOLOR="#193751"><FONT COLOR="white"><B>maintenance_states</B></FONT></TD></TR><TR><TD ALIGN="LEFT">key</TD><TD ALIGN="LEFT">str PK</TD></TR><TR><TD ALIGN="LEFT">cursor</TD><TD ALIGN="LEFT">str </TD></TR><TR><TD ALIGN="LEFT">lease_owner</TD><TD ALIGN="LEFT">uuid &quot;nullable&quot;</TD></TR><TR><TD ALIGN="LEFT">lease_until</TD><TD ALIGN="LEFT">timestamp &quot;nullable&quot;</TD></TR></TABLE>>];
+}

@@ -1,6 +1,6 @@
 # A3 — Sequence theo source
 
-Các endpoint ghi theo decorator trong file đã cung cấp; chưa xác minh prefix include_router tại app/main.py. Nhánh lỗi kết thúc yêu cầu; các bước tiếp theo chỉ áp dụng khi không lỗi. Các sơ đồ là phân tích source, không phải trace chạy thật.
+Đã đọc app/main.py: các router liên quan được include_router trực tiếp, không thêm prefix. Nhánh lỗi kết thúc yêu cầu; các bước tiếp theo chỉ áp dụng khi không lỗi. Các sơ đồ là phân tích source, không phải trace chạy thật.
 
 ## Giữ chỗ và admission
 
@@ -47,7 +47,7 @@ sequenceDiagram
             Note over A,P: Chỉ đi tiếp nếu guard thành công hoặc queue tắt
             A->>P: Thêm HELD và audit, PlatformEvent
             A->>P: Lưu response idempotency nếu có key
-            Note over A,P: Caller sở hữu commit/rollback, chưa có shared/http.py để kiểm tra
+            Note over A,P: db_session dùng db.begin: commit khi thoát bình thường, rollback khi có ngoại lệ
             opt Sau commit và có admission
                 A->>R: consume generation
                 Note over A,R: Lỗi consume được log, không hoàn tác vé đã commit
@@ -79,7 +79,7 @@ sequenceDiagram
         A->>P: Thêm OutboxEvent ReservationConfirmed
         A->>P: Thêm AuditEvent và PlatformEvent availability
         A->>P: Lưu response idempotency nếu có key
-        Note over A,P: Các ghi dùng cùng session; commit do caller quản lý
+        Note over A,P: db_session commit transaction khi thoát bình thường
         A-->>U: Vé xác nhận
     else Trạng thái hoặc thời gian không hợp lệ
         A-->>U: 409 conflict
@@ -88,7 +88,7 @@ sequenceDiagram
 
 Nguồn và giới hạn: app/modules/booking/router.py:confirm; service.py:transition,audit; idempotency.py:execute.
 
-Không gửi email trực tiếp trong transition. Việc hoàn tất giao dịch HTTP cần kiểm tra thêm app/shared/http.py; sequence không coi response thành công là bằng chứng test thực tế.
+Không gửi email trực tiếp trong transition. app/shared/http.py bọc yield db trong db.begin; commit/rollback được quản lý bởi context manager. Chưa chạy integration để xác minh thời điểm response trên phiên bản FastAPI triển khai.
 
 ## Hủy đặt chỗ
 
@@ -107,7 +107,7 @@ sequenceDiagram
         A->>P: Đổi status thành CANCELLED
         A->>P: Ghi AuditEvent và PlatformEvent availability
         A->>P: Lưu response idempotency nếu có key
-        Note over A,P: Caller sở hữu transaction
+        Note over A,P: db_session quản lý transaction bằng db.begin
         A-->>U: Vé CANCELLED
     else CHECKED_IN hoặc quá hạn điều kiện hủy
         A-->>U: 409 conflict
@@ -138,7 +138,7 @@ sequenceDiagram
     else CONFIRMED và chính sách check-in hiệu lực
         A->>P: status CHECKED_IN, checked_in_at bằng DB clock
         A->>P: Ghi AuditEvent và PlatformEvent
-        Note over A,P: Caller sở hữu commit/rollback
+        Note over A,P: db_session quản lý commit/rollback bằng db.begin
         A-->>O: Vé CHECKED_IN
     else Không đủ điều kiện
         A-->>O: ticket_not_eligible hoặc checkin_closed
@@ -172,7 +172,7 @@ sequenceDiagram
 
 Nguồn và giới hạn: app/modules/notifications/service.py:publish_batch; adapters.py:SQS.publish.
 
-Backoff min(300, 2 ** min(attempts, 8)) giây theo biểu thức source (thực tế lũy thừa bị chặn ở 256). Đây là cơ chế at-least-once có thể trùng; không phải atomic transaction giữa PostgreSQL và SQS. Chưa đọc entrypoint worker/ack nên không khẳng định thứ tự delete message.
+Backoff min(300, 2 ** min(attempts, 8)) giây theo biểu thức source (thực tế lũy thừa bị chặn ở 256). Đây là cơ chế at-least-once có thể trùng; không phải atomic transaction giữa PostgreSQL và SQS. Đã đọc app/events.py: worker gọi consume trước queue.delete; ngoại lệ đi vào WorkerFailure và chờ 3 giây.
 
 ## Worker xử lý email xác nhận
 
@@ -212,3 +212,36 @@ sequenceDiagram
 Nguồn và giới hạn: app/modules/notifications/service.py:consume; jobs.py:enqueue,dispatch; adapters.py:email_adapter.
 
 Bước cập nhật delivery cuối chỉ chạy khi dispatch trả về bình thường. Nhánh email_job envelope đi thẳng vào dispatch. Code có adapter Brevo, mock (local/test), disabled; chưa biết EMAIL_BACKEND runtime. Webhook được xử lý riêng trong jobs.py; chưa kiểm thử gửi hoặc nhận webhook thực tế.
+
+## Worker loop và ack SQS
+
+```mermaid
+sequenceDiagram
+    participant W as Worker loop
+    participant P as PostgreSQL
+    participant Q as SQS
+    participant C as consume
+    W->>P: process_webhooks trong transaction
+    W->>P: cancel_batch limit 10 trong transaction khác
+    W->>Q: receive, tối đa 1 message
+    Q-->>W: Body và ReceiptHandle
+    alt Đã nhận tín hiệu dừng
+        Note over W,Q: Không consume hoặc delete message mới nhận
+    else Tiếp tục xử lý
+        W->>C: consume Body, email adapter
+        alt consume ném lỗi
+            C-->>W: Exception
+            Note over W,Q: Không delete, emit WorkerFailure và chờ 3 giây
+        else consume trả bình thường
+            C-->>W: Hoàn tất xử lý hoặc bỏ qua hợp lệ
+            W->>Q: delete ReceiptHandle
+            alt delete lỗi
+                Note over W,Q: WorkerFailure, có thể nhận lại message
+            else delete thành công
+                Note over W,Q: Vòng tiếp theo
+            end
+        end
+    end
+```
+
+Nguồn: app/events.py:main và notifications/adapters.py:SQS. Receive dùng WaitTimeSeconds=5, VisibilityTimeout=120. consume trả bình thường có thể là gửi, SKIPPED hoặc bỏ qua bản trùng; delete không chứng minh email đã tới hộp thư. SIGINT/SIGTERM đặt cờ dừng, không chủ động ngắt consume đang chạy; giới hạn thời gian dừng container chưa xác minh. Publisher gọi publish_batch rồi publish_platform, chờ 2 giây; lỗi vòng lặp chờ 3 giây. Body của admin.lifecycle.cancel_batch chưa có trong gói, chỉ xác minh call site.

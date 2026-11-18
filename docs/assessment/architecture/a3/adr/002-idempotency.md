@@ -20,4 +20,4 @@ Header là tùy chọn. Không tuyên bố mọi request tự được deduplica
 app/modules/booking/idempotency.py:execute; router.py; app/models.py:IdempotencyRecord.
 
 ## Kiểm chứng còn cần
-Retry cùng key; cùng key khác payload/operation; khác user cùng key; timeout sau commit; replay không đổi expires_at. Cần kiểm tra transaction owner.
+Retry cùng key; cùng key khác payload/operation; khác user cùng key; timeout sau commit; replay không đổi expires_at. Transaction owner đã xác định là shared/http.py:db_session; chưa chạy test commit/rollback.

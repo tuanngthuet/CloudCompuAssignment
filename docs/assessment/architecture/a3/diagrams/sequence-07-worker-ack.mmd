@@ -1,0 +1,26 @@
+sequenceDiagram
+    participant W as Worker loop
+    participant P as PostgreSQL
+    participant Q as SQS
+    participant C as consume
+    W->>P: process_webhooks trong transaction
+    W->>P: cancel_batch limit 10 trong transaction khác
+    W->>Q: receive, tối đa 1 message
+    Q-->>W: Body và ReceiptHandle
+    alt Đã nhận tín hiệu dừng
+        Note over W,Q: Không consume hoặc delete message mới nhận
+    else Tiếp tục xử lý
+        W->>C: consume Body, email adapter
+        alt consume ném lỗi
+            C-->>W: Exception
+            Note over W,Q: Không delete, emit WorkerFailure và chờ 3 giây
+        else consume trả bình thường
+            C-->>W: Hoàn tất xử lý hoặc bỏ qua hợp lệ
+            W->>Q: delete ReceiptHandle
+            alt delete lỗi
+                Note over W,Q: WorkerFailure, có thể nhận lại message
+            else delete thành công
+                Note over W,Q: Vòng tiếp theo
+            end
+        end
+    end

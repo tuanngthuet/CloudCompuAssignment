@@ -20,4 +20,4 @@ Có thể publish trùng giữa SQS send và DB commit. Có độ trễ email v�
 booking/service.py:transition; notifications/service.py:publish_batch,consume; notifications/jobs.py:dispatch; notifications/adapters.py.
 
 ## Kiểm chứng còn cần
-Fault sau SQS send trước commit; redelivery; lỗi provider; crash sau SENDING; webhook trùng; vé bị hủy trước gửi. Chưa đọc loop worker/ack và chưa chạy end-to-end.
+Fault sau SQS send trước commit; redelivery; lỗi provider; crash sau SENDING; webhook trùng; vé bị hủy trước gửi. Đã đọc app/events.py: consume trả bình thường mới delete; lỗi consume không delete, lỗi delete có thể redeliver. Chưa chạy end-to-end.

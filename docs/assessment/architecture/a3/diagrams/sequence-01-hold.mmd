@@ -40,7 +40,7 @@ sequenceDiagram
             Note over A,P: Chỉ đi tiếp nếu guard thành công hoặc queue tắt
             A->>P: Thêm HELD và audit, PlatformEvent
             A->>P: Lưu response idempotency nếu có key
-            Note over A,P: Caller sở hữu commit/rollback, chưa có shared/http.py để kiểm tra
+            Note over A,P: db_session dùng db.begin: commit khi thoát bình thường, rollback khi có ngoại lệ
             opt Sau commit và có admission
                 A->>R: consume generation
                 Note over A,R: Lỗi consume được log, không hoàn tác vé đã commit

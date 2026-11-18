@@ -15,7 +15,7 @@ sequenceDiagram
     else CONFIRMED và chính sách check-in hiệu lực
         A->>P: status CHECKED_IN, checked_in_at bằng DB clock
         A->>P: Ghi AuditEvent và PlatformEvent
-        Note over A,P: Caller sở hữu commit/rollback
+        Note over A,P: db_session quản lý commit/rollback bằng db.begin
         A-->>O: Vé CHECKED_IN
     else Không đủ điều kiện
         A-->>O: ticket_not_eligible hoặc checkin_closed

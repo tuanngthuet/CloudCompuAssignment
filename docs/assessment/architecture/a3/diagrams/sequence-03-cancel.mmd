@@ -12,7 +12,7 @@ sequenceDiagram
         A->>P: Đổi status thành CANCELLED
         A->>P: Ghi AuditEvent và PlatformEvent availability
         A->>P: Lưu response idempotency nếu có key
-        Note over A,P: Caller sở hữu transaction
+        Note over A,P: db_session quản lý transaction bằng db.begin
         A-->>U: Vé CANCELLED
     else CHECKED_IN hoặc quá hạn điều kiện hủy
         A-->>U: 409 conflict

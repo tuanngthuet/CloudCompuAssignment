@@ -10,3 +10,8 @@
 - Chưa so sánh tất cả type/default/CHECK/index bằng database diff.
 - Chưa có commit SHA của bộ source. SHA-256 file được ghi trong source-manifest.json.
 - Mermaid cung cấp dạng .mmd và Markdown; chưa xác minh bằng renderer Mermaid trong môi trường này.
+
+- Bổ sung review http.py/main.py/cli.py; xem supplement-review.md.
+- Sửa cấu trúc bảng Markdown; xuất thành công 7 ERD PNG/SVG với Graphviz.
+
+- Đã review app/events.py có sẵn trong ZIP: publisher/worker loop, consume trước delete, nhánh lỗi và tín hiệu dừng. Chưa chạy các test được liệt kê bởi git grep.

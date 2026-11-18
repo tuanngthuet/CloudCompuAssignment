@@ -1,0 +1,8 @@
+digraph ERD {
+graph [rankdir=TB, bgcolor="white", pad="0.3", nodesep="0.5", ranksep="1", dpi=140];
+node [shape=plain, fontname="DejaVu Sans"];
+edge [fontname="DejaVu Sans", fontsize=10, color="#64748b", arrowsize=0.6];
+rate_limits [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="5" COLOR="#cbd5e1"><TR><TD COLSPAN="2" BGCOLOR="#193751"><FONT COLOR="white"><B>rate_limits</B></FONT></TD></TR><TR><TD ALIGN="LEFT">key_hash</TD><TD ALIGN="LEFT">str PK</TD></TR><TR><TD ALIGN="LEFT">window_at</TD><TD ALIGN="LEFT">timestamp </TD></TR><TR><TD ALIGN="LEFT">attempts</TD><TD ALIGN="LEFT">int </TD></TR></TABLE>>];
+email_suppressions [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="5" COLOR="#cbd5e1"><TR><TD COLSPAN="2" BGCOLOR="#193751"><FONT COLOR="white"><B>email_suppressions</B></FONT></TD></TR><TR><TD ALIGN="LEFT">email</TD><TD ALIGN="LEFT">str PK</TD></TR><TR><TD ALIGN="LEFT">reason</TD><TD ALIGN="LEFT">str </TD></TR><TR><TD ALIGN="LEFT">created_at</TD><TD ALIGN="LEFT">timestamp </TD></TR></TABLE>>];
+platform_events [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="5" COLOR="#cbd5e1"><TR><TD COLSPAN="2" BGCOLOR="#193751"><FONT COLOR="white"><B>platform_events</B></FONT></TD></TR><TR><TD ALIGN="LEFT">id</TD><TD ALIGN="LEFT">uuid PK</TD></TR><TR><TD ALIGN="LEFT">kind</TD><TD ALIGN="LEFT">str </TD></TR><TR><TD ALIGN="LEFT">subject_id</TD><TD ALIGN="LEFT">uuid </TD></TR><TR><TD ALIGN="LEFT">published_at</TD><TD ALIGN="LEFT">timestamp &quot;nullable&quot;</TD></TR><TR><TD ALIGN="LEFT">created_at</TD><TD ALIGN="LEFT">timestamp </TD></TR></TABLE>>];
+}
