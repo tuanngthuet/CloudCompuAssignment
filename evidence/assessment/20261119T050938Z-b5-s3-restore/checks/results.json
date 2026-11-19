@@ -83,5 +83,77 @@
     "source_version_id": "JmiLVA.SywILMOOJXEcJ5o78aTnlRBx_",
     "new_current_version_id": "mU4g0DjmFqHmSSLfoJaW1q_8DVldRCqb"
   },
-  "evidence_scope": "Authenticated S3 GET object bytes only; no application screenshots, no DB reference verification, no restored app."
+  "evidence_scope": "Authenticated S3 GET object bytes only; no application screenshots, no DB reference verification, no restored app.",
+  "evidence_run_id": "20261119T050938Z-b5-s3-restore",
+  "review": {
+    "reviewed_at_utc": "2026-11-19T05:15:03.216220+00:00",
+    "cleanup_recheck": {
+      "checked_at_utc": "2026-11-19T05:15:03.216220+00:00",
+      "account_verified": true,
+      "operation": "ListObjectVersions, exact-key filter",
+      "remaining_versions": 0,
+      "remaining_delete_markers": 0,
+      "status": "PASS",
+      "mutations": []
+    },
+    "prompt_alignment": "S3 component meets overwrite/copy/hash/content-type/private/cleanup requirements; full B5 NOT complete until DB reference and real app display/cache are verified in the restored environment.",
+    "requirements": [
+      {
+        "requirement": "synthetic good version/key/hash",
+        "status": "PASS"
+      },
+      {
+        "requirement": "controlled wrong-image overwrite observed in S3 bytes",
+        "status": "PASS"
+      },
+      {
+        "requirement": "copy good version into current without deletion as restore method",
+        "status": "PASS"
+      },
+      {
+        "requirement": "downloaded SHA256/content type/PNG validation",
+        "status": "PASS"
+      },
+      {
+        "requirement": "private access",
+        "status": "PASS"
+      },
+      {
+        "requirement": "exact version cleanup after evidence",
+        "status": "PASS"
+      },
+      {
+        "requirement": "synthetic restored DB reference",
+        "status": "NOT_RUN"
+      },
+      {
+        "requirement": "real app display before/wrong/restored and app cache",
+        "status": "NOT_RUN"
+      },
+      {
+        "requirement": "B4 images_verified true and overall measurement",
+        "status": "NOT_RUN"
+      }
+    ],
+    "coordination": [
+      {
+        "owner": "Person 3",
+        "task": "C4/C5",
+        "deliver": "Fault run IDs/evidence, completion/rollback times and stable app/dependencies; no concurrent load/fault",
+        "consumer": "Person 2 schedules B4 rehearsal after this handoff"
+      },
+      {
+        "owner": "Person 2",
+        "task": "B4",
+        "deliver": "Private restored DB/app, pinned API digest, isolated secrets/cache/storage, synthetic record and accessible image route",
+        "consumer": "Person 2 runs integrated B5; this is not work assigned to Person 3"
+      },
+      {
+        "owner": "Person 2",
+        "task": "B5 remaining",
+        "deliver": "New integrated run: link synthetic DB record, observe good/wrong/restored image through app, compare DB key/hash/MIME/private/cache, capture evidence, cleanup",
+        "consumer": "Set images_verified=true only after all actual checks pass"
+      }
+    ]
+  }
 }

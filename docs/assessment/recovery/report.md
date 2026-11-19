@@ -32,3 +32,5 @@ Trong lượt B4 không tạo DB/app/secret/cache/object phục hồi, không đ
 Đã thực thi riêng phần S3 trên một key synthetic mới: bản tốt → bản ghi đè sai nội dung → CopyObject version tốt thành current. GET/hash/content type/private đạt; đã dọn đúng3 version, còn0 version/delete marker. Bằng chứng và bảng key/version/hash trong [s3-restore.md](s3-restore.md).
 
 B5 tổng thể vẫn BLOCKED: chưa kiểm DB reference và ảnh qua app restored của B4. `images_verified=false`; `b5_images=NOT_RUN`, RPO/RTO vẫn null. Ảnh evidence là object GET từ S3, không phải UI screenshot; không dùng kết quả S3 độc lập thay kiểm chứng app/DB.
+
+Rà soát B5 ngày19/11: prompt đã có bằng chứng cho riêng lớp S3; kiểm cleanup lại05:15:03UTC vẫn0 version/delete marker. Bảng trách nhiệm và phần NOT_RUN nằm trong [s3-restore.md](s3-restore.md#đối-chiếu-prompt-và-phần-cần-phối-hợp): người3 bàn giao ổn định C4/C5, người2 thực hiện B4 rồi lượt B5 tích hợp mới. Không coi app restored là việc của người3 hoặc dùng ảnh object thay kiểm UI/DB.

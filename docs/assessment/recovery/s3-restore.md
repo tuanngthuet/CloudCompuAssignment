@@ -57,10 +57,42 @@ Các ảnh dưới là **object tải lại từ S3**, không phải screenshot 
 5. Chỉ khi cả ảnh và DB reference qua app đạt mới cập nhật images_verified=true ở B4 và dùng record RPO/RTO thật.
 6. Giữ evidence trước cleanup. Liệt kê đúng key, so version/delete marker với manifest sở hữu rồi xóa chính các ID test; list lại phải trống. Không dùng delete recursive theo prefix hoặc sửa versioning/bucket policy.
 
+Ví dụ lệnh cho riêng lớp S3: đặt trước các biến Bucket/Key/Owner/Profile/Region và Good/Wrong theo target synthetic mới, cùng cache/content type phù hợp. Kiểm versioning, account và key chưa tồn tại trước các lệnh ghi; không dùng key/version đã dọn trong bảng.
+
+```powershell
+$GoodVersion = aws s3api put-object --bucket $Bucket --key $Key --body $Good --content-type image/png --cache-control no-store --expected-bucket-owner $Owner --profile $Profile --region $Region --query VersionId --output text
+$WrongVersion = aws s3api put-object --bucket $Bucket --key $Key --body $Wrong --content-type image/png --cache-control no-store --expected-bucket-owner $Owner --profile $Profile --region $Region --query VersionId --output text
+$CopySource = "$Bucket/$Key" + "?versionId=" + [Uri]::EscapeDataString($GoodVersion)
+$RestoredVersion = aws s3api copy-object --bucket $Bucket --key $Key --copy-source $CopySource --metadata-directive COPY --expected-bucket-owner $Owner --expected-source-bucket-owner $Owner --profile $Profile --region $Region --query VersionId --output text
+aws s3api get-object --bucket $Bucket --key $Key --expected-bucket-owner $Owner --profile $Profile --region $Region .local/b5-current.png
+Get-FileHash -Algorithm SHA256 -LiteralPath .local/b5-current.png
+```
+
+Sau **mỗi** request phải kiểm exit code, lưu VersionId ngay vào manifest riêng và GET/hash ảnh của giai đoạn đó trước khi tiếp tục. Cleanup dùng DeleteObjects với đúng Key+VersionId trong manifest sau khi đối chiếu ListObjectVersions; kiểm Errors và list lại. Các lệnh minh họa lớp S3 không thay bước DB reference/hiển thị app.
+
 Phiên bản/version IDs trong bảng đã được dọn, không dùng chúng để chạy lại; lượt mới phải có key/version/manifest mới. Chuỗi thao tác S3 đã thực thi được lưu trong JSON theo timestamp; vẫn cần một lượt gắn DB/app restored để nghiệm thu trọn B5.
 
-## Phần còn thiếu
+## Đối chiếu prompt và phần cần phối hợp
 
-B4 chưa tạo DB/app restored nên chưa có DB reference, ảnh trước/sau qua app hay kiểm cache của app. Các mục này giữ NOT_RUN; `images_verified=false`, RPO/RTO tổng thể chưa chốt. Kết quả đã gộp vào [report B4](report.md#kết-quả-b5).
+| Yêu cầu prompt B5 | Trạng thái / trách nhiệm |
+|---|---|
+| Synthetic tốt → ghi đè lỗi → copy version tốt thành current | PASS ở lớp S3; không dùng delete làm thao tác phục hồi |
+| Key/version/hash, content type, quyền private | PASS; bảng và JSON đối chiếu object tải lại |
+| Evidence và cleanup manifest | Đã có; xóa đúng3 version sau lưu evidence, không động key khác |
+| Liên kết đúng bản ghi synthetic | NOT_RUN; phải làm trên DB restored của B4 |
+| Hiển thị thật qua app, ảnh trước/sai/sau và hành vi cache | NOT_RUN; ảnh object hiện tại không thay bằng chứng UI |
+| Cập nhật B4 | Đã giữ images_verified=false và RPO/RTO chưa chốt |
+
+| Người / task | Cần bàn giao gì? | Người 2 kiểm hoặc làm tiếp gì? |
+|---|---|---|
+| Người3 — C4/C5 | Run ID/evidence, mốc kết thúc/rollback và xác nhận app/dependencies ổn định, không có tải/fault chạy song song | Chốt cửa sổ B4 theo sprint; không tự thực hiện fault thay người3 |
+| Người2 — B4 | DB/app restored private, cùng digest, secret/cache/storage riêng, bản ghi synthetic và đường đọc ảnh qua app | Đây vẫn là phần người2; người3 không có trách nhiệm tạo app restored |
+| Người2 — B5 | Khi B4 sẵn sàng: liên kết bản ghi, chạy lại toàn luồng tốt→sai→phục hồi qua app; so DB key/hash/MIME/private/cache, lưu evidence và cleanup | Chỉ sau khi thực tế đạt mới đặt images_verified=true; không đổi thành PASS chỉ vì S3 đã đạt |
+
+Lượt độc lập hiện tại đã dọn hết key/version test. Vì vậy cần **một lượt tích hợp mới** trong app restored; không thể bổ sung vài ảnh UI sau đó để coi các version đã xóa là đã được kiểm qua app. Khi tích hợp nên lấy key/content type thực từ upload ảnh synthetic của app, giữ DB reference đúng key đó và đối chiếu bytes sau chuẩn hóa ảnh của app.
+
+Đã kiểm cleanup lại bằng ListObjectVersions chỉ đọc lúc **2026-11-19T05:15:03.216220Z**: đúng key vẫn còn0 version/0 delete marker. Không ghi đè hoặc phục hồi thêm object để lặp lại bài S3 đã PASS. Chi tiết [review trong JSON](../../../evidence/assessment/20261119T050938Z-b5-s3-restore/checks/results.json#/review).
+
+Không có yêu cầu phối hợp thêm với người1 từ phần đã kiểm. Chưa cần người dùng cung cấp ảnh/video ở giai đoạn này; evidence UI chỉ có ý nghĩa khi có app restored thật. Kết quả gộp tại [report B4](report.md#kết-quả-b5).
 
 Nguồn: [AWS — copy version tốt thành current](https://docs.aws.amazon.com/AmazonS3/latest/userguide/RestoringPreviousVersions.html).

@@ -11,11 +11,11 @@
   "files": [
     {
       "path": "checks/results.json",
-      "sha256": "7de35e2bf9f983afdd9119cd9dca5e7e130678b5a15e6c4b2237c3c65997ba0a"
+      "sha256": "709967b6beabcb4d458c8e475215d4cee416b0d41fedcd38a0eedd7b4fdf1ffb"
     },
     {
       "path": "cleanup-manifest.json",
-      "sha256": "62a01b342529baa9f707301074f8c3addce9e267fa2b6721825375f56b0229a6"
+      "sha256": "5703d59660a7deadac7120028adf76f30fc9e3eccafda39644fe3ecb12bb2154"
     },
     {
       "path": "images/before.png",
@@ -31,8 +31,10 @@
     },
     {
       "path": "summary.md",
-      "sha256": "012dde7694e536cc8517b243e99cad603d57e5a62f02ff1bbad0fc8ccdb6b656"
+      "sha256": "7ce10f3fdcba51d46c54fe143fc91f4dc21f98657bd5074f386091770b686b64"
     }
   ],
-  "report_sha256": "e0231bf5e2800111a2e65467ef2c4c8c1cb9ee2635f7153d7a34ebd453f9fcc9"
+  "report_sha256": "3c0b5cef954e3446a7b0c4359edf62d32f365d24d5658de50b9cd3612e06ea57",
+  "object_run_id": "76e341cb-2c1e-4ec7-9113-9906e44d660c",
+  "reviewed_at_utc": "2026-11-19T05:15:03.216220+00:00"
 }
