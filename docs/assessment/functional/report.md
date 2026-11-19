@@ -41,7 +41,7 @@ Ma trận [test-cases.csv](test-cases.csv) dùng đúng cột sprint: `case_id,t
 | Probe tải/fault/restore | X01–X03 NOT_RUN; người dùng xác nhận chưa có lịch. | CSV |
 | Video student → admin/staff check-in | V01 BLOCKED, chờ người dùng cung cấp. Không nhận hai ảnh hoặc video cũ là video mới hoàn chỉnh. | [manifest](../../../evidence/assessment/20261119T034356Z-b3-functional/manifest.json), [kịch bản](demo-script.md) |
 
-Ma trận hiện **318 PASS, 18 NOT_RUN, 1 BLOCKED** (số dòng assertion/bằng chứng, không phải số yêu cầu độc lập). Toàn suite lịch sử: 275 PASS, 15 SKIP, 0 FAIL/ERROR; Node 39 PASS; API 33 PASS; browser 5 PASS. [Regression summary](../../../evidence/assessment/20261119T034356Z-b3-functional/checks/results.json#/regression_summary). 48 dòng kiểm deploy/migration/recovery/maintenance ngoài B3 đã bỏ khỏi ma trận; không xóa test gốc.
+Ma trận hiện **329 PASS, 3 FAIL, 3 NOT_RUN, 2 BLOCKED** (số dòng assertion/bằng chứng, không phải số yêu cầu độc lập). Toàn suite lịch sử: 275 PASS, 15 SKIP, 0 FAIL/ERROR; Node 39 PASS; API 33 PASS; browser 5 PASS. [Regression summary](../../../evidence/assessment/20261119T034356Z-b3-functional/checks/results.json#/regression_summary). 48 dòng kiểm deploy/migration/recovery/maintenance ngoài B3 đã bỏ khỏi ma trận; không xóa test gốc.
 
 Hai ảnh người dùng đã nhận: [reset thành công](../../../evidence/assessment/20261119T034356Z-b3-functional/screenshots/password-reset-success.png) và email SAT có QR/nhãn Inbox. Bản email nguyên gốc chứa QR vé chưa check-in giữ private; nguồn/hash ở manifest. Đã thêm bản che QR/mã đăng ký theo yêu cầu người dùng; bản che là ảnh dẫn xuất có hỗ trợ AI, không thay thế bản gốc hoặc log giao thư. Không yêu cầu ảnh riêng cho mọi test khi đã có log hoặc video rõ ràng.
 
@@ -51,7 +51,7 @@ Hai ảnh người dùng đã nhận: [reset thành công](../../../evidence/ass
 | --- | --- | --- |
 | X01–X03 chưa chạy | Chưa đủ bằng chứng nghiệm thu phần cửa sổ phối hợp | Chạy probe nghiệp vụ và bảy invariants đúng trước/sau C3/C4/C5/B4/B5 khi nhóm có lịch. |
 | Video chưa được cung cấp | Chưa đủ demo theo prompt | Người dùng gửi video trọn luồng trên ca có sẵn; ghi link kho nhóm/quyền truy cập/thời lượng. |
-| 15 test SKIP | Thiếu prerequisite optional browser/SQS local và Redis restart/OOM | Giữ NOT_RUN, không chuyển PASS bằng bài gần giống; không restart Redis AWS để lấp phần thiếu. |
+| Optional regression bổ sung | 11 mục đã PASS; avatar/map/camera FAIL; profile BLOCKED do thiếu fixture | Chi tiết repro và giới hạn dưới đây; không đổi các mục chưa đạt thành PASS. |
 | Schema metadata | Đã lấy thêm bằng truy vấn read-only | RDS trả 0002_platform ngày 19/11/2026 lúc 04:01:04 UTC. Đây là snapshot hiện tại, không ghi ngược là đã thu tại run lịch sử. |
 | Fixture avatar thiếu clean_db ban đầu | Lỗi thiết lập test, không phải lỗi runtime critical | Đã import fixture clean_db để mỗi test có dữ liệu sạch; suite cuối không còn fail/error. Chỉnh tên parameter chỉ phục vụ log đã hoàn nguyên vì không cần cho đầu ra B3. |
 | Mật khẩu thử login 401 | Không xác nhận là lỗi sản phẩm | Người dùng chọn mật khẩu khác, đã xác nhận login; giữ log trung thực và phân biệt xác nhận thủ công. |
@@ -64,7 +64,7 @@ Phân công staff bổ sung tạm để kiểm sai lịch đã gỡ; không chec
 
 Đầu ra B3 chỉ gồm ba file functional/test-cases.csv, report.md, demo-script.md, cùng một thư mục bằng chứng `20261119T034356Z-b3-functional` có manifest/summary đúng quy cách chung. Đã xóa ba cây evidence cũ, các script/debug/backup trung gian thừa, hai script probe chưa dùng và video tự tạo cũ; không đụng tài liệu B1/B2, input ảnh của người dùng hoặc test gốc. Video để người dùng cung cấp sau.
 
-Bộ thay đổi Git sau dọn: ba tài liệu B3; năm file evidence (manifest.json, summary.md, checks/results.json, ảnh reset, ảnh email đã che); một dòng sửa fixture test_avatars.py. Các log/assertion được gom nguyên nội dung trong results.json, các mục CSV trỏ tới section bằng JSON pointer. Một dòng import clean_db được giữ vì thiếu nó làm các test avatar dùng trùng dữ liệu và lỗi; không sửa chức năng/runtime hoặc chỉ tiêu nghiệm thu.
+Bộ thay đổi Git ban đầu sau dọn: ba tài liệu B3; năm file evidence (manifest.json, summary.md, checks/results.json, ảnh reset, ảnh email đã che); một dòng sửa fixture test_avatars.py. Các log/assertion được gom nguyên nội dung trong results.json, các mục CSV trỏ tới section bằng JSON pointer. Một dòng import clean_db được giữ vì thiếu nó làm các test avatar dùng trùng dữ liệu và lỗi; không sửa chức năng/runtime hoặc chỉ tiêu nghiệm thu.
 
 ### Ảnh email vé đã che thông tin
 
@@ -81,3 +81,15 @@ Theo chỉ đạo người dùng mới nhất, phần chưa có kết quả đư
 Preflight kỹ thuật đã đọc AWS: source RDS available/private/encrypted/Multi-AZ, PostgreSQL16.13/db.t4g.micro, retention1 ngày, có LatestRestorableTime; quota DB còn39; class gp3 có thể đặt; KMS enabled; S3 versioning Enabled/public-block bật; mô phỏng IAM cần thiết allowed; ECS API/worker/publisher stable2/1/1. Quyền mô phỏng không được ghi thành restore PASS. SQL read-only trả schema0002_platform và bảy invariants zero rows. [Preflight](../../../evidence/assessment/20261119T034356Z-b3-functional/checks/results.json#/recovery_preflight).
 
 Chưa phát sinh DB restored, không có phí lưu DB tạm từ lượt preflight này. Khi đủ điều kiện sẽ dùng DB/app/secret riêng, không đổi endpoint production; tạo đúng đầu ra recovery B4/B5 mà sprint yêu cầu và cleanup theo ID sau giữ bằng chứng.
+
+## Lượt optional regression bổ sung ngày 19/11
+
+Đã chạy 12 module browser cùng 6 bài SQS/Redis trên container riêng. Đây là lượt bổ sung cho 15 mục SKIP lịch sử, không phải chạy lại toàn bộ suite. Không thay đổi AWS, không gửi mail, không tạo ảnh/video. Kết quả từng assertion và timestamp tại [remaining_regression](../../../evidence/assessment/20261119T034356Z-b3-functional/checks/results.json#/remaining_regression).
+
+- PASS: browser HTTP, queue, registration, event discovery, login modal, platform, refresh, UI và SQS/Redis restart/OOM.
+- Avatar: 5 FAIL do bài đăng ký không điền email/họ tên bắt buộc; chưa tới bước upload. Mức độ: lỗi thiết lập bài test, chưa kết luận runtime. Repro: chạy test_avatar_browser với BROWSER_BASE_URL local.
+- Profile: BLOCKED, generic seed không tạo profile-admin nên 5 login assertion trả 401. Cần fixture riêng trước khi kiểm tiếp.
+- Map: 5 FAIL tại assertion số option editor-event sau lưu; thực tế 8 option, kỳ vọng tính từ danh sách admin. Mức độ: chưa phân loại lỗi sản phẩm; cần đối chiếu lọc quyền/event. Repro: test_image_map_browser trên seed local.
+- Camera: 18 PASS, 1 FAIL ở test_navigation_stops_live_tracks: Playwright wait_for_function bị CSP chặn unsafe-eval. Mức độ: tương thích harness; không tắt CSP để ép PASS. Fake media không thay thế kiểm điện thoại thật.
+
+Giữ kết quả chưa đạt trong ma trận; chưa thể chốt B3 ngoài phần video và cửa sổ phối hợp. Chỉ sửa môi trường build test (pin python slim-bookworm, timeout tải Playwright); chưa sửa hay phát hành runtime nên chưa có release mới để nhờ C3 đo lại.

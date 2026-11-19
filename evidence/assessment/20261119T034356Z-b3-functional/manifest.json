@@ -4,7 +4,7 @@
   "packaged_at_utc": "2026-11-19T03:43:56.607796+00:00",
   "operator": "Codex for automated checks; user for inbox, reset/login and iPhone camera observations",
   "source_commit": "a6e49640ddfac5e442e8a321d319018a4dc59ee4",
-  "workspace_change": "One necessary fixture import in tests/app/test_avatars.py; cosmetic parameter IDs reverted; no runtime release deployed by B3",
+  "workspace_change": "One necessary fixture import in tests/app/test_avatars.py; cosmetic parameter IDs reverted; no runtime release deployed by B3; browser.Dockerfile bookworm pin/download timeout for additional disposable browser checks",
   "historical_api_task_definition": "labseat-lab-api:10",
   "historical_api_image_digest": "sha256:8cf4b144a8c1260b22ad4a6be6277d5d3b66552cdeda407dab894258243256ee",
   "schema_version": "0002_platform",
@@ -23,9 +23,10 @@
   ],
   "new_existing_event_checks": "Two existing SAT schedules; no new event created in completion checks",
   "status_counts": {
-    "NOT_RUN": 18,
-    "PASS": 318,
-    "BLOCKED": 1
+    "FAIL": 3,
+    "PASS": 329,
+    "BLOCKED": 2,
+    "NOT_RUN": 3
   },
   "video": {
     "status": "BLOCKED",
@@ -57,14 +58,14 @@
   ],
   "limitations": [
     "Historical and completion runs consolidated without rerunning tests",
-    "15 optional regression tests skipped; no fabricated PASS",
     "No load/fault/restore coordinated window executed",
-    "User-provided video still pending"
+    "User-provided video still pending",
+    "Additional optional regression: 3 FAIL placeholders and 1 BLOCKED fixture; see remaining_regression, not runtime failure attribution."
   ],
   "files": [
     {
       "path": "checks/results.json",
-      "sha256": "5d410bf486574911979bdf3ead3bf0e41201c8c522636a47f39467883dfea8e7"
+      "sha256": "2d0b14e554832f3bb779cbb88d60cf88c3eca89dbfd7a10f565806361275b1b5"
     },
     {
       "path": "screenshots/password-reset-success.png",
@@ -76,9 +77,10 @@
     },
     {
       "path": "summary.md",
-      "sha256": "dd26cdcd346c43d8fdc19fa396908172d8c4f757ba61e645a64cccf4d3762f2e"
+      "sha256": "e007d790758c1bc87da658d494abd3faa154287931a5586521381c325c365ce4"
     }
   ],
   "evidence_format": "Checks consolidated without altering results in checks/results.json; CSV references #/section JSON pointers.",
-  "recovery_status": "Preflight collected; actual B4/B5 restore NOT_RUN pending planned fault handoff per user instruction"
+  "recovery_status": "Preflight collected; actual B4/B5 restore NOT_RUN pending planned fault handoff per user instruction",
+  "additional_source_commit": "92668ab"
 }

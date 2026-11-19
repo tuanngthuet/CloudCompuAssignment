@@ -932,5 +932,502 @@
       "conclusion": "Not verified from GitHub; work may exist locally or not yet pushed"
     },
     "decision": "Follow user instruction: wait per plan for missing prerequisites; do not independently run load/fault or mark restore completed."
+  },
+  "remaining_regression": {
+    "collected_at_utc": "2026-11-19T04:31:15.267324+00:00",
+    "source_commit": "92668ab",
+    "scope": "Additional optional tests only; not a full-suite rerun; local disposable Postgres/Redis/SQS and Chromium, fake camera/mocked APIs; no AWS calls or emails.",
+    "versions": {
+      "python": "3.12.16",
+      "packages": {
+        "pytest": "8.3.4",
+        "playwright": "1.49.1",
+        "sqlalchemy": "2.0.36",
+        "psycopg": "3.2.3",
+        "redis": "6.4.0"
+      }
+    },
+    "modules": {
+      "test_avatar_browser": {
+        "tests": 5,
+        "failures": 5,
+        "errors": 0,
+        "skipped": 0,
+        "timestamp": "2026-11-19T04:25:32.487291+00:00",
+        "cases": [
+          {
+            "name": "test_account_avatar_menu_guest_upload_reload_remove[1440-900]",
+            "status": "FAIL",
+            "seconds": 6.036
+          },
+          {
+            "name": "test_account_avatar_menu_guest_upload_reload_remove[1024-768]",
+            "status": "FAIL",
+            "seconds": 5.877
+          },
+          {
+            "name": "test_account_avatar_menu_guest_upload_reload_remove[768-1024]",
+            "status": "FAIL",
+            "seconds": 5.968
+          },
+          {
+            "name": "test_account_avatar_menu_guest_upload_reload_remove[390-844]",
+            "status": "FAIL",
+            "seconds": 5.941
+          },
+          {
+            "name": "test_account_avatar_menu_guest_upload_reload_remove[320-740]",
+            "status": "FAIL",
+            "seconds": 5.937
+          }
+        ]
+      },
+      "test_browser": {
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "timestamp": "2026-11-19T04:24:33.902899+00:00",
+        "cases": [
+          {
+            "name": "test_student_ticket_and_admin_manual_checkin",
+            "status": "PASS",
+            "seconds": 4.388
+          },
+          {
+            "name": "test_screen_navigation_preserves_drafts_without_writing[viewport0]",
+            "status": "PASS",
+            "seconds": 2.174
+          },
+          {
+            "name": "test_screen_navigation_preserves_drafts_without_writing[viewport1]",
+            "status": "PASS",
+            "seconds": 2.198
+          },
+          {
+            "name": "test_screen_navigation_preserves_drafts_without_writing[viewport2]",
+            "status": "PASS",
+            "seconds": 2.105
+          }
+        ]
+      },
+      "test_browser_queue": {
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "timestamp": "2026-11-19T04:24:55.207024+00:00",
+        "cases": [
+          {
+            "name": "test_real_waiting_room_auto_admit_reload_expire_and_leave",
+            "status": "PASS",
+            "seconds": 26.915
+          }
+        ]
+      },
+      "test_camera_browser": {
+        "tests": 19,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0,
+        "timestamp": "2026-11-19T04:29:38.055129+00:00",
+        "cases": [
+          {
+            "name": "test_video_camera_reads_qr_without_native_detector_and_requires_confirmation",
+            "status": "PASS",
+            "seconds": 4.788
+          },
+          {
+            "name": "test_photo_fallback_decodes_locally_without_opening_camera",
+            "status": "PASS",
+            "seconds": 1.173
+          },
+          {
+            "name": "test_permission_denied_explains_browser_permission",
+            "status": "PASS",
+            "seconds": 1.156
+          },
+          {
+            "name": "test_broken_native_detector_falls_back_to_jsqr",
+            "status": "PASS",
+            "seconds": 1.462
+          },
+          {
+            "name": "test_navigation_stops_live_tracks",
+            "status": "FAIL",
+            "seconds": 1.238
+          },
+          {
+            "name": "test_plain_http_origin_can_import_photo_without_https",
+            "status": "PASS",
+            "seconds": 1.369
+          },
+          {
+            "name": "test_non_ticket_qr_does_not_navigate_or_check_in",
+            "status": "PASS",
+            "seconds": 1.103
+          },
+          {
+            "name": "test_qr_modal_layout_animation_and_escape[1440-900]",
+            "status": "PASS",
+            "seconds": 1.776
+          },
+          {
+            "name": "test_qr_modal_layout_animation_and_escape[1024-768]",
+            "status": "PASS",
+            "seconds": 3.605
+          },
+          {
+            "name": "test_qr_modal_layout_animation_and_escape[768-1024]",
+            "status": "PASS",
+            "seconds": 3.025
+          },
+          {
+            "name": "test_qr_modal_layout_animation_and_escape[390-844]",
+            "status": "PASS",
+            "seconds": 1.69
+          },
+          {
+            "name": "test_qr_modal_layout_animation_and_escape[320-720]",
+            "status": "PASS",
+            "seconds": 1.607
+          },
+          {
+            "name": "test_qr_modal_close_stops_camera[button]",
+            "status": "PASS",
+            "seconds": 1.776
+          },
+          {
+            "name": "test_qr_modal_close_stops_camera[backdrop]",
+            "status": "PASS",
+            "seconds": 1.906
+          },
+          {
+            "name": "test_qr_modal_close_stops_camera[enter]",
+            "status": "PASS",
+            "seconds": 1.893
+          },
+          {
+            "name": "test_qr_modal_respects_reduced_motion",
+            "status": "PASS",
+            "seconds": 1.83
+          },
+          {
+            "name": "test_manual_entry_previews_ticket_and_profile_without_checkin",
+            "status": "PASS",
+            "seconds": 2.133
+          },
+          {
+            "name": "test_management_switch_controls_checkin_action_on_existing_session",
+            "status": "PASS",
+            "seconds": 3.155
+          },
+          {
+            "name": "test_checkin_preview_remains_within_mobile_viewport",
+            "status": "PASS",
+            "seconds": 2.226
+          }
+        ]
+      },
+      "test_event_discovery": {
+        "tests": 5,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "timestamp": "2026-11-19T04:27:55.400959+00:00",
+        "cases": [
+          {
+            "name": "test_labseat_vertical_status_sections_and_horizontal_cards[1440-900]",
+            "status": "PASS",
+            "seconds": 4.226
+          },
+          {
+            "name": "test_labseat_vertical_status_sections_and_horizontal_cards[1024-768]",
+            "status": "PASS",
+            "seconds": 4.244
+          },
+          {
+            "name": "test_labseat_vertical_status_sections_and_horizontal_cards[768-1024]",
+            "status": "PASS",
+            "seconds": 4.35
+          },
+          {
+            "name": "test_labseat_vertical_status_sections_and_horizontal_cards[390-844]",
+            "status": "PASS",
+            "seconds": 4.513
+          },
+          {
+            "name": "test_labseat_vertical_status_sections_and_horizontal_cards[320-740]",
+            "status": "PASS",
+            "seconds": 4.664
+          }
+        ]
+      },
+      "test_image_map_browser": {
+        "tests": 5,
+        "failures": 5,
+        "errors": 0,
+        "skipped": 0,
+        "timestamp": "2026-11-19T04:26:11.960266+00:00",
+        "cases": [
+          {
+            "name": "test_room_map_detect_delete_drag_edit_capacity_and_booking[1440-900]",
+            "status": "FAIL",
+            "seconds": 10.319
+          },
+          {
+            "name": "test_room_map_detect_delete_drag_edit_capacity_and_booking[1024-768]",
+            "status": "FAIL",
+            "seconds": 9.846
+          },
+          {
+            "name": "test_room_map_detect_delete_drag_edit_capacity_and_booking[768-1024]",
+            "status": "FAIL",
+            "seconds": 9.837
+          },
+          {
+            "name": "test_room_map_detect_delete_drag_edit_capacity_and_booking[390-844]",
+            "status": "FAIL",
+            "seconds": 9.573
+          },
+          {
+            "name": "test_room_map_detect_delete_drag_edit_capacity_and_booking[320-740]",
+            "status": "FAIL",
+            "seconds": 9.955
+          }
+        ]
+      },
+      "test_login_modal": {
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "timestamp": "2026-11-19T04:28:18.810811+00:00",
+        "cases": [
+          {
+            "name": "test_guest_dashboard_and_login_modal[1440-1000]",
+            "status": "PASS",
+            "seconds": 2.387
+          },
+          {
+            "name": "test_guest_dashboard_and_login_modal[1024-768]",
+            "status": "PASS",
+            "seconds": 2.237
+          },
+          {
+            "name": "test_guest_dashboard_and_login_modal[390-844]",
+            "status": "PASS",
+            "seconds": 2.194
+          }
+        ]
+      },
+      "test_platform_browser": {
+        "tests": 6,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "timestamp": "2026-11-19T04:28:26.923125+00:00",
+        "cases": [
+          {
+            "name": "test_security_management_and_staff_views[admin-390]",
+            "status": "PASS",
+            "seconds": 0.996
+          },
+          {
+            "name": "test_security_management_and_staff_views[admin-1440]",
+            "status": "PASS",
+            "seconds": 1.183
+          },
+          {
+            "name": "test_security_management_and_staff_views[staff-390]",
+            "status": "PASS",
+            "seconds": 1.055
+          },
+          {
+            "name": "test_security_management_and_staff_views[staff-1440]",
+            "status": "PASS",
+            "seconds": 0.903
+          },
+          {
+            "name": "test_security_management_and_staff_views[guest-390]",
+            "status": "PASS",
+            "seconds": 1.023
+          },
+          {
+            "name": "test_security_management_and_staff_views[guest-1440]",
+            "status": "PASS",
+            "seconds": 1.352
+          }
+        ]
+      },
+      "test_profile_browser": {
+        "tests": 5,
+        "failures": 5,
+        "errors": 0,
+        "skipped": 0,
+        "timestamp": "2026-11-19T04:27:11.496222+00:00",
+        "cases": [
+          {
+            "name": "test_profile_exam_gate_resume_and_persistence[1440-900]",
+            "status": "FAIL",
+            "seconds": 0.656
+          },
+          {
+            "name": "test_profile_exam_gate_resume_and_persistence[1024-768]",
+            "status": "FAIL",
+            "seconds": 0.544
+          },
+          {
+            "name": "test_profile_exam_gate_resume_and_persistence[768-1024]",
+            "status": "FAIL",
+            "seconds": 0.587
+          },
+          {
+            "name": "test_profile_exam_gate_resume_and_persistence[390-844]",
+            "status": "FAIL",
+            "seconds": 0.568
+          },
+          {
+            "name": "test_profile_exam_gate_resume_and_persistence[320-740]",
+            "status": "FAIL",
+            "seconds": 0.573
+          }
+        ]
+      },
+      "test_registration_browser": {
+        "tests": 5,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "timestamp": "2026-11-19T04:27:24.156230+00:00",
+        "cases": [
+          {
+            "name": "test_registration_real_http_password_errors_session_and_login[1440-900]",
+            "status": "PASS",
+            "seconds": 3.833
+          },
+          {
+            "name": "test_registration_real_http_password_errors_session_and_login[1024-768]",
+            "status": "PASS",
+            "seconds": 3.41
+          },
+          {
+            "name": "test_registration_real_http_password_errors_session_and_login[768-1024]",
+            "status": "PASS",
+            "seconds": 3.833
+          },
+          {
+            "name": "test_registration_real_http_password_errors_session_and_login[390-844]",
+            "status": "PASS",
+            "seconds": 3.453
+          },
+          {
+            "name": "test_registration_real_http_password_errors_session_and_login[320-740]",
+            "status": "PASS",
+            "seconds": 3.111
+          }
+        ]
+      },
+      "test_room_refresh": {
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "timestamp": "2026-11-19T04:28:34.876782+00:00",
+        "cases": [
+          {
+            "name": "test_room_updates_do_not_reload_image_or_rebuild_list[1440-900]",
+            "status": "PASS",
+            "seconds": 7.359
+          },
+          {
+            "name": "test_room_updates_do_not_reload_image_or_rebuild_list[390-844]",
+            "status": "PASS",
+            "seconds": 7.822
+          },
+          {
+            "name": "test_room_updates_do_not_reload_image_or_rebuild_list[320-740]",
+            "status": "PASS",
+            "seconds": 7.417
+          }
+        ]
+      },
+      "test_ui": {
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "timestamp": "2026-11-19T04:28:58.984068+00:00",
+        "cases": [
+          {
+            "name": "test_booking_tickets_queue_and_admin[1440-900]",
+            "status": "PASS",
+            "seconds": 4.533
+          },
+          {
+            "name": "test_booking_tickets_queue_and_admin[1024-768]",
+            "status": "PASS",
+            "seconds": 5.347
+          },
+          {
+            "name": "test_booking_tickets_queue_and_admin[768-1024]",
+            "status": "PASS",
+            "seconds": 5.911
+          },
+          {
+            "name": "test_booking_tickets_queue_and_admin[390-844]",
+            "status": "PASS",
+            "seconds": 5.566
+          }
+        ]
+      },
+      "transport-redis": {
+        "tests": 6,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "timestamp": "2026-11-19T04:24:01.896897+00:00",
+        "cases": [
+          {
+            "name": "test_real_transport_and_duplicate_ack",
+            "status": "PASS",
+            "seconds": 2.129
+          },
+          {
+            "name": "test_poison_message_reaches_local_dlq",
+            "status": "PASS",
+            "seconds": 1.471
+          },
+          {
+            "name": "test_worker_process_sends_and_sigterm_exits",
+            "status": "PASS",
+            "seconds": 8.745
+          },
+          {
+            "name": "test_publisher_process_publishes_and_sigterm_exits",
+            "status": "PASS",
+            "seconds": 3.156
+          },
+          {
+            "name": "test_queue_actual_redis_restart_is_fail_closed",
+            "status": "PASS",
+            "seconds": 1.65
+          },
+          {
+            "name": "test_queue_noeviction_oom_keeps_committed_ticket",
+            "status": "PASS",
+            "seconds": 0.336
+          }
+        ]
+      }
+    },
+    "issues": {
+      "test_avatar_browser": "5 assertions failed: register test omits required email/full_name, account menu stays hidden; test setup mismatch; not proof runtime registration broken.",
+      "test_profile_browser": "5 failed login attempts: profile-admin fixture was not provisioned by generic seed; prerequisite missing.",
+      "test_image_map_browser": "5 assertions failed after saving map: editor-event options count 8 versus admin events count +1; role-filter expectation needs investigation.",
+      "test_camera_browser": "18 passed, 1 failed: test_navigation_stops_live_tracks wait_for_function blocked by CSP unsafe-eval under Playwright 1.49; do not weaken app CSP."
+    },
+    "initial_camera_attempt": "19 setup errors because default /usr/bin/google-chrome absent; retried with installed Chromium.",
+    "environment_fix": "browser.Dockerfile pins Debian bookworm and increases Playwright download timeout; no app/runtime change."
   }
 }
