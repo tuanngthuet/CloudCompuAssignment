@@ -1,0 +1,936 @@
+{
+  "api": {
+    "checkedAt": "2026-11-18T15:29:43.252Z",
+    "cases": [
+      {
+        "id": "P01",
+        "name": "Guest /me rejected",
+        "status": "PASS",
+        "environment": "production HTTPS"
+      },
+      {
+        "id": "P02",
+        "name": "Three roles login and authenticated identity",
+        "status": "PASS",
+        "environment": "production HTTPS"
+      },
+      {
+        "id": "P03",
+        "name": "Student admin API denied",
+        "status": "PASS",
+        "environment": "production HTTPS"
+      },
+      {
+        "id": "P04",
+        "name": "Staff admin API denied",
+        "status": "PASS",
+        "environment": "production HTTPS"
+      },
+      {
+        "id": "P05",
+        "name": "Missing CSRF write denied",
+        "status": "PASS",
+        "environment": "production HTTPS"
+      },
+      {
+        "id": "P06",
+        "name": "Profile persists valid Vietnamese name and rejects invalid CCCD",
+        "status": "PASS",
+        "environment": "production HTTPS"
+      },
+      {
+        "id": "P07",
+        "name": "Invalid event schedule rejected",
+        "status": "PASS",
+        "environment": "production HTTPS"
+      },
+      {
+        "id": "P08",
+        "name": "Create synthetic event with normalized poster",
+        "status": "PASS",
+        "environment": "production HTTPS"
+      },
+      {
+        "id": "P09",
+        "name": "Edit event name and retain schedule",
+        "status": "PASS",
+        "environment": "production HTTPS"
+      },
+      {
+        "id": "P10",
+        "name": "Upload image map detects three quadrilateral rooms",
+        "status": "PASS",
+        "environment": "production HTTPS"
+      },
+      {
+        "id": "P11",
+        "name": "Edit labels and capacities and save image map",
+        "status": "PASS",
+        "environment": "production HTTPS"
+      },
+      {
+        "id": "P12",
+        "name": "Assign staff and open check-in manually",
+        "status": "PASS",
+        "environment": "production HTTPS"
+      },
+      {
+        "id": "P13",
+        "name": "Queue join permits booking",
+        "status": "PASS",
+        "environment": "production HTTPS"
+      },
+      {
+        "id": "P14",
+        "name": "Hold and idempotent replay preserve hold ID",
+        "status": "PASS",
+        "environment": "production HTTPS"
+      },
+      {
+        "id": "P15",
+        "name": "Confirm creates ticket and QR",
+        "status": "PASS",
+        "environment": "production HTTPS"
+      },
+      {
+        "id": "P16",
+        "name": "Duplicate registration in same event denied",
+        "status": "PASS",
+        "environment": "production HTTPS"
+      },
+      {
+        "id": "P17",
+        "name": "Unassigned staff cannot inspect B3 ticket",
+        "status": "PASS",
+        "environment": "production HTTPS"
+      },
+      {
+        "id": "P18",
+        "name": "Assigned staff can inspect without auto check-in",
+        "status": "PASS",
+        "environment": "production HTTPS"
+      },
+      {
+        "id": "P19",
+        "name": "Invalid QR rejected",
+        "status": "PASS",
+        "environment": "production HTTPS"
+      },
+      {
+        "id": "P20",
+        "name": "CSV authorized only for admin and contains synthetic ticket",
+        "status": "PASS",
+        "environment": "production HTTPS"
+      },
+      {
+        "id": "P21",
+        "name": "Second student confirm and cancel return capacity",
+        "status": "PASS",
+        "environment": "production HTTPS"
+      },
+      {
+        "id": "P22",
+        "name": "Register new synthetic mail account",
+        "status": "PASS",
+        "environment": "production HTTPS"
+      },
+      {
+        "id": "P23",
+        "name": "Profile actual update persists and original profile restored",
+        "status": "PASS",
+        "environment": "production HTTPS"
+      },
+      {
+        "id": "P24",
+        "name": "Admin lock rejects existing student session; unlock restores account status",
+        "status": "PASS",
+        "environment": "production HTTPS"
+      },
+      {
+        "id": "P25",
+        "name": "Unknown role field in signup is rejected",
+        "status": "PASS",
+        "environment": "production HTTPS"
+      },
+      {
+        "id": "P26",
+        "name": "Closed registration schedule refuses queue join",
+        "status": "PASS",
+        "environment": "production HTTPS"
+      },
+      {
+        "id": "P27",
+        "name": "Ended schedule refuses queue join",
+        "status": "PASS",
+        "environment": "production HTTPS"
+      },
+      {
+        "id": "P28",
+        "name": "Cancelled event refuses queue join",
+        "status": "PASS",
+        "environment": "production HTTPS"
+      },
+      {
+        "id": "P29",
+        "name": "Deleting event with booking history is rejected",
+        "status": "PASS",
+        "environment": "production HTTPS"
+      },
+      {
+        "id": "P30",
+        "name": "Create and delete unused synthetic draft event",
+        "status": "PASS",
+        "environment": "production HTTPS"
+      },
+      {
+        "id": "P31",
+        "name": "Closed check-in rejects confirmed ticket; baseline enabled restored",
+        "status": "PASS",
+        "environment": "production HTTPS"
+      },
+      {
+        "id": "P32",
+        "name": "Wrong password rejects login without session",
+        "status": "PASS",
+        "environment": "production HTTPS"
+      },
+      {
+        "id": "P33",
+        "name": "Successful logout invalidates session and /me is unauthorized",
+        "status": "PASS",
+        "environment": "production HTTPS"
+      }
+    ]
+  },
+  "browser": {
+    "checkedAt": "2026-11-18T15:42:24.913Z",
+    "results": [
+      {
+        "id": "U01",
+        "name": "390px real HTTPS booking layout has no horizontal overflow",
+        "status": "PASS",
+        "environment": "Edge mobile viewport emulation"
+      },
+      {
+        "id": "U02",
+        "name": "Second independent browser disables last-place room after first browser hold without refresh",
+        "status": "PASS",
+        "environment": "production HTTPS two browser contexts"
+      },
+      {
+        "id": "U03",
+        "name": "UI hold/confirm and explicit admin check-in persisted; student UI shows CHECKED_IN",
+        "status": "PASS",
+        "environment": "production HTTPS browser"
+      },
+      {
+        "id": "U04",
+        "name": "Repeated check-in safely returns checked-in ticket",
+        "status": "PASS",
+        "environment": "production HTTPS"
+      },
+      {
+        "id": "U05",
+        "name": "Desktop catalogue screenshot and checked-in ticket state",
+        "status": "PASS",
+        "environment": "Edge desktop"
+      }
+    ]
+  },
+  "email": {
+    "initial_scoped_mail": {
+      "email_verified": true,
+      "webhook_configured": true,
+      "reset_challenge_consumed": true,
+      "jobs": [
+        {
+          "kind": "verify",
+          "status": "DELIVERED",
+          "attempts": 1,
+          "provider_id_present": true,
+          "callback_events": 2
+        },
+        {
+          "kind": "reset",
+          "status": "DELIVERED",
+          "attempts": 1,
+          "provider_id_present": true,
+          "callback_events": 2
+        },
+        {
+          "kind": "ticket",
+          "status": "DELIVERED",
+          "attempts": 1,
+          "provider_id_present": true,
+          "callback_events": 2
+        }
+      ],
+      "recipient": "approved inbox (redacted)",
+      "inbox_confirmed_by_recipient": true,
+      "login_after_reset_confirmed_by_recipient": false,
+      "worker_baseline": "EMAIL_BACKEND=disabled; scoped task dispatch only"
+    },
+    "normal_pipeline": {
+      "checked_at_utc": "2026-11-19 03:27:31.825259+00:00",
+      "recipient": "approved verified student475 inbox (redacted)",
+      "jobs": [
+        {
+          "id": "992c0bd6-df10-42e2-95f3-5637eb47223f",
+          "kind": "resend",
+          "status": "DELIVERED",
+          "attempts": 1,
+          "provider_id_present": true,
+          "published_by_normal_publisher": true,
+          "callback_events": 2
+        },
+        {
+          "id": "37d4c582-e955-40d5-b602-8c221e5f99de",
+          "kind": "reset",
+          "status": "DELIVERED",
+          "attempts": 1,
+          "provider_id_present": true,
+          "published_by_normal_publisher": true,
+          "callback_events": 2
+        }
+      ],
+      "invariants": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "new_email_attempts_global": 2,
+      "within_two_mail_budget": true,
+      "reset_challenge_consumed": true,
+      "ticket_statuses": [
+        {
+          "reservation_id": "2722da93-c422-49ae-898e-ff9877de28dc",
+          "status": "CONFIRMED",
+          "checkin_audits": 0
+        }
+      ]
+    },
+    "quota_preflight": {
+      "student475_verified": true,
+      "captured_at_utc": "2026-11-19 03:11:20.410499+00:00",
+      "email_job_status_counts": {
+        "DELIVERED": 6,
+        "SKIPPED": 312
+      },
+      "unpublished_email_events": 0,
+      "active_email_jobs": 0,
+      "brevo_credits": [
+        {
+          "type": "free",
+          "credits": 300,
+          "credits_type": "sendLimit"
+        }
+      ]
+    },
+    "approved_two_mail_window": {
+      "startedAtUtc": "2026-11-19T03:12:36.0854192Z",
+      "baseline": "arn:aws:ecs:ap-southeast-2:403030570855:task-definition/labseat-lab-worker:10",
+      "brevo": "arn:aws:ecs:ap-southeast-2:403030570855:task-definition/labseat-lab-worker:11",
+      "maxApprovedEmails": 2,
+      "requestsCompleted": true,
+      "disabledRestored": true,
+      "brevoReadyAtUtc": "2026-11-19T03:13:43.1279370Z",
+      "closedAtUtc": "2026-11-19T03:14:52.7995912Z"
+    },
+    "recipient_observations": {
+      "recipient": "approved verified student475 inbox (redacted)",
+      "reset_inbox": true,
+      "ticket_inbox": true,
+      "reset_action_success": true,
+      "source": "User confirmed both messages Inbox, reset succeeded, and student475 login succeeded with recipient-chosen password on 2026-11-19",
+      "login_after_reset_confirmed": true,
+      "reset_password_choice": "recipient-chosen private password; not disclosed",
+      "original_password_restored": false,
+      "password_restoration_note": "Recipient chose a private password; assistant did not obtain or replace it."
+    },
+    "email_disabled_after_window": {
+      "checkedAtUtc": "2026-11-19T03:16:58.2767259Z",
+      "backend": "disabled",
+      "taskDefinition": "arn:aws:ecs:ap-southeast-2:403030570855:task-definition/labseat-lab-worker:10",
+      "running": 1,
+      "pending": 0,
+      "rollout": "IN_PROGRESS",
+      "runningTaskDefinitions": [
+        "arn:aws:ecs:ap-southeast-2:403030570855:task-definition/labseat-lab-worker:10"
+      ]
+    }
+  },
+  "invariants": {
+    "initial_b3": {
+      "before": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "after": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "after_checked_at_utc": "2026-11-18 16:23:42.532285+00:00",
+      "browser_checkin_audits": 1,
+      "phone_email_ticket": {
+        "reservation_id": "c911bbbe-aa46-46d9-a99b-9ef06cb8d27e",
+        "status": "CHECKED_IN",
+        "checked_in_at": "2026-11-18 16:20:44.383849+00:00",
+        "checkin_audits": 1,
+        "checkin_actor_roles": [
+          "staff"
+        ]
+      }
+    },
+    "after_sat_email_reset": {
+      "checked_at_utc": "2026-11-19 03:27:31.825259+00:00",
+      "violating_rows": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    "sql_source": "scripts/tests/db-invariants.sql",
+    "coordinated_load_fault_restore": "NOT_RUN; no real window scheduled"
+  },
+  "phone": {
+    "operator_observations": {
+      "source": "User replies in B3 conversation",
+      "reported_date_local": "2026-11-18",
+      "timezone": "Asia/Saigon",
+      "verify_mail_inbox": true,
+      "verify_action_success": true,
+      "reset_mail_inbox": true,
+      "reset_action_success": true,
+      "ticket_mail_inbox": true,
+      "login_after_reset_confirmed": false,
+      "login_after_reset_note": "Reset succeeded; subsequent login was not confirmed before temporary account cleanup. No longer waiting on the deleted account.",
+      "phone_device": "iPhone XR",
+      "phone_os": "iOS (version not supplied)",
+      "phone_browser": "Safari (version not supplied)",
+      "initial_scan_surface": "Native Camera/QR application; decoded text, not the website test",
+      "website_camera_scan_success": true,
+      "website_checkin_success": true,
+      "repeat_scan_already_checked_in": true,
+      "phone_reservation_source": "QR in booking confirmation email",
+      "phone_reservation_id": "c911bbbe-aa46-46d9-a99b-9ef06cb8d27e",
+      "phone_recording_supplied": false,
+      "temporary_fixture_removed_by_user_request": true,
+      "cleanup_note": "Login after reset was not confirmed before removal; historical observations retained."
+    },
+    "server_phone_ticket": {
+      "reservation_id": "c911bbbe-aa46-46d9-a99b-9ef06cb8d27e",
+      "status": "CHECKED_IN",
+      "checked_in_at": "2026-11-18 16:20:44.383849+00:00",
+      "checkin_audits": 1,
+      "checkin_actor_roles": [
+        "staff"
+      ]
+    },
+    "physical_phone_video": "Awaiting user-provided file; no new camera test inferred"
+  },
+  "realtime": {
+    "status": "PASS",
+    "recordedAt": "2026-11-18T17:17:49.160Z",
+    "student": "student476",
+    "observer": "student477",
+    "session_id": "1a7402d1-a9df-5053-8282-a4ab4d33e813",
+    "before": "72A+72B (A2-411): Còn 45/45 chỗ",
+    "held": "72A+72B (A2-411): Còn 44/45 chỗ",
+    "after": "72A+72B (A2-411): Còn 45/45 chỗ",
+    "observerReloaded": false,
+    "actions": [
+      {
+        "seconds": 15,
+        "title": "Student476: chọn phòng SAT còn chỗ để thử giữ và hủy"
+      },
+      {
+        "seconds": 22,
+        "title": "Giữ chỗ là giữ tạm một suất, chưa xác nhận đăng ký"
+      },
+      {
+        "seconds": 28,
+        "title": "Đã giữ một suất; chưa tạo vé xác nhận"
+      },
+      {
+        "seconds": 32,
+        "title": "Student477 quan sát: số chỗ cập nhật realtime, không reload"
+      },
+      {
+        "seconds": 38,
+        "title": "Student476 bấm Hủy giữ chỗ để trả lại suất"
+      },
+      {
+        "seconds": 51,
+        "title": "Sau khi hủy: số chỗ trở về như ban đầu, không reload"
+      },
+      {
+        "seconds": 57,
+        "title": "Đã hủy giữ chỗ. Không hủy ca SAT hoặc vé của student475."
+      },
+      {
+        "seconds": 63,
+        "title": "Lịch sử ghi nhận lượt giữ đã hủy của student476"
+      }
+    ]
+  },
+  "reset_login": {
+    "checkedAt": "2026-11-19T03:24:57.451Z",
+    "username": "b1-b1b2-20261117a-student475",
+    "results": [
+      {
+        "name": "pre-reset session revoked",
+        "status": "PASS"
+      },
+      {
+        "name": "reset login check",
+        "status": "FAIL",
+        "actual": "Chosen test password login failed; do not guess recipient password\n\n401 !== 200\n"
+      }
+    ],
+    "originalPasswordRestored": false,
+    "product_failure_confirmed": false,
+    "recipient_login_confirmed": true,
+    "interpretation": "Automated attempt used a preselected test password; recipient chose a different private password and confirmed successful login. Original password was not restored."
+  },
+  "ui_and_qr": {
+    "checkedAt": "2026-11-19T03:06:39.239Z",
+    "base": "https://labseat.id.vn",
+    "existingEventsOnly": true,
+    "newEventsCreated": 0,
+    "screenshotsCaptured": 0,
+    "results": [
+      {
+        "id": "UI-student-navigation",
+        "status": "PASS",
+        "actual": "Admin/staff navigation visibility matches authenticated student"
+      },
+      {
+        "id": "UI-student-event-form",
+        "status": "PASS",
+        "actual": "Forbidden deep link does not expose admin view or controls"
+      },
+      {
+        "id": "UI-student-layout-editor",
+        "status": "PASS",
+        "actual": "Forbidden deep link does not expose admin view or controls"
+      },
+      {
+        "id": "UI-student-users-panel",
+        "status": "PASS",
+        "actual": "Forbidden deep link does not expose admin view or controls"
+      },
+      {
+        "id": "UI-student-registrations-panel",
+        "status": "PASS",
+        "actual": "Forbidden deep link does not expose admin view or controls"
+      },
+      {
+        "id": "UI-student-staff-assignment-panel",
+        "status": "PASS",
+        "actual": "Forbidden deep link does not expose admin view or controls"
+      },
+      {
+        "id": "UI-student-email-jobs-panel",
+        "status": "PASS",
+        "actual": "Forbidden deep link does not expose admin view or controls"
+      },
+      {
+        "id": "UI-student-staff-panel",
+        "status": "PASS",
+        "actual": "Staff view is exposed only to staff role"
+      },
+      {
+        "id": "UI-staff-navigation",
+        "status": "PASS",
+        "actual": "Admin/staff navigation visibility matches authenticated staff"
+      },
+      {
+        "id": "UI-staff-event-form",
+        "status": "PASS",
+        "actual": "Forbidden deep link does not expose admin view or controls"
+      },
+      {
+        "id": "UI-staff-layout-editor",
+        "status": "PASS",
+        "actual": "Forbidden deep link does not expose admin view or controls"
+      },
+      {
+        "id": "UI-staff-users-panel",
+        "status": "PASS",
+        "actual": "Forbidden deep link does not expose admin view or controls"
+      },
+      {
+        "id": "UI-staff-registrations-panel",
+        "status": "PASS",
+        "actual": "Forbidden deep link does not expose admin view or controls"
+      },
+      {
+        "id": "UI-staff-staff-assignment-panel",
+        "status": "PASS",
+        "actual": "Forbidden deep link does not expose admin view or controls"
+      },
+      {
+        "id": "UI-staff-email-jobs-panel",
+        "status": "PASS",
+        "actual": "Forbidden deep link does not expose admin view or controls"
+      },
+      {
+        "id": "UI-staff-staff-panel",
+        "status": "PASS",
+        "actual": "Staff view is exposed only to staff role"
+      },
+      {
+        "id": "UI-admin-navigation",
+        "status": "PASS",
+        "actual": "Admin/staff navigation visibility matches authenticated admin"
+      },
+      {
+        "id": "UI-admin-event-form",
+        "status": "PASS",
+        "actual": "Authorized admin view visible"
+      },
+      {
+        "id": "UI-admin-layout-editor",
+        "status": "PASS",
+        "actual": "Authorized admin view visible"
+      },
+      {
+        "id": "UI-admin-users-panel",
+        "status": "PASS",
+        "actual": "Authorized admin view visible"
+      },
+      {
+        "id": "UI-admin-registrations-panel",
+        "status": "PASS",
+        "actual": "Authorized admin view visible"
+      },
+      {
+        "id": "UI-admin-staff-assignment-panel",
+        "status": "PASS",
+        "actual": "Authorized admin view visible"
+      },
+      {
+        "id": "UI-admin-email-jobs-panel",
+        "status": "PASS",
+        "actual": "Authorized admin view visible"
+      },
+      {
+        "id": "UI-admin-staff-panel",
+        "status": "PASS",
+        "actual": "Staff view is exposed only to staff role"
+      },
+      {
+        "id": "QR-wrong-selected-session",
+        "status": "PASS",
+        "actual": {
+          "selected_session": "21965ca0-7bf8-5bec-a162-64ea3818e964",
+          "ticket_session": "1a7402d1-a9df-5053-8282-a4ab4d33e813",
+          "message": "Vé không thuộc ca đang chọn.",
+          "confirmation_button_visible": false,
+          "checkin_write_requests": 0,
+          "ticket_status": "CONFIRMED",
+          "input": "Actual existing SAT ticket QR payload entered in website lookup; not a physical-camera test"
+        }
+      },
+      {
+        "id": "assignment-restored",
+        "status": "PASS",
+        "actual": "Temporary staff assignment removed; original event/schedule/ticket preserved"
+      }
+    ]
+  },
+  "regression_summary": {
+    "totals": {
+      "tests": 290,
+      "errors": 0,
+      "failures": 0,
+      "skipped": 15,
+      "passed": 275
+    },
+    "modules": {
+      "": 13,
+      "tests.app.test_avatars": 5,
+      "tests.app.test_booking_concurrency": 10,
+      "tests.app.test_brevo_booking": 4,
+      "tests.app.test_brevo_email": 19,
+      "tests.app.test_checkin_control": 10,
+      "tests.app.test_db": 34,
+      "tests.app.test_ecs_deploy": 9,
+      "tests.app.test_event_management": 4,
+      "tests.app.test_events": 8,
+      "tests.app.test_health": 1,
+      "tests.app.test_home": 1,
+      "tests.app.test_image_cache": 4,
+      "tests.app.test_image_detection": 16,
+      "tests.app.test_image_maps_db": 5,
+      "tests.app.test_local": 19,
+      "tests.app.test_map": 15,
+      "tests.app.test_migrate": 19,
+      "tests.app.test_notifications": 10,
+      "tests.app.test_platform": 22,
+      "tests.app.test_profiles": 18,
+      "tests.app.test_queue_config": 7,
+      "tests.app.test_recovery_measure": 5,
+      "tests.app.test_registration": 24,
+      "tests.app.test_reset": 2,
+      "tests.app.test_upload": 6
+    },
+    "skipped": [
+      {
+        "module": "",
+        "test": "tests.app.test_avatar_browser"
+      },
+      {
+        "module": "",
+        "test": "tests.app.test_browser"
+      },
+      {
+        "module": "",
+        "test": "tests.app.test_browser_queue"
+      },
+      {
+        "module": "",
+        "test": "tests.app.test_camera_browser"
+      },
+      {
+        "module": "",
+        "test": "tests.app.test_event_discovery"
+      },
+      {
+        "module": "",
+        "test": "tests.app.test_image_map_browser"
+      },
+      {
+        "module": "",
+        "test": "tests.app.test_login_modal"
+      },
+      {
+        "module": "",
+        "test": "tests.app.test_platform_browser"
+      },
+      {
+        "module": "",
+        "test": "tests.app.test_profile_browser"
+      },
+      {
+        "module": "",
+        "test": "tests.app.test_registration_browser"
+      },
+      {
+        "module": "",
+        "test": "tests.app.test_room_refresh"
+      },
+      {
+        "module": "",
+        "test": "tests.app.test_sqs_local"
+      },
+      {
+        "module": "",
+        "test": "tests.app.test_ui"
+      },
+      {
+        "module": "tests.app.test_db",
+        "test": "test_queue_actual_redis_restart_is_fail_closed"
+      },
+      {
+        "module": "tests.app.test_db",
+        "test": "test_queue_noeviction_oom_keeps_committed_ticket"
+      }
+    ]
+  },
+  "regression_junit_xml": "<?xml version='1.0' encoding='utf-8'?>\n<testsuite tests=\"290\" errors=\"0\" failures=\"0\" skipped=\"15\"><testcase classname=\"\" name=\"tests.app.test_avatar_browser__case_1\" time=\"0.000\"><skipped message=\"Optional environment prerequisite not supplied; see report\" /></testcase><testcase classname=\"\" name=\"tests.app.test_browser__case_2\" time=\"0.000\"><skipped message=\"Optional environment prerequisite not supplied; see report\" /></testcase><testcase classname=\"\" name=\"tests.app.test_browser_queue__case_3\" time=\"0.000\"><skipped message=\"Optional environment prerequisite not supplied; see report\" /></testcase><testcase classname=\"\" name=\"tests.app.test_camera_browser__case_4\" time=\"0.000\"><skipped message=\"Optional environment prerequisite not supplied; see report\" /></testcase><testcase classname=\"\" name=\"tests.app.test_event_discovery__case_5\" time=\"0.000\"><skipped message=\"Optional environment prerequisite not supplied; see report\" /></testcase><testcase classname=\"\" name=\"tests.app.test_image_map_browser__case_6\" time=\"0.000\"><skipped message=\"Optional environment prerequisite not supplied; see report\" /></testcase><testcase classname=\"\" name=\"tests.app.test_login_modal__case_7\" time=\"0.000\"><skipped message=\"Optional environment prerequisite not supplied; see report\" /></testcase><testcase classname=\"\" name=\"tests.app.test_platform_browser__case_8\" time=\"0.000\"><skipped message=\"Optional environment prerequisite not supplied; see report\" /></testcase><testcase classname=\"\" name=\"tests.app.test_profile_browser__case_9\" time=\"0.000\"><skipped message=\"Optional environment prerequisite not supplied; see report\" /></testcase><testcase classname=\"\" name=\"tests.app.test_registration_browser__case_10\" time=\"0.000\"><skipped message=\"Optional environment prerequisite not supplied; see report\" /></testcase><testcase classname=\"\" name=\"tests.app.test_room_refresh__case_11\" time=\"0.000\"><skipped message=\"Optional environment prerequisite not supplied; see report\" /></testcase><testcase classname=\"\" name=\"tests.app.test_sqs_local__case_12\" time=\"0.000\"><skipped message=\"Optional environment prerequisite not supplied; see report\" /></testcase><testcase classname=\"\" name=\"tests.app.test_ui__case_13\" time=\"0.000\"><skipped message=\"Optional environment prerequisite not supplied; see report\" /></testcase><testcase classname=\"tests.app.test_avatars\" name=\"test_avatar_private_normalized_replace_and_remove__case_14\" time=\"0.908\" /><testcase classname=\"tests.app.test_avatars\" name=\"test_invalid_avatar_preserves_current__case_15\" time=\"0.737\" /><testcase classname=\"tests.app.test_avatars\" name=\"test_invalid_avatar_preserves_current__case_16\" time=\"0.536\" /><testcase classname=\"tests.app.test_avatars\" name=\"test_invalid_avatar_preserves_current__case_17\" time=\"0.702\" /><testcase classname=\"tests.app.test_avatars\" name=\"test_avatar_storage_failure_and_s3_prefix__case_18\" time=\"0.614\" /><testcase classname=\"tests.app.test_booking_concurrency\" name=\"test_unrelated_rooms_progress_while_first_transaction_open__case_19\" time=\"0.431\" /><testcase classname=\"tests.app.test_booking_concurrency\" name=\"test_admin_exclusive_edit_waits_for_active_booking__case_20\" time=\"0.594\" /><testcase classname=\"tests.app.test_booking_concurrency\" name=\"test_thousand_attempts_across_five_rooms__case_21\" time=\"12.124\" /><testcase classname=\"tests.app.test_booking_concurrency\" name=\"test_opposite_room_expired_holds_do_not_deadlock__case_22\" time=\"1.163\" /><testcase classname=\"tests.app.test_booking_concurrency\" name=\"test_idempotency_replays_exact_response_without_extending_hold__case_23\" time=\"1.285\" /><testcase classname=\"tests.app.test_booking_concurrency\" name=\"test_concurrent_same_idempotency_key_one_mutation__case_24\" time=\"0.415\" /><testcase classname=\"tests.app.test_booking_concurrency\" name=\"test_idempotency_rollback_does_not_persist_response__case_25\" time=\"0.476\" /><testcase classname=\"tests.app.test_booking_concurrency\" name=\"test_invalid_and_user_scoped_idempotency_keys__case_26\" time=\"0.458\" /><testcase classname=\"tests.app.test_booking_concurrency\" name=\"test_confirm_and_cancel_keys_replay_authoritative_results__case_27\" time=\"0.508\" /><testcase classname=\"tests.app.test_booking_concurrency\" name=\"test_opposite_checkin_actors_use_consistent_user_lock_order__case_28\" time=\"0.794\" /><testcase classname=\"tests.app.test_brevo_booking\" name=\"test_email_qr_capability_is_read_only_scoped_and_same_as_ticket__case_29\" time=\"0.502\" /><testcase classname=\"tests.app.test_brevo_booking\" name=\"test_cancelled_ticket_email_qr_is_revoked__case_30\" time=\"0.331\" /><testcase classname=\"tests.app.test_brevo_booking\" name=\"test_email_image_expires_at_session_end__case_31\" time=\"0.392\" /><testcase classname=\"tests.app.test_brevo_booking\" name=\"test_brevo_failures_preserve_booking_and_retry_deduplicates__case_32\" time=\"0.501\" /><testcase classname=\"tests.app.test_brevo_email\" name=\"test_brevo_request_contract_and_attached_qr__case_33\" time=\"0.058\" /><testcase classname=\"tests.app.test_brevo_email\" name=\"test_brevo_failure_is_sanitized_and_not_retried__case_34\" time=\"0.009\" /><testcase classname=\"tests.app.test_brevo_email\" name=\"test_brevo_failure_is_sanitized_and_not_retried__case_35\" time=\"0.011\" /><testcase classname=\"tests.app.test_brevo_email\" name=\"test_brevo_failure_is_sanitized_and_not_retried__case_36\" time=\"0.010\" /><testcase classname=\"tests.app.test_brevo_email\" name=\"test_brevo_failure_is_sanitized_and_not_retried__case_37\" time=\"0.009\" /><testcase classname=\"tests.app.test_brevo_email\" name=\"test_brevo_failure_is_sanitized_and_not_retried__case_38\" time=\"0.017\" /><testcase classname=\"tests.app.test_brevo_email\" name=\"test_brevo_failure_is_sanitized_and_not_retried__case_39\" time=\"0.008\" /><testcase classname=\"tests.app.test_brevo_email\" name=\"test_timeout_is_ambiguous_without_leaking_secret__case_40\" time=\"0.008\" /><testcase classname=\"tests.app.test_brevo_email\" name=\"test_invalid_provider_ack_is_not_success__case_41\" time=\"0.011\" /><testcase classname=\"tests.app.test_brevo_email\" name=\"test_invalid_provider_ack_is_not_success__case_42\" time=\"0.007\" /><testcase classname=\"tests.app.test_brevo_email\" name=\"test_invalid_provider_ack_is_not_success__case_43\" time=\"0.013\" /><testcase classname=\"tests.app.test_brevo_email\" name=\"test_invalid_provider_ack_is_not_success__case_44\" time=\"0.015\" /><testcase classname=\"tests.app.test_brevo_email\" name=\"test_html_escapes_untrusted_event_and_room__case_45\" time=\"0.004\" /><testcase classname=\"tests.app.test_brevo_email\" name=\"test_real_email_requires_clean_https_url__case_46\" time=\"0.001\" /><testcase classname=\"tests.app.test_brevo_email\" name=\"test_real_email_requires_clean_https_url__case_47\" time=\"0.001\" /><testcase classname=\"tests.app.test_brevo_email\" name=\"test_real_email_requires_clean_https_url__case_48\" time=\"0.001\" /><testcase classname=\"tests.app.test_brevo_email\" name=\"test_real_email_requires_clean_https_url__case_49\" time=\"0.001\" /><testcase classname=\"tests.app.test_brevo_email\" name=\"test_real_email_requires_clean_https_url__case_50\" time=\"0.001\" /><testcase classname=\"tests.app.test_brevo_email\" name=\"test_secret_file_is_supported_and_key_is_not_in_repr__case_51\" time=\"0.001\" /><testcase classname=\"tests.app.test_checkin_control\" name=\"test_inspection_needs_admin_and_csrf_and_exposes_only_profile_fields__case_52\" time=\"0.425\" /><testcase classname=\"tests.app.test_checkin_control\" name=\"test_lookup_accepts_registration_id_and_unknown_ticket_is_safe__case_53\" time=\"0.536\" /><testcase classname=\"tests.app.test_checkin_control\" name=\"test_manual_open_allows_early_checkin_and_repeated_confirmation_is_idempotent__case_54\" time=\"0.585\" /><testcase classname=\"tests.app.test_checkin_control\" name=\"test_manual_open_controls_checkin_even_after_end_time__case_55\" time=\"0.516\" /><testcase classname=\"tests.app.test_checkin_control\" name=\"test_closing_after_lookup_is_rechecked_and_policy_is_audited__case_56\" time=\"0.463\" /><testcase classname=\"tests.app.test_checkin_control\" name=\"test_cancelled_ticket_never_has_checkin_permission__case_57\" time=\"0.398\" /><testcase classname=\"tests.app.test_checkin_control\" name=\"test_concurrent_checkins_create_one_audit_record__case_58\" time=\"0.434\" /><testcase classname=\"tests.app.test_checkin_control\" name=\"test_exclusive_policy_lock_prevents_checkin_using_stale_open_state__case_59\" time=\"0.467\" /><testcase classname=\"tests.app.test_checkin_control\" name=\"test_unconfirmed_or_expired_hold_is_visible_but_cannot_check_in__case_60\" time=\"0.467\" /><testcase classname=\"tests.app.test_checkin_control\" name=\"test_unconfirmed_or_expired_hold_is_visible_but_cannot_check_in__case_61\" time=\"0.512\" /><testcase classname=\"tests.app.test_db\" name=\"test_100_users_one_seat__case_62\" time=\"3.326\" /><testcase classname=\"tests.app.test_db\" name=\"test_one_user_many_seats__case_63\" time=\"0.383\" /><testcase classname=\"tests.app.test_db\" name=\"test_expiry_releases_and_forbids_confirm__case_64\" time=\"0.325\" /><testcase classname=\"tests.app.test_db\" name=\"test_idempotence_and_checkin__case_65\" time=\"0.399\" /><testcase classname=\"tests.app.test_db\" name=\"test_cancel_repeat_and_ownership__case_66\" time=\"0.406\" /><testcase classname=\"tests.app.test_db\" name=\"test_hold_repeat_no_extension_and_cap__case_67\" time=\"0.393\" /><testcase classname=\"tests.app.test_db\" name=\"test_db_unique_backstop__case_68\" time=\"0.348\" /><testcase classname=\"tests.app.test_db\" name=\"test_api_auth_qr_csv_images__case_69\" time=\"1.500\" /><testcase classname=\"tests.app.test_db\" name=\"test_migration_matches_models__case_70\" time=\"0.820\" /><testcase classname=\"tests.app.test_db\" name=\"test_confirm_rechecks_clock_after_wait__case_71\" time=\"1.507\" /><testcase classname=\"tests.app.test_db\" name=\"test_confirm_cancel_race__case_72\" time=\"0.494\" /><testcase classname=\"tests.app.test_db\" name=\"test_admin_overlap_and_guards__case_73\" time=\"0.746\" /><testcase classname=\"tests.app.test_db\" name=\"test_time_boundaries__case_74\" time=\"0.447\" /><testcase classname=\"tests.app.test_db\" name=\"test_two_process_http_and_restart__case_75\" time=\"14.338\" /><testcase classname=\"tests.app.test_db\" name=\"test_migration_roundtrip_and_idempotent_seed__case_76\" time=\"7.121\" /><testcase classname=\"tests.app.test_db\" name=\"test_map_save_revision_and_freeze__case_77\" time=\"0.946\" /><testcase classname=\"tests.app.test_db\" name=\"test_new_room_default_map_and_registration_guards__case_78\" time=\"0.824\" /><testcase classname=\"tests.app.test_db\" name=\"test_map_add_delete_syncs_session_seats__case_79\" time=\"0.363\" /><testcase classname=\"tests.app.test_db\" name=\"test_queue_fifo_capacity_and_concurrent_join__case_80\" time=\"1.076\" /><testcase classname=\"tests.app.test_db\" name=\"test_queue_reload_deadline_and_multi_tab__case_81\" time=\"0.526\" /><testcase classname=\"tests.app.test_db\" name=\"test_queue_waiter_expiry_and_explicit_rejoin__case_82\" time=\"0.312\" /><testcase classname=\"tests.app.test_db\" name=\"test_queue_admission_expiry_does_not_renew__case_83\" time=\"0.386\" /><testcase classname=\"tests.app.test_db\" name=\"test_queue_sessions_are_independent_and_close_caps_lease__case_84\" time=\"0.441\" /><testcase classname=\"tests.app.test_db\" name=\"test_queue_api_auth_csrf_and_backend_bypass__case_85\" time=\"0.479\" /><testcase classname=\"tests.app.test_db\" name=\"test_queue_database_rollback_does_not_consume__case_86\" time=\"0.369\" /><testcase classname=\"tests.app.test_db\" name=\"test_queue_post_commit_release_failure_preserves_hold_and_retry__case_87\" time=\"0.572\" /><testcase classname=\"tests.app.test_db\" name=\"test_queue_old_consume_cannot_remove_new_generation__case_88\" time=\"0.364\" /><testcase classname=\"tests.app.test_db\" name=\"test_queue_noscript_and_restart_marker_fail_closed__case_89\" time=\"0.334\" /><testcase classname=\"tests.app.test_db\" name=\"test_queue_partial_entry_fails_closed__case_90\" time=\"0.287\" /><testcase classname=\"tests.app.test_db\" name=\"test_queue_off_does_not_construct_redis_client__case_91\" time=\"0.358\" /><testcase classname=\"tests.app.test_db\" name=\"test_queue_operator_recovery_and_audit__case_92\" time=\"0.458\" /><testcase classname=\"tests.app.test_db\" name=\"test_queue_shared_between_api_processes__case_93\" time=\"16.198\" /><testcase classname=\"tests.app.test_db\" name=\"test_queue_actual_redis_restart_is_fail_closed__case_94\" time=\"0.330\"><skipped message=\"Optional environment prerequisite not supplied; see report\" /></testcase><testcase classname=\"tests.app.test_db\" name=\"test_queue_noeviction_oom_keeps_committed_ticket__case_95\" time=\"0.377\"><skipped message=\"Optional environment prerequisite not supplied; see report\" /></testcase><testcase classname=\"tests.app.test_ecs_deploy\" name=\"test_migration_timeout_stops_task_and_diagnoses__case_96\" time=\"0.002\" /><testcase classname=\"tests.app.test_ecs_deploy\" name=\"test_failed_migration_exit_blocks_release__case_97\" time=\"0.001\" /><testcase classname=\"tests.app.test_ecs_deploy\" name=\"test_placement_failure_is_not_retried__case_98\" time=\"0.001\" /><testcase classname=\"tests.app.test_ecs_deploy\" name=\"test_rollback_revision_is_not_accepted_as_candidate__case_99\" time=\"0.001\" /><testcase classname=\"tests.app.test_ecs_deploy\" name=\"test_release_smoke_rejects_wrong_image__case_100\" time=\"0.001\" /><testcase classname=\"tests.app.test_ecs_deploy\" name=\"test_release_smoke_rejects_old_api_task__case_101\" time=\"0.001\" /><testcase classname=\"tests.app.test_ecs_deploy\" name=\"test_rollback_after_success_uses_previous_good__case_102\" time=\"0.006\" /><testcase classname=\"tests.app.test_ecs_deploy\" name=\"test_standalone_migration_prepares_candidate_before_run__case_103\" time=\"0.002\" /><testcase classname=\"tests.app.test_ecs_deploy\" name=\"test_maintenance_schedule_preserves_network_and_changes_release__case_104\" time=\"0.001\" /><testcase classname=\"tests.app.test_event_management\" name=\"test_create_and_edit_event_owns_one_schedule_and_empty_layout__case_105\" time=\"0.264\" /><testcase classname=\"tests.app.test_event_management\" name=\"test_bad_schedule_creates_no_partial_event__case_106\" time=\"0.264\" /><testcase classname=\"tests.app.test_event_management\" name=\"test_cannot_change_schedule_after_ticket_and_rolls_back_metadata__case_107\" time=\"0.295\" /><testcase classname=\"tests.app.test_event_management\" name=\"test_my_tickets_include_current_event_name_without_catalogue_requests__case_108\" time=\"0.566\" /><testcase classname=\"tests.app.test_events\" name=\"test_ca_images_auth_and_atomic_storage__case_109\" time=\"0.404\" /><testcase classname=\"tests.app.test_events\" name=\"test_any_dimensions_are_normalized_for_ca__case_110\" time=\"0.203\" /><testcase classname=\"tests.app.test_events\" name=\"test_any_dimensions_are_normalized_for_ca__case_111\" time=\"0.208\" /><testcase classname=\"tests.app.test_events\" name=\"test_any_dimensions_are_normalized_for_ca__case_112\" time=\"0.194\" /><testcase classname=\"tests.app.test_events\" name=\"test_any_dimensions_are_normalized_for_ca__case_113\" time=\"0.139\" /><testcase classname=\"tests.app.test_events\" name=\"test_any_dimensions_are_normalized_for_ca__case_114\" time=\"0.165\" /><testcase classname=\"tests.app.test_events\" name=\"test_required_image_type_schedule_and_no_online__case_115\" time=\"0.241\" /><testcase classname=\"tests.app.test_events\" name=\"test_poster_keeps_aspect_crops_center_and_strips_exif__case_116\" time=\"0.064\" /><testcase classname=\"tests.app.test_health\" name=\"test_process_health_survives_db_failure__case_117\" time=\"3.893\" /><testcase classname=\"tests.app.test_home\" name=\"test_root_serves_app_and_initializes_csrf_without_redirect__case_118\" time=\"0.023\" /><testcase classname=\"tests.app.test_image_cache\" name=\"test_only_current_version_of_public_image_is_cacheable__case_119\" time=\"0.029\" /><testcase classname=\"tests.app.test_image_cache\" name=\"test_only_current_version_of_public_image_is_cacheable__case_120\" time=\"0.035\" /><testcase classname=\"tests.app.test_image_cache\" name=\"test_map_key_previews_never_get_public_cache_headers__case_121\" time=\"0.015\" /><testcase classname=\"tests.app.test_image_cache\" name=\"test_errors_and_sensitive_responses_remain_uncached__case_122\" time=\"0.037\" /><testcase classname=\"tests.app.test_image_detection\" name=\"test_shared_wall_smallest_faces_and_parallelogram_with_text__case_123\" time=\"0.116\" /><testcase classname=\"tests.app.test_image_detection\" name=\"test_nested_frames_keep_only_smallest_room__case_124\" time=\"0.020\" /><testcase classname=\"tests.app.test_image_detection\" name=\"test_background_colors_and_touching_filled_rooms__case_125\" time=\"0.019\" /><testcase classname=\"tests.app.test_image_detection\" name=\"test_background_colors_and_touching_filled_rooms__case_126\" time=\"0.007\" /><testcase classname=\"tests.app.test_image_detection\" name=\"test_background_colors_and_touching_filled_rooms__case_127\" time=\"0.021\" /><testcase classname=\"tests.app.test_image_detection\" name=\"test_open_shapes_circles_and_triangles_are_not_rooms__case_128\" time=\"0.024\" /><testcase classname=\"tests.app.test_image_detection\" name=\"test_noise_threshold_and_geometry__case_129\" time=\"0.014\" /><testcase classname=\"tests.app.test_image_detection\" name=\"test_bad_image__case_130\" time=\"0.001\" /><testcase classname=\"tests.app.test_image_detection\" name=\"test_bad_image__case_131\" time=\"0.001\" /><testcase classname=\"tests.app.test_image_detection\" name=\"test_bad_image__case_132\" time=\"0.040\" /><testcase classname=\"tests.app.test_image_detection\" name=\"test_bad_image__case_133\" time=\"0.001\" /><testcase classname=\"tests.app.test_image_detection\" name=\"test_bad_manual_quadrilateral__case_134\" time=\"0.001\" /><testcase classname=\"tests.app.test_image_detection\" name=\"test_bad_manual_quadrilateral__case_135\" time=\"0.001\" /><testcase classname=\"tests.app.test_image_detection\" name=\"test_bad_manual_quadrilateral__case_136\" time=\"0.001\" /><testcase classname=\"tests.app.test_image_detection\" name=\"test_only_rooms_capacity_explicit_and_four_points__case_137\" time=\"0.001\" /><testcase classname=\"tests.app.test_image_detection\" name=\"test_s3_preserves_lossless_png_content_type__case_138\" time=\"0.001\" /><testcase classname=\"tests.app.test_image_maps_db\" name=\"test_publish_exact_mask_and_protect_geometry__case_139\" time=\"0.937\" /><testcase classname=\"tests.app.test_image_maps_db\" name=\"test_add_remove_manual_rooms_and_reject_invalid_polygons__case_140\" time=\"0.631\" /><testcase classname=\"tests.app.test_image_maps_db\" name=\"test_zone_capacity_races_expiry_cancel_and_personal_tickets__case_141\" time=\"1.699\" /><testcase classname=\"tests.app.test_image_maps_db\" name=\"test_one_account_cannot_hold_twice_across_sessions_of_one_event__case_142\" time=\"0.503\" /><testcase classname=\"tests.app.test_image_maps_db\" name=\"test_blank_upload_can_be_configured_with_manual_room__case_143\" time=\"0.378\" /><testcase classname=\"tests.app.test_local\" name=\"test_image_normalization__case_144\" time=\"0.001\" /><testcase classname=\"tests.app.test_local\" name=\"test_image_normalization__case_145\" time=\"0.001\" /><testcase classname=\"tests.app.test_local\" name=\"test_image_normalization__case_146\" time=\"0.003\" /><testcase classname=\"tests.app.test_local\" name=\"test_reject_image__case_147\" time=\"0.001\" /><testcase classname=\"tests.app.test_local\" name=\"test_reject_image__case_148\" time=\"0.024\" /><testcase classname=\"tests.app.test_local\" name=\"test_reject_image__case_149\" time=\"0.001\" /><testcase classname=\"tests.app.test_local\" name=\"test_local_roundtrip_and_traversal__case_150\" time=\"0.004\" /><testcase classname=\"tests.app.test_local\" name=\"test_s3_stub_roundtrip__case_151\" time=\"0.001\" /><testcase classname=\"tests.app.test_local\" name=\"test_s3_failure_propagates__case_152\" time=\"0.000\" /><testcase classname=\"tests.app.test_local\" name=\"test_aware_ordered_session__case_153\" time=\"0.001\" /><testcase classname=\"tests.app.test_local\" name=\"test_invalid_ids_and_extra_input__case_154\" time=\"0.001\" /><testcase classname=\"tests.app.test_local\" name=\"test_gif_content_rejected_despite_image_container__case_155\" time=\"0.001\" /><testcase classname=\"tests.app.test_local\" name=\"test_decompression_bomb_warning_becomes_validation_error__case_156\" time=\"0.001\" /><testcase classname=\"tests.app.test_local\" name=\"test_corrupt_image_payload_is_rejected__case_157\" time=\"0.001\" /><testcase classname=\"tests.app.test_local\" name=\"test_local_atomic_replacement_with_concurrent_writers__case_158\" time=\"0.170\" /><testcase classname=\"tests.app.test_local\" name=\"test_local_symlink_cannot_escape_storage__case_159\" time=\"0.002\" /><testcase classname=\"tests.app.test_local\" name=\"test_s3_stream_closed_even_when_read_fails__case_160\" time=\"0.001\" /><testcase classname=\"tests.app.test_local\" name=\"test_blank_names_and_out_of_order_session__case_161\" time=\"0.001\" /><testcase classname=\"tests.app.test_local\" name=\"test_password_whitespace_preserved__case_162\" time=\"0.000\" /><testcase classname=\"tests.app.test_map\" name=\"test_default_60_positions__case_163\" time=\"0.001\" /><testcase classname=\"tests.app.test_map\" name=\"test_invalid_layout__case_164\" time=\"0.001\" /><testcase classname=\"tests.app.test_map\" name=\"test_invalid_layout__case_165\" time=\"0.001\" /><testcase classname=\"tests.app.test_map\" name=\"test_invalid_layout__case_166\" time=\"0.001\" /><testcase classname=\"tests.app.test_map\" name=\"test_invalid_layout__case_167\" time=\"0.000\" /><testcase classname=\"tests.app.test_map\" name=\"test_invalid_layout__case_168\" time=\"0.000\" /><testcase classname=\"tests.app.test_map\" name=\"test_invalid_layout__case_169\" time=\"0.001\" /><testcase classname=\"tests.app.test_map\" name=\"test_duplicate_element_or_seat_identity__case_170\" time=\"0.001\" /><testcase classname=\"tests.app.test_map\" name=\"test_valid_room_objects_and_seats__case_171\" time=\"0.001\" /><testcase classname=\"tests.app.test_map\" name=\"test_schema_limits__case_172\" time=\"0.001\" /><testcase classname=\"tests.app.test_map\" name=\"test_schema_limits__case_173\" time=\"0.000\" /><testcase classname=\"tests.app.test_map\" name=\"test_schema_limits__case_174\" time=\"0.001\" /><testcase classname=\"tests.app.test_map\" name=\"test_schema_limits__case_175\" time=\"0.001\" /><testcase classname=\"tests.app.test_map\" name=\"test_schema_limits__case_176\" time=\"0.001\" /><testcase classname=\"tests.app.test_map\" name=\"test_extra_seats_are_not_lost__case_177\" time=\"0.002\" /><testcase classname=\"tests.app.test_migrate\" name=\"test_single_frozen_baseline_and_fresh_roundtrip__case_178\" time=\"2.262\" /><testcase classname=\"tests.app.test_migrate\" name=\"test_adoption_changes_only_revision_and_preserves_every_business_table__case_179\" time=\"1.567\" /><testcase classname=\"tests.app.test_migrate\" name=\"test_drift_refuses_adoption_without_modifying_revision_or_rows__case_180\" time=\"1.403\" /><testcase classname=\"tests.app.test_migrate\" name=\"test_drift_refuses_adoption_without_modifying_revision_or_rows__case_181\" time=\"1.268\" /><testcase classname=\"tests.app.test_migrate\" name=\"test_drift_refuses_adoption_without_modifying_revision_or_rows__case_182\" time=\"1.234\" /><testcase classname=\"tests.app.test_migrate\" name=\"test_drift_refuses_adoption_without_modifying_revision_or_rows__case_183\" time=\"1.265\" /><testcase classname=\"tests.app.test_migrate\" name=\"test_drift_refuses_adoption_without_modifying_revision_or_rows__case_184\" time=\"1.198\" /><testcase classname=\"tests.app.test_migrate\" name=\"test_drift_refuses_adoption_without_modifying_revision_or_rows__case_185\" time=\"1.104\" /><testcase classname=\"tests.app.test_migrate\" name=\"test_drift_refuses_adoption_without_modifying_revision_or_rows__case_186\" time=\"1.199\" /><testcase classname=\"tests.app.test_migrate\" name=\"test_drift_refuses_adoption_without_modifying_revision_or_rows__case_187\" time=\"1.400\" /><testcase classname=\"tests.app.test_migrate\" name=\"test_missing_queue_policy_refuses_adoption__case_188\" time=\"1.177\" /><testcase classname=\"tests.app.test_migrate\" name=\"test_unknown_revision_is_untouched__case_189\" time=\"0.696\" /><testcase classname=\"tests.app.test_migrate\" name=\"test_unversioned_existing_tables_are_not_automatically_stamped__case_190\" time=\"0.773\" /><testcase classname=\"tests.app.test_migrate\" name=\"test_concurrent_migration_processes_are_serialized__case_191\" time=\"3.195\" /><testcase classname=\"tests.app.test_migrate\" name=\"test_concurrent_migration_processes_are_serialized__case_192\" time=\"4.224\" /><testcase classname=\"tests.app.test_migrate\" name=\"test_release_smoke_accepts_future_additive_schema_for_rollback__case_193\" time=\"0.681\" /><testcase classname=\"tests.app.test_migrate\" name=\"test_duplicate_identity_preflight_is_atomic__case_194\" time=\"0.510\" /><testcase classname=\"tests.app.test_migrate\" name=\"test_duplicate_identity_preflight_is_atomic__case_195\" time=\"0.404\" /><testcase classname=\"tests.app.test_migrate\" name=\"test_release_smoke_refuses_missing_platform_schema__case_196\" time=\"0.520\" /><testcase classname=\"tests.app.test_notifications\" name=\"test_confirm_outbox_atomic_and_repeated_confirm__case_197\" time=\"0.822\" /><testcase classname=\"tests.app.test_notifications\" name=\"test_publisher_ambiguous_send_and_retry__case_198\" time=\"0.432\" /><testcase classname=\"tests.app.test_notifications\" name=\"test_publisher_commit_failure_redelivers__case_199\" time=\"0.431\" /><testcase classname=\"tests.app.test_notifications\" name=\"test_parallel_publishers_and_email_dedup__case_200\" time=\"0.488\" /><testcase classname=\"tests.app.test_notifications\" name=\"test_email_failure_does_not_change_reservation__case_201\" time=\"0.510\" /><testcase classname=\"tests.app.test_notifications\" name=\"test_worker_crash_after_provider_accept_can_duplicate__case_202\" time=\"0.502\" /><testcase classname=\"tests.app.test_notifications\" name=\"test_invalid_recipient_and_cancelled_registration__case_203\" time=\"0.455\" /><testcase classname=\"tests.app.test_notifications\" name=\"test_invalid_recipient_and_cancelled_registration__case_204\" time=\"0.435\" /><testcase classname=\"tests.app.test_notifications\" name=\"test_invalid_recipient_and_cancelled_registration__case_205\" time=\"0.477\" /><testcase classname=\"tests.app.test_notifications\" name=\"test_forged_or_poison_envelope_is_not_acknowledged__case_206\" time=\"0.387\" /><testcase classname=\"tests.app.test_platform\" name=\"test_unique_identity_database_backstop__case_207\" time=\"0.445\" /><testcase classname=\"tests.app.test_platform\" name=\"test_unique_identity_database_backstop__case_208\" time=\"0.270\" /><testcase classname=\"tests.app.test_platform\" name=\"test_verification_one_use_supersedes_and_no_plaintext__case_209\" time=\"0.361\" /><testcase classname=\"tests.app.test_platform\" name=\"test_expired_or_wrong_purpose_link__case_210\" time=\"0.357\" /><testcase classname=\"tests.app.test_platform\" name=\"test_expired_or_wrong_purpose_link__case_211\" time=\"0.377\" /><testcase classname=\"tests.app.test_platform\" name=\"test_unverified_blocks_hold_and_queue__case_212\" time=\"0.373\" /><testcase classname=\"tests.app.test_platform\" name=\"test_reset_revokes_all_sessions_and_token_replay__case_213\" time=\"0.865\" /><testcase classname=\"tests.app.test_platform\" name=\"test_change_password_rotates_current_and_revokes_other__case_214\" time=\"0.938\" /><testcase classname=\"tests.app.test_platform\" name=\"test_rate_limits_survive_rejected_transaction__case_215\" time=\"0.393\" /><testcase classname=\"tests.app.test_platform\" name=\"test_last_admin_and_lock_revoke__case_216\" time=\"0.463\" /><testcase classname=\"tests.app.test_platform\" name=\"test_staff_assignment_lookup_mask_reveal_and_revocation__case_217\" time=\"0.558\" /><testcase classname=\"tests.app.test_platform\" name=\"test_deadline_enforced_without_scheduler_and_manual_reopen__case_218\" time=\"0.528\" /><testcase classname=\"tests.app.test_platform\" name=\"test_jobs_delivery_dedup_out_of_order_suppression_and_retry_window__case_219\" time=\"0.511\" /><testcase classname=\"tests.app.test_platform\" name=\"test_webhook_auth_and_forgot_generic__case_220\" time=\"0.381\" /><testcase classname=\"tests.app.test_platform\" name=\"test_cancel_batch_and_history_delete_guard__case_221\" time=\"0.546\" /><testcase classname=\"tests.app.test_platform\" name=\"test_gc_quarantine_and_reference_protection__case_222\" time=\"0.553\" /><testcase classname=\"tests.app.test_platform\" name=\"test_maintenance_dry_run_does_not_revoke_or_anonymize__case_223\" time=\"0.733\" /><testcase classname=\"tests.app.test_platform\" name=\"test_auth_email_payload_has_no_persisted_bearer_token__case_224\" time=\"0.429\" /><testcase classname=\"tests.app.test_platform\" name=\"test_parallel_authenticated_rate_limits_keep_pool_progress__case_225\" time=\"1.415\" /><testcase classname=\"tests.app.test_platform\" name=\"test_resend_limits_use_full_sixty_second_cooldown__case_226\" time=\"3.061\" /><testcase classname=\"tests.app.test_platform\" name=\"test_privacy_review_requires_admin_reason_and_protects_future_booking__case_227\" time=\"1.659\" /><testcase classname=\"tests.app.test_platform\" name=\"test_soft_bounce_is_provider_retry_not_a_new_send__case_228\" time=\"0.471\" /><testcase classname=\"tests.app.test_profiles\" name=\"test_profile_auth_csrf_normalization_and_private_fields__case_229\" time=\"0.717\" /><testcase classname=\"tests.app.test_profiles\" name=\"test_invalid_profile_does_not_change_saved_values__case_230\" time=\"0.688\" /><testcase classname=\"tests.app.test_profiles\" name=\"test_invalid_profile_does_not_change_saved_values__case_231\" time=\"0.723\" /><testcase classname=\"tests.app.test_profiles\" name=\"test_invalid_profile_does_not_change_saved_values__case_232\" time=\"0.620\" /><testcase classname=\"tests.app.test_profiles\" name=\"test_invalid_profile_does_not_change_saved_values__case_233\" time=\"0.613\" /><testcase classname=\"tests.app.test_profiles\" name=\"test_invalid_profile_does_not_change_saved_values__case_234\" time=\"0.692\" /><testcase classname=\"tests.app.test_profiles\" name=\"test_invalid_profile_does_not_change_saved_values__case_235\" time=\"0.615\" /><testcase classname=\"tests.app.test_profiles\" name=\"test_invalid_profile_does_not_change_saved_values__case_236\" time=\"0.526\" /><testcase classname=\"tests.app.test_profiles\" name=\"test_each_required_field_blocks_exam_queue_and_hold__case_237\" time=\"0.884\" /><testcase classname=\"tests.app.test_profiles\" name=\"test_practice_does_not_require_profile_and_existing_exam_can_be_cancelled__case_238\" time=\"1.075\" /><testcase classname=\"tests.app.test_profiles\" name=\"test_required_email_rejects_empty_without_changing_profile__case_239\" time=\"0.572\" /><testcase classname=\"tests.app.test_profiles\" name=\"test_required_email_rejects_empty_without_changing_profile__case_240\" time=\"1.253\" /><testcase classname=\"tests.app.test_profiles\" name=\"test_email_cannot_be_omitted_from_profile_update__case_241\" time=\"0.580\" /><testcase classname=\"tests.app.test_profiles\" name=\"test_phone_is_optional_and_does_not_block_exam__case_242\" time=\"0.809\" /><testcase classname=\"tests.app.test_profiles\" name=\"test_phone_is_optional_and_does_not_block_exam__case_243\" time=\"1.099\" /><testcase classname=\"tests.app.test_profiles\" name=\"test_profile_without_email_blocks_exam__case_244\" time=\"0.878\" /><testcase classname=\"tests.app.test_profiles\" name=\"test_cccd_is_optional_for_exam_queue_hold_and_confirmation__case_245\" time=\"1.070\" /><testcase classname=\"tests.app.test_profiles\" name=\"test_cccd_is_optional_for_exam_queue_hold_and_confirmation__case_246\" time=\"1.115\" /><testcase classname=\"tests.app.test_queue_config\" name=\"test_pool_size_stays_within_connection_budget__case_247\" time=\"0.001\" /><testcase classname=\"tests.app.test_queue_config\" name=\"test_pool_overflow_cannot_expand_budget__case_248\" time=\"0.001\" /><testcase classname=\"tests.app.test_queue_config\" name=\"test_production_rejects_unsafe_redis_configuration__case_249\" time=\"0.002\" /><testcase classname=\"tests.app.test_queue_config\" name=\"test_production_rejects_unsafe_redis_configuration__case_250\" time=\"0.001\" /><testcase classname=\"tests.app.test_queue_config\" name=\"test_production_rejects_unsafe_redis_configuration__case_251\" time=\"0.001\" /><testcase classname=\"tests.app.test_queue_config\" name=\"test_status_does_not_silently_ignore_policy_updates__case_252\" time=\"0.001\" /><testcase classname=\"tests.app.test_queue_config\" name=\"test_ecs_inline_ca_keeps_tls_verification__case_253\" time=\"0.001\" /><testcase classname=\"tests.app.test_recovery_measure\" name=\"test_measured_objectives__case_254\" time=\"0.001\" /><testcase classname=\"tests.app.test_recovery_measure\" name=\"test_over_budget_is_reported__case_255\" time=\"0.000\" /><testcase classname=\"tests.app.test_recovery_measure\" name=\"test_missing_or_inconsistent_evidence_refused__case_256\" time=\"0.001\" /><testcase classname=\"tests.app.test_recovery_measure\" name=\"test_missing_or_inconsistent_evidence_refused__case_257\" time=\"0.001\" /><testcase classname=\"tests.app.test_recovery_measure\" name=\"test_missing_or_inconsistent_evidence_refused__case_258\" time=\"0.001\" /><testcase classname=\"tests.app.test_registration\" name=\"test_signup_hashes_password_autologin_logout_and_login__case_259\" time=\"0.665\" /><testcase classname=\"tests.app.test_registration\" name=\"test_duplicate_username_does_not_change_account_or_session__case_260\" time=\"0.368\" /><testcase classname=\"tests.app.test_registration\" name=\"test_invalid_signup_creates_no_user__case_261\" time=\"0.019\" /><testcase classname=\"tests.app.test_registration\" name=\"test_invalid_signup_creates_no_user__case_262\" time=\"0.016\" /><testcase classname=\"tests.app.test_registration\" name=\"test_invalid_signup_creates_no_user__case_263\" time=\"0.024\" /><testcase classname=\"tests.app.test_registration\" name=\"test_invalid_signup_creates_no_user__case_264\" time=\"0.031\" /><testcase classname=\"tests.app.test_registration\" name=\"test_invalid_signup_creates_no_user__case_265\" time=\"0.027\" /><testcase classname=\"tests.app.test_registration\" name=\"test_invalid_signup_creates_no_user__case_266\" time=\"0.027\" /><testcase classname=\"tests.app.test_registration\" name=\"test_invalid_signup_creates_no_user__case_267\" time=\"0.023\" /><testcase classname=\"tests.app.test_registration\" name=\"test_invalid_signup_creates_no_user__case_268\" time=\"0.057\" /><testcase classname=\"tests.app.test_registration\" name=\"test_invalid_signup_creates_no_user__case_269\" time=\"0.044\" /><testcase classname=\"tests.app.test_registration\" name=\"test_invalid_signup_creates_no_user__case_270\" time=\"0.046\" /><testcase classname=\"tests.app.test_registration\" name=\"test_invalid_signup_creates_no_user__case_271\" time=\"0.044\" /><testcase classname=\"tests.app.test_registration\" name=\"test_invalid_signup_creates_no_user__case_272\" time=\"0.016\" /><testcase classname=\"tests.app.test_registration\" name=\"test_signup_requires_prelogin_csrf__case_273\" time=\"0.022\" /><testcase classname=\"tests.app.test_registration\" name=\"test_signup_requires_prelogin_csrf__case_274\" time=\"0.016\" /><testcase classname=\"tests.app.test_registration\" name=\"test_concurrent_signup_one_account_and_one_session__case_275\" time=\"0.327\" /><testcase classname=\"tests.app.test_registration\" name=\"test_signup_replaces_previous_authenticated_session__case_276\" time=\"0.329\" /><testcase classname=\"tests.app.test_registration\" name=\"test_short_password_and_signup_email_are_saved_unverified__case_277\" time=\"0.297\" /><testcase classname=\"tests.app.test_registration\" name=\"test_short_password_and_signup_email_are_saved_unverified__case_278\" time=\"0.296\" /><testcase classname=\"tests.app.test_registration\" name=\"test_short_password_and_signup_email_are_saved_unverified__case_279\" time=\"0.257\" /><testcase classname=\"tests.app.test_registration\" name=\"test_registration_requires_email__case_280\" time=\"0.020\" /><testcase classname=\"tests.app.test_registration\" name=\"test_duplicate_normalized_email_preserves_existing_account_and_session__case_281\" time=\"0.182\" /><testcase classname=\"tests.app.test_registration\" name=\"test_concurrent_registration_same_email_is_atomic__case_282\" time=\"0.248\" /><testcase classname=\"tests.app.test_reset\" name=\"test_local_reset_preview_execute_and_old_session_invalid__case_283\" time=\"0.724\" /><testcase classname=\"tests.app.test_reset\" name=\"test_reset_rejects_production__case_284\" time=\"0.001\" /><testcase classname=\"tests.app.test_upload\" name=\"test_chunked_limit_before_parser__case_285\" time=\"0.003\" /><testcase classname=\"tests.app.test_upload\" name=\"test_body_replay__case_286\" time=\"0.002\" /><testcase classname=\"tests.app.test_upload\" name=\"test_disconnect_never_calls_parser__case_287\" time=\"0.002\" /><testcase classname=\"tests.app.test_upload\" name=\"test_non_upload_request_is_not_buffered__case_288\" time=\"0.004\" /><testcase classname=\"tests.app.test_upload\" name=\"test_ca_multipart_bounded_before_parser__case_289\" time=\"0.001\" /><testcase classname=\"tests.app.test_upload\" name=\"test_ca_multipart_bounded_before_parser__case_290\" time=\"0.003\" /></testsuite>",
+  "node_ui_log": "✔ late availability response never replaces the currently selected session (105.7276ms)\n✔ confirming via ticket card clears the corresponding hold panel (4.9693ms)\n✔ stopping camera while permission request is pending stops late stream (4.9058ms)\n✔ camera unsupported offers manual entry without making a check-in request (5.5414ms)\n✔ room names are rendered as text and login uses pre-login CSRF (5.9391ms)\n✔ CSV parser supports BOM, commas, multiline and escaped quotes (4.6749ms)\n✔ availability restores own held registration without renewing it (5.018ms)\n✔ admin registrations use their own session selector independently of booking (6.1239ms)\n✔ late registrations response cannot replace a newly selected session (5.3047ms)\n✔ waiting queue hides the catalogue and map and restores without joining (26.8364ms)\n✔ expired admission disables hold even with a selected seat (3.7144ms)\n✔ late queue response cannot change the newly selected session (3.1173ms)\n✔ selecting an open session automatically restores then joins using CSRF (5.1172ms)\n✔ guest selecting a session requests login and resumes that session after identity (8.2052ms)\n✔ server expired lease automatically rejoins, local clock alone cannot create another lease (7.7548ms)\n✔ leaving clears the selected session and never automatically rejoins (9.5096ms)\n✔ switching sessions waits for an in-flight join, leaves old session, then joins new (10.0707ms)\n✔ unknown join result is checked with heartbeat before any retry (12.4627ms)\n✔ existing hold bypasses admission even after selection expires (5.2169ms)\n✔ leaving booking screen stops admission and returning does not auto rejoin (8.8196ms)\n✔ an in-flight hold prevents automatic admission changes and duplicate hold requests (6.1664ms)\n✔ ticket names and seat labels load without catalogue metadata or displaying internal codes (13.9947ms)\n✔ ticket missing metadata never falls back to UUID text (3.8177ms)\n✔ signup submits prelogin CSRF, refreshes identity and clears password fields (2.4483ms)\n✔ signup mismatch never sends account creation and preserves input (3.8713ms)\n✔ profile reads private fields and saves with authenticated CSRF (4.1407ms)\n✔ late profile save cannot refill private fields after logout (3.6994ms)\n✔ account header uses full name, avatar and default person after logout or image failure (8.0565ms)\n✔ availability polling keeps room nodes and reuses geometry until revision changes (12.0104ms)\n✔ a slow background poll does not clear the visible room list while waiting (5.1974ms)\n✔ mutation retries reuse a key after uncertain failure and new intents get new keys (6.0155ms)\n✔ camera permission errors explain recovery and release the controls (4.4458ms)\n✔ camera blocks insecure origins before requesting device access (4.3728ms)\n✔ scanned ticket fills the form and stops the stream without auto check-in (8.9576ms)\n✔ native decoder completion after stopping cannot fill a ticket (5.5362ms)\n✔ ticket lookup shows private profile and requires a separate check-in action (7.1059ms)\n✔ closed session hides check-in action but still shows ticket information (5.3954ms)\n✔ late ticket lookup never exposes the previous registrant after input changes (6.2861ms)\n✔ unverified account banner follows identity and remains hidden for guests (8.3975ms)\nℹ tests 39\nℹ suites 0\nℹ pass 39\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 551.7315\n",
+  "format_note": "Each evidence reference uses results.json#/section as a JSON pointer. Original assertions/log content preserved; no tests rerun during consolidation.",
+  "recovery_preflight": {
+    "checked_at_utc": "2026-11-19 04:01:04.661975+00:00",
+    "status": "BLOCKED",
+    "blocker": "Sprint B4 requires rehearsal after faults stabilize; no committed C3/C4/C5 completion evidence found on reviewed remote branches; user instructed waiting for uncompleted planned work.",
+    "technical_checks": {
+      "source_db_status": "available",
+      "engine": "postgres",
+      "engine_version": "16.13",
+      "class": "db.t4g.micro",
+      "multi_az": true,
+      "private": true,
+      "encrypted": true,
+      "backup_retention_days": 1,
+      "latest_restorable_time": "2026-11-19T03:53:10+00:00",
+      "source_storage_gib": 20,
+      "quotas": [
+        {
+          "AccountQuotaName": "DBInstances",
+          "Used": 1,
+          "Max": 40
+        },
+        {
+          "AccountQuotaName": "AllocatedStorage",
+          "Used": 20,
+          "Max": 100000
+        },
+        {
+          "AccountQuotaName": "DBSubnetGroups",
+          "Used": 1,
+          "Max": 50
+        }
+      ],
+      "orderable_class": [
+        {
+          "Class": "db.t4g.micro",
+          "Engine": "postgres",
+          "Version": "16.13",
+          "Storage": "gp3",
+          "MultiAZ": true,
+          "MinStorage": 20,
+          "MaxStorage": 6144
+        }
+      ],
+      "kms": {
+        "KeyState": "Enabled",
+        "Enabled": true,
+        "KeyManager": "AWS",
+        "KeyUsage": "ENCRYPT_DECRYPT"
+      },
+      "s3_versioning": {
+        "Status": "Enabled"
+      },
+      "s3_public_access_block": {
+        "PublicAccessBlockConfiguration": {
+          "BlockPublicAcls": true,
+          "IgnorePublicAcls": true,
+          "BlockPublicPolicy": true,
+          "RestrictPublicBuckets": true
+        }
+      },
+      "iam_simulated_decisions": [
+        {
+          "action": "rds:RestoreDBInstanceToPointInTime",
+          "decision": "allowed"
+        },
+        {
+          "action": "rds:DeleteDBInstance",
+          "decision": "allowed"
+        },
+        {
+          "action": "ecs:RunTask",
+          "decision": "allowed"
+        },
+        {
+          "action": "ssm:PutParameter",
+          "decision": "allowed"
+        },
+        {
+          "action": "ssm:DeleteParameter",
+          "decision": "allowed"
+        },
+        {
+          "action": "s3:GetObjectVersion",
+          "decision": "allowed"
+        },
+        {
+          "action": "s3:PutObject",
+          "decision": "allowed"
+        },
+        {
+          "action": "s3:DeleteObjectVersion",
+          "decision": "allowed"
+        },
+        {
+          "action": "iam:PassRole",
+          "decision": "allowed"
+        },
+        {
+          "action": "kms:Decrypt",
+          "decision": "allowed"
+        },
+        {
+          "action": "kms:CreateGrant",
+          "decision": "allowed"
+        }
+      ],
+      "services": [
+        {
+          "name": "labseat-lab-api",
+          "desired": 2,
+          "running": 2,
+          "pending": 0,
+          "rollout": "COMPLETED"
+        },
+        {
+          "name": "labseat-lab-worker",
+          "desired": 1,
+          "running": 1,
+          "pending": 0,
+          "rollout": "COMPLETED"
+        },
+        {
+          "name": "labseat-lab-publisher",
+          "desired": 1,
+          "running": 1,
+          "pending": 0,
+          "rollout": "COMPLETED"
+        }
+      ],
+      "schema": {
+        "checked_at_utc": "2026-11-19 04:01:04.661975+00:00",
+        "schema_revision": "0002_platform",
+        "invariant_violations": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    "limitations": [
+      "IAM simulation is not a successful RDS restore request or proof of all service/KMS restrictions",
+      "No incident timestamp, markers, PITR target or RPO/RTO measured",
+      "No restored DB/app/secret/object created; no production endpoint or secret modified"
+    ],
+    "next_step": "Wait for C4/C5 completion/stability handoff, then B4 PITR and B5 version restore + restored-app verification; run X03 and measure only after actual completion"
+  },
+  "github_dependency_review": {
+    "checked_at_utc": "2026-11-19T04:04:01.203162+00:00",
+    "repository": "https://github.com/tuanngthuet/CloudCompuAssignment",
+    "source_method": "Authenticated git ls-remote/fetch/show; no checkout/merge",
+    "heads": {
+      "assessment/architecture": "b9bd5abcc6fddb914199ff54c2a19fe527d5dba4",
+      "main": "ff2bb56091a5e846e4ebc662d2ea44d1d6fbecf6",
+      "tv1/w1-package": "cc9ce1971ac79fbc38c2a3ab900c79b02b97ac59",
+      "tv2/w1-package": "a9107b3cb210fffddcd86c0f134c80ea60303881",
+      "tv3/w1-package": "a6e49640ddfac5e442e8a321d319018a4dc59ee4"
+    },
+    "person1": {
+      "A1": "main inventory FINAL FOR HANDOFF, previous eight permission blockers cleared, pending/unknown checks still documented; not reviewer Accepted",
+      "A2": "main has Hava document and screenshots, with documented import/export/visibility limitations",
+      "A3": "main has seven ERD groups, seven sequences and five ADR drafts; source-analysis review not Accepted",
+      "A4": "No committed resilience/fault/restore evidence found in reviewed trees"
+    },
+    "person3": {
+      "finding": "No docs/assessment/performance, evidence/assessment or assessment observability/fault run evidence found in reviewed remote branches",
+      "existing_load_scripts": "Source templates exist under scripts/load; not proof C3/C4/C5 were executed",
+      "conclusion": "Not verified from GitHub; work may exist locally or not yet pushed"
+    },
+    "decision": "Follow user instruction: wait per plan for missing prerequisites; do not independently run load/fault or mark restore completed."
+  }
+}
