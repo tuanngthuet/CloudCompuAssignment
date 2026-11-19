@@ -25,4 +25,10 @@ Theo sprint, diễn tập sau khi C4/C5 ổn định; chưa có handoff trên c�
 
 ## Trạng thái cuối
 
-Không tạo DB/app/secret/cache/object phục hồi, không đổi production endpoint/secret/data/config, worker email giữ disabled. Hai ECS probe nguồn chỉ đọc đã STOPPED/exit0; DB/network disposable local đã dọn. Chưa có ảnh/video restore vì chưa thực thi, không dựng bằng chứng thay thế.
+Trong lượt B4 không tạo DB/app/secret/cache/object phục hồi, không đổi production endpoint/secret/data/config, worker email giữ disabled. Hai ECS probe nguồn chỉ đọc đã STOPPED/exit0; DB/network disposable local đã dọn. Chưa có ảnh/video của app restored/PITR vì các bước này chưa thực thi; ảnh object S3 của B5 được ghi riêng bên dưới.
+
+## Kết quả B5
+
+Đã thực thi riêng phần S3 trên một key synthetic mới: bản tốt → bản ghi đè sai nội dung → CopyObject version tốt thành current. GET/hash/content type/private đạt; đã dọn đúng3 version, còn0 version/delete marker. Bằng chứng và bảng key/version/hash trong [s3-restore.md](s3-restore.md).
+
+B5 tổng thể vẫn BLOCKED: chưa kiểm DB reference và ảnh qua app restored của B4. `images_verified=false`; `b5_images=NOT_RUN`, RPO/RTO vẫn null. Ảnh evidence là object GET từ S3, không phải UI screenshot; không dùng kết quả S3 độc lập thay kiểm chứng app/DB.

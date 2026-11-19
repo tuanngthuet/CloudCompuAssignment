@@ -1,0 +1,87 @@
+{
+  "run_id": "76e341cb-2c1e-4ec7-9113-9906e44d660c",
+  "task_id": "B5",
+  "started_at_utc": "2026-11-19T05:09:38.739888+00:00",
+  "region": "ap-southeast-2",
+  "bucket_alias": "labseat-private-assets",
+  "bucket_identity_sha256": "3c1ef13767867644d6e4274b48c56f4fd8886ad8b261580bcd8720dcf6f83d05",
+  "key_suffix": "assessment/b5/76e341cb-2c1e-4ec7-9113-9906e44d660c/rooms/fixture.png",
+  "full_key_sha256": "ae991f70b5a86c14ada41fed28f3b7b30d8625676bbd6e6af6d5e601fb5ba718",
+  "stages": [
+    {
+      "stage": "before",
+      "at_utc": "2026-11-19T05:09:49.248862+00:00",
+      "version_id": "JmiLVA.SywILMOOJXEcJ5o78aTnlRBx_",
+      "sha256": "17c0edfb565b41fbd252608537d227330abfd3aad8cf0a1d95db9f4fbea8e6ac",
+      "bytes": 18456,
+      "width": 800,
+      "height": 480,
+      "content_type": "image/png",
+      "cache_control": "no-store",
+      "evidence_file": "images/before.png"
+    },
+    {
+      "stage": "overwritten",
+      "at_utc": "2026-11-19T05:09:53.296444+00:00",
+      "version_id": "AlvyXV5nlHipTnOftRwvrm66j2mV0P22",
+      "sha256": "a7022db27680c96f426cdfb9ceecb72424948c8390146e882f7b24e7474f7a6a",
+      "bytes": 20565,
+      "width": 800,
+      "height": 480,
+      "content_type": "image/png",
+      "cache_control": "no-store",
+      "evidence_file": "images/overwritten.png"
+    },
+    {
+      "stage": "restored",
+      "at_utc": "2026-11-19T05:09:56.503532+00:00",
+      "version_id": "mU4g0DjmFqHmSSLfoJaW1q_8DVldRCqb",
+      "sha256": "17c0edfb565b41fbd252608537d227330abfd3aad8cf0a1d95db9f4fbea8e6ac",
+      "bytes": 18456,
+      "width": 800,
+      "height": 480,
+      "content_type": "image/png",
+      "cache_control": "no-store",
+      "evidence_file": "images/restored.png"
+    }
+  ],
+  "s3_status": "PASS",
+  "overall_status": "BLOCKED",
+  "db_reference": {
+    "status": "NOT_RUN",
+    "reason": "B4 restored DB/app not created"
+  },
+  "app_display": {
+    "status": "NOT_RUN",
+    "reason": "B4 restored app not created"
+  },
+  "images_verified": false,
+  "versioning": {
+    "Status": "Enabled"
+  },
+  "public_access_block": {
+    "BlockPublicAcls": true,
+    "IgnorePublicAcls": true,
+    "BlockPublicPolicy": true,
+    "RestrictPublicBuckets": true
+  },
+  "object_lock_default_retention": false,
+  "initial_key_empty": true,
+  "object_acl": [
+    {
+      "type": "CanonicalUser",
+      "permission": "FULL_CONTROL",
+      "public_group": false
+    }
+  ],
+  "anonymous_get_status": 403,
+  "cache_scope": "S3 authenticated GET returns Cache-Control no-store; browser/CDN cache and app display NOT_RUN",
+  "finished_at_utc": "2026-11-19T05:10:04.533372+00:00",
+  "account_verified": true,
+  "restore_method": {
+    "operation": "CopyObject",
+    "source_version_id": "JmiLVA.SywILMOOJXEcJ5o78aTnlRBx_",
+    "new_current_version_id": "mU4g0DjmFqHmSSLfoJaW1q_8DVldRCqb"
+  },
+  "evidence_scope": "Authenticated S3 GET object bytes only; no application screenshots, no DB reference verification, no restored app."
+}

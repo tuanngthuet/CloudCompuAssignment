@@ -882,6 +882,9 @@
     "rpo_seconds": null,
     "rto_seconds": null,
     "created_resources": [],
-    "cleanup": "No restored resources created. Two read-only source probe tasks exited0/STOPPED; disposable local DB/network cleaned after validation."
+    "cleanup": "No restored resources created. Two read-only source probe tasks exited0/STOPPED; disposable local DB/network cleaned after validation.",
+    "images_verified": false,
+    "b5_s3_component": "PASS",
+    "b5_evidence": "evidence/assessment/20261119T050938Z-b5-s3-restore/checks/results.json"
   }
 }
