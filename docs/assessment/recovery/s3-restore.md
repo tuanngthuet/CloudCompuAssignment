@@ -140,3 +140,7 @@ Ghi cùng session/room alias, DB key, full S3 key, version/hash, registry state 
 - v là **tên file của DB key**, không phải S3 VersionId/hash. Copy version tốt vào cùng key không làm v đổi. Route app tự đặt cache header; no-store trong metadata S3 của lượt độc lập không tự truyền thành no-store ở route có v.
 
 Đây là nguy cơ stale cache cần quan sát khi diễn tập, chưa phải lỗi browser đã tái hiện. Trong lượt tích hợp phải ghi header/URL và hình ảnh ở request bình thường; sau đó đối chiếu request bỏ v (no-store) hoặc browser tắt cache để phân biệt bytes S3 thật với ảnh cache. Giữ DB key đúng object, không âm thầm đổi key/v chỉ để ảnh có vẻ phục hồi. Ghi rõ nếu cần reload/bypass/invalidation và chỉ tác động môi trường kiểm chứng. Cache browser/CDN và ảnh qua app restored vẫn NOT_RUN;4 test mock không đổi images_verified thành true.
+
+## C1 liên quan B5 như thế nào?
+
+B5 không có đầu vào C1 trực tiếp; phụ thuộc **qua B4**, vì cần app dùng DB restored riêng. C1 hỗ trợ kiểm capacity/DB budget/dependency trước khi dựng app và ghép timestamp khi quan sát; không chứng minh object hash, DB reference hoặc ảnh hiển thị. Đã dẫn [smoke C1 dùng cho B4](../../../evidence/assessment/20261119T172832Z-b4-c1-preflight/checks/results.json) từ7fa878a; không chạy lại object S3 đã PASS và cleanup, không đổi images_verified=false. Các phần kiểm DB/app/cache của B5 vẫn NOT_RUN.

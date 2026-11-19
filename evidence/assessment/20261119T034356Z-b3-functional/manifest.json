@@ -65,7 +65,7 @@
   "files": [
     {
       "path": "checks/results.json",
-      "sha256": "2d0b14e554832f3bb779cbb88d60cf88c3eca89dbfd7a10f565806361275b1b5"
+      "sha256": "21450519dec005b855614eb07785a24fd9877aa1a8261c7734498d51ec45acf1"
     },
     {
       "path": "screenshots/password-reset-success.png",
@@ -77,10 +77,12 @@
     },
     {
       "path": "summary.md",
-      "sha256": "e007d790758c1bc87da658d494abd3faa154287931a5586521381c325c365ce4"
+      "sha256": "43327d10bd4017902ebecd67483ac7f2e886fea4b0a37912ef1d0587e591fc31"
     }
   ],
   "evidence_format": "Checks consolidated without altering results in checks/results.json; CSV references #/section JSON pointers.",
   "recovery_status": "Preflight collected; actual B4/B5 restore NOT_RUN pending planned fault handoff per user instruction",
-  "additional_source_commit": "92668ab"
+  "additional_source_commit": "92668ab",
+  "c1_support_run_id": "20261119T172832Z-b4-c1-preflight",
+  "c1_source_commit": "7fa878ac7e7995c25777680e44fe2da36d1e619c"
 }

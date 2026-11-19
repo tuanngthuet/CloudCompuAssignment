@@ -1055,5 +1055,11 @@
       "No restored DB/app deployment, effective recovery-role permissions, successful network probe or RPO/RTO measurement",
       "A1 read-only inventory and A2 diagrams do not prove source commit matches a deployed digest"
     ]
+  },
+  "c1_handoff_support": {
+    "source_commit": "7fa878ac7e7995c25777680e44fe2da36d1e619c",
+    "evidence": "evidence/assessment/20261119T172832Z-b4-c1-preflight/checks/results.json",
+    "scope": "Direct: sprint lists C1 quota/capacity as an input; DB connections/reserve, RAM/CPU/ENI/placement and restore headroom.",
+    "no_completion_status_promoted": true
   }
 }

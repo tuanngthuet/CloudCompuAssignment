@@ -1429,5 +1429,11 @@
     },
     "initial_camera_attempt": "19 setup errors because default /usr/bin/google-chrome absent; retried with installed Chromium.",
     "environment_fix": "browser.Dockerfile pins Debian bookworm and increases Playwright download timeout; no app/runtime change."
+  },
+  "c1_handoff_support": {
+    "source_commit": "7fa878ac7e7995c25777680e44fe2da36d1e619c",
+    "evidence": "evidence/assessment/20261119T172832Z-b4-c1-preflight/checks/results.json",
+    "scope": "Indirect: correlate business probes and read-only invariants with timestamped C3/C4/C5/B4/B5 windows; this standalone smoke does not close X01-X03.",
+    "no_completion_status_promoted": true
   }
 }

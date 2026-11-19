@@ -255,5 +255,11 @@
       "Successful app image retrieval with recovery task IAM/network/SSL config"
     ],
     "images_verified": false
+  },
+  "c1_handoff_support": {
+    "source_commit": "7fa878ac7e7995c25777680e44fe2da36d1e619c",
+    "evidence": "evidence/assessment/20261119T172832Z-b4-c1-preflight/checks/results.json",
+    "scope": "Indirect via B4 restored private app; collection does not prove image DB reference or app rendering.",
+    "no_completion_status_promoted": true
   }
 }

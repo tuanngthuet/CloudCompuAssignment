@@ -66,3 +66,21 @@ Lúc **19/11/2026 12:21:46 UTC+7 / 05:21:46 UTC**:
 - Lifecycle Enabled, phạm vi toàn bucket, NoncurrentDays=30. Đây là giới hạn giữ version ảnh cũ, không bảo đảm mọi ảnh cũ luôn có đủ30 ngày phục hồi hoặc thay RDS retention1 ngày.
 
 Như vậy đã bổ sung phần lifecycle/TLS policy mà A1 ghi Pending cho bucket ảnh; không sửa kết luận A1 gốc hoặc nhận là toàn bộ security audit đã hoàn tất. Effective IAM, endpoint policy, recovery prefix, ENI và probe tới tài nguyên mới vẫn cần kiểm lúc triển khai.
+
+## Bàn giao C1 cho B4
+
+B4 có đầu vào C1 trực tiếp theo sprint. Đã đọc [C1 nguồn](https://github.com/tuanngthuet/CloudCompuAssignment/blob/7fa878ac7e7995c25777680e44fe2da36d1e619c/docs/assessment/performance/observability.md) ở7fa878a và chạy collector nguyên bản,6 unit test offline đạt; chỉ bổ sung kết quả vào output người2, không sửa báo cáo/code của người3. [JSON/CSV/chart thực](../../../evidence/assessment/20261119T172832Z-b4-c1-preflight/checks/results.json). Lượt quan sát UTC19/11 17:28–17:31 tương ứng20/11 sau00:28 giờ Việt Nam, không phải tải/fault/restore.
+
+| Phần C1 cần cho B4 | Kết quả bổ sung thực tế | Giới hạn |
+|---|---|---|
+| Collector baseline |4 mẫu/252 dòng; API running2, EC2 desired/InService4, healthy targets2;0 lỗi API |1 vòng30,78s;10 loại metric thiếu/chậm được giữ nguyên status, không đổi thành0 |
+| DB connection budget |max_connections79; superuser reserve3, reserved2 → non-reserved74; budget66 dư8, rolling ceiling65 |9 client connections tại SQL snapshot gồm probe; không phải peak của tải/rollout |
+| DB correctness |schema0002_platform;7 invariants zero rows; transaction read-only |Không thay kiểm DB restored; commit tracking vẫn off |
+| Restore quotas |DB instances1/40; allocated storage20/100000GiB; manual snapshots0/100 |Không chứng minh IAM/KMS/create/restore thực thành công |
+| Same API task |memory hard512MiB, CPU256units; đọc ENI attached và instance-type max thực |Không lấy capability trunking làm bằng chứng có trunk ENI; ECS ENI metric vẫn MISSING |
+| Headroom theo AZ |Ước lượng cận trên cho cùng API task: AZ2a1slot, AZ2b3slots |Chỉ min(memory/CPU/physical ENI) tại snapshot; còn subnet IP, SG, constraint, reserved headroom và role; không đảm bảo placement hoặc phục hồi cả AZ |
+| Worker/email |revision10, EMAIL_BACKEND=disabled; không đổi backend |Chưa thực hiện smoke mail C2 hoặc gửi mail |
+
+Collector exit0 chỉ là thu được API; C1 nguồn vẫn ghi nghiệm thu BLOCKED và chưa được owner xác nhận lại. K6/clock/load-runner saturation, request stream và khả năng placement/fault còn phải xác minh. Snapshot capacity sau SQL probe không cùng thời điểm từng mẫu metrics. Có một ECS probe chỉ đọc tạm trong smoke, đã STOPPED/exit0; biến động task/resource do probe không phải autoscaling.
+
+Các [chart task–EC2–targets](../../../evidence/assessment/20261119T172832Z-b4-c1-preflight/charts/tasks-ec2-targets.svg) và [RDS connections](../../../evidence/assessment/20261119T172832Z-b4-c1-preflight/charts/rds-connections.svg) lấy từ CSV, không dựng từ ảnh Console. Chạy lại collector theo cùng source/dimensions trước cửa sổ B4 thật và kiểm SHOW max_connections trên **DB restored** trước khi chốt connection budget của app tạm. Không tăng ASG/scale thủ công hoặc đổi production secret/endpoint trong lượt này.

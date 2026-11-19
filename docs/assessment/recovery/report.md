@@ -42,3 +42,9 @@ Rà soát B5 ngày19/11: prompt đã có bằng chứng cho riêng lớp S3; ki�
 Đã xác minh mới chỉ đọc lúc05:21:46UTC: route NAT/S3 endpoint của hai subnet API; TLS-only bucket policy, BucketOwnerEnforced và lifecycle noncurrent30 ngày của bucket ảnh. Các mục này bổ sung độ rõ của preflight; không thực hiện thay C4/C5, không tạo DB/app restored hoặc đo RPO/RTO. Trạng thái B4 trong evidence hiện vẫn là chuẩn bị/preflight; không có run PITR được ghi nhận để đánh hoàn thành. B1–B3 không bị chạy lại hoặc sửa kết quả.
 
 B5 đã bổ sung từ A3 cách nối session→room/layout→DB key→S3 prefix/object và đối chiếu storage_objects (không có FK bảo đảm object tồn tại). Suite cache source có sẵn đã chạy offline4 PASS; route published có thể cache24 giờ theo tên file, độc lập với S3 VersionId. Đây là kiểm contract bằng mock, không phải kiểm DB/app restored; images_verified vẫn false. Chi tiết trong [s3-restore.md](s3-restore.md#liên-kết-db-và-đường-dẫn-ảnh-cần-kiểm-theo-a3).
+
+## Tích hợp C1 vào B4 —20/11/2026
+
+B4 cần C1 quota/capacity trực tiếp. Đã dùng collector7fa878a từ nhánh người3 cho một smoke chỉ đọc và bổ sung SQL max_connections/reserve, quota RDS, RAM/CPU/ENI theo AZ. Chi tiết ở [preflight](preflight.md#bàn-giao-c1-cho-b4) và [evidence](../../../evidence/assessment/20261119T172832Z-b4-c1-preflight/checks/results.json).
+
+Budget66 phù hợp non-reserved limit74 của DB nguồn tại snapshot; rolling ceiling65. Headroom placement chỉ là cận trên1slot AZ2a/3slots AZ2b, chưa chứng minh tài nguyên còn lại đủ cho fault hoặc app restored. Smoke có metric thiếu/chậm và1 vòng vượt interval nên không tự đánh C1 accepted. Chưa chạy PITR/deploy restored app hoặc chốt RPO/RTO; không đổi trạng thái C4/C5/B4/B5 vì có baseline mới.

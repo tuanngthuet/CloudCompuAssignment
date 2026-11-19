@@ -1,0 +1,45 @@
+{
+  "run_id": "20261119T172832Z-b4-c1-preflight",
+  "task_id": "B4",
+  "consumers": [
+    "B3",
+    "B4",
+    "B5"
+  ],
+  "source_commit": "cad42fe3ef51c544d80a60398dddc30996304ced",
+  "collector_source_commit": "7fa878ac7e7995c25777680e44fe2da36d1e619c",
+  "status": "PREFLIGHT_PARTIAL",
+  "hash_encoding": "UTF-8 text with CRLF normalized to LF; SVG is a text artifact",
+  "privacy": "No raw account/ARN/endpoint/IP/email/token. EC2 IDs replaced by aliases; private dimensions and query requests retained locally.",
+  "files": [
+    {
+      "path": "charts/rds-connections.svg",
+      "sha256": "60613b79f11e7c5b4086660c252f31c22a75f61e2898fcba6ea25565856a8988"
+    },
+    {
+      "path": "charts/tasks-ec2-targets.svg",
+      "sha256": "19c54b88fecfe47b7e48bcfb038334d514889e4724774165ed73abe0954ade68"
+    },
+    {
+      "path": "checks/results.json",
+      "sha256": "0b796a3c04e1622dbae8c6b66d39b880c581ad7100574d8529ac5d8412ae21d0"
+    },
+    {
+      "path": "metrics.csv",
+      "sha256": "9031fc0bad4ac867a1c0119dc91dc17077892448f5ea4c1732275ba770834b15"
+    },
+    {
+      "path": "summary.md",
+      "sha256": "4cc91bb292df7e6e7b71e16b1a282478195f1a26076d9326ad2b7a4e0c6c62cb"
+    }
+  ],
+  "completion_flags": {
+    "X01": "NOT_RUN",
+    "X02": "NOT_RUN",
+    "X03": "NOT_RUN",
+    "pitr_executed": false,
+    "images_verified": false,
+    "rpo_seconds": null,
+    "rto_seconds": null
+  }
+}
