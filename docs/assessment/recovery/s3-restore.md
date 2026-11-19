@@ -100,3 +100,43 @@ Nguồn: [AWS — copy version tốt thành current](https://docs.aws.amazon.com
 ## Bổ sung từ người1 cho bước tích hợp B4/B5
 
 A1 trên main ghi S3 lifecycle/TLS policy còn Pending. Phần liên quan bucket ảnh đã được xác minh thêm chỉ đọc05:21:46UTC: policy Deny non-TLS phủ bucket/objects, BucketOwnerEnforced, lifecycle noncurrent30 ngày; identity bucket khớp lượt S3 B5. App source private subnet có route S3 gateway endpoint. Nguồn/dữ liệu/hash tại [preflight B4](preflight.md#bổ-sung-từ-bàn-giao-người1-trên-main). Những thông tin này hỗ trợ chọn version, prefix và đường private cho lần tích hợp; chưa chứng minh recovery role/endpoint policy cho phép truy cập hoặc ảnh đã hiển thị qua app. Giữ images_verified=false.
+
+### Liên kết DB và đường dẫn ảnh cần kiểm theo A3
+
+ERD của người1 chỉ ra image_key/poster_key không có FK tới storage_objects.key; khóa/ràng buộc DB đúng chưa đủ chứng minh object tồn tại. Đã đối chiếu lại source hiện tại với main ở các file router/storage/registry/image-map/test liên quan; kết quả và hash tại [b5_source_contract](../../../evidence/assessment/20261119T050938Z-b5-s3-restore/checks/results.json#/b5_source_contract).
+
+| Loại ảnh | DB reference và route thực | Điều cần giữ đúng |
+|---|---|---|
+| Sơ đồ ảnh của phòng | room_layouts.layout.image_key; GET /rooms/{room_id}/seat-map/image | Đi từ lab_sessions.room_id tới đúng room/layout; key rooms/ROOM_UUID/maps/FILE.png, MIME image/png |
+| Ảnh phòng kiểu cũ | rooms.image_key; GET /rooms/{room_id}/image | Upload chuẩn hóa JPEG, route image/jpeg; không nhầm với key sơ đồ PNG |
+| Poster | events.poster_key; GET /events/{event_id}/images/poster | Chọn đúng event/ảnh; không dùng poster thay bằng chứng sơ đồ phòng |
+
+Đối với một lượt B5 tích hợp, chọn **một** loại ảnh cụ thể. Full S3 key là prefix app + key tương đối trong DB; tránh thêm prefix hai lần hoặc lấy nhầm bucket/prefix production. Baseline hash phải tính trên bytes **sau upload/chuẩn hóa của app**, không lấy hash file input ban đầu. Đọc storage_objects để đối chiếu key/state; với ảnh synthetic vừa publish theo app, expected state REFERENCED và object đọc được. Không tự sửa registry hoặc DB nguồn để làm kết quả PASS.
+
+Ví dụ SQL chỉ đọc cho phương án sơ đồ phòng, chạy trên DB restored với các biến psql của bản ghi synthetic đã chốt; đây là hướng dẫn **chưa thực thi**:
+
+```sql
+BEGIN TRANSACTION ISOLATION LEVEL REPEATABLE READ READ ONLY;
+SELECT ls.id AS session_id, ls.room_id, rl.revision,
+       rl.layout->>'type' AS layout_type,
+       rl.layout->>'image_key' AS map_key
+FROM lab_sessions ls
+JOIN rooms r ON r.id=ls.room_id
+LEFT JOIN room_layouts rl ON rl.room_id=r.id
+WHERE ls.id=:'synthetic_session_id'::uuid;
+SELECT key, state, quarantine_at, deleted_at
+FROM storage_objects WHERE key=:'db_image_key';
+COMMIT;
+```
+
+Ghi cùng session/room alias, DB key, full S3 key, version/hash, registry state và route ở cả ba giai đoạn. Ghi đè/copy version trên **cùng object** không được tự đổi DB key/layout revision; đối chiếu lại sau phục hồi. Chỉ sau kiểm app hiển thị đúng và DB reference nhất quán mới chốt B5.
+
+### Cache app: đã kiểm source và4 test offline
+
+Đã chạy suite có sẵn tests/app/test_image_cache.py: **4 PASS**, DB/storage mock và network none. Source/TestClient xác nhận:
+
+- Published map/poster có query v khớp tên file trả public,max-age=86400; không có v hoặc v không khớp trả no-store.
+- Preview có query key không nhận public cache; key chưa publish cần admin. Response lỗi/nhạy cảm giữ no-store.
+- v là **tên file của DB key**, không phải S3 VersionId/hash. Copy version tốt vào cùng key không làm v đổi. Route app tự đặt cache header; no-store trong metadata S3 của lượt độc lập không tự truyền thành no-store ở route có v.
+
+Đây là nguy cơ stale cache cần quan sát khi diễn tập, chưa phải lỗi browser đã tái hiện. Trong lượt tích hợp phải ghi header/URL và hình ảnh ở request bình thường; sau đó đối chiếu request bỏ v (no-store) hoặc browser tắt cache để phân biệt bytes S3 thật với ảnh cache. Giữ DB key đúng object, không âm thầm đổi key/v chỉ để ảnh có vẻ phục hồi. Ghi rõ nếu cần reload/bypass/invalidation và chỉ tác động môi trường kiểm chứng. Cache browser/CDN và ảnh qua app restored vẫn NOT_RUN;4 test mock không đổi images_verified thành true.

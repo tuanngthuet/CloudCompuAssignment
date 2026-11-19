@@ -11,7 +11,7 @@
   "files": [
     {
       "path": "checks/results.json",
-      "sha256": "ea0db561cf5ddc89c1b4628c1d7b709c7f6d77ea83a6a427a307d46f711115fb"
+      "sha256": "cd3df79e230e1843122ec618d16dee98fc55ccdd9373f2b50da22ffdd4df05a1"
     },
     {
       "path": "cleanup-manifest.json",
@@ -31,11 +31,12 @@
     },
     {
       "path": "summary.md",
-      "sha256": "7ce10f3fdcba51d46c54fe143fc91f4dc21f98657bd5074f386091770b686b64"
+      "sha256": "b7e8837a3e7ef227974af697988df4ac3f9d239f9ffcf2ebdc3e9254f7553235"
     }
   ],
-  "report_sha256": "aa6287a982962821df30a7efc587aa356490b0ce117d3e0a7a2eae454ad06750",
+  "report_sha256": "c29935b9f5d715d56f24bb412d68bf13abd1b368cf59408996b77055a123d770",
   "object_run_id": "76e341cb-2c1e-4ec7-9113-9906e44d660c",
   "reviewed_at_utc": "2026-11-19T05:15:03.216220+00:00",
-  "person1_source_commit": "ff2bb56091a5e846e4ebc662d2ea44d1d6fbecf6"
+  "person1_source_commit": "ff2bb56091a5e846e4ebc662d2ea44d1d6fbecf6",
+  "source_contract_commit": "ba326f5e6d32a9e5a40f1ebdad959f5ab7215e2f"
 }
