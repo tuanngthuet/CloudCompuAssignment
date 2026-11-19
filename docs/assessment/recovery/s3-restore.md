@@ -96,3 +96,7 @@ Lượt độc lập hiện tại đã dọn hết key/version test. Vì vậy c
 Không có yêu cầu phối hợp thêm với người1 từ phần đã kiểm. Chưa cần người dùng cung cấp ảnh/video ở giai đoạn này; evidence UI chỉ có ý nghĩa khi có app restored thật. Kết quả gộp tại [report B4](report.md#kết-quả-b5).
 
 Nguồn: [AWS — copy version tốt thành current](https://docs.aws.amazon.com/AmazonS3/latest/userguide/RestoringPreviousVersions.html).
+
+## Bổ sung từ người1 cho bước tích hợp B4/B5
+
+A1 trên main ghi S3 lifecycle/TLS policy còn Pending. Phần liên quan bucket ảnh đã được xác minh thêm chỉ đọc05:21:46UTC: policy Deny non-TLS phủ bucket/objects, BucketOwnerEnforced, lifecycle noncurrent30 ngày; identity bucket khớp lượt S3 B5. App source private subnet có route S3 gateway endpoint. Nguồn/dữ liệu/hash tại [preflight B4](preflight.md#bổ-sung-từ-bàn-giao-người1-trên-main). Những thông tin này hỗ trợ chọn version, prefix và đường private cho lần tích hợp; chưa chứng minh recovery role/endpoint policy cho phép truy cập hoặc ảnh đã hiển thị qua app. Giữ images_verified=false.

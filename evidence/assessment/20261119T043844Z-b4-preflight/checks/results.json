@@ -886,5 +886,174 @@
     "images_verified": false,
     "b5_s3_component": "PASS",
     "b5_evidence": "evidence/assessment/20261119T050938Z-b5-s3-restore/checks/results.json"
+  },
+  "person1_handoff": {
+    "source_review": {
+      "main_commit": "ff2bb56091a5e846e4ebc662d2ea44d1d6fbecf6",
+      "working_base_commit": "98e946087e56a105805a2a3fa0a8a7538cde3869",
+      "architecture_present_on_tv3_branch": false,
+      "sources": [
+        {
+          "path": "docs/assessment/architecture/inventory.md",
+          "commit": "ff2bb56091a5e846e4ebc662d2ea44d1d6fbecf6",
+          "sha256": "a8f647ebe36edeb79b7e0aefc5a13d02519e0f6b740bc0d29dd7cc3bd628cc96",
+          "url": "https://github.com/tuanngthuet/CloudCompuAssignment/blob/ff2bb56091a5e846e4ebc662d2ea44d1d6fbecf6/docs/assessment/architecture/inventory.md"
+        },
+        {
+          "path": "docs/assessment/architecture/hava.md",
+          "commit": "ff2bb56091a5e846e4ebc662d2ea44d1d6fbecf6",
+          "sha256": "e9ba841fafb1ab28026303e09ac1523b677cab364ae99999d222d764a7293e1b",
+          "url": "https://github.com/tuanngthuet/CloudCompuAssignment/blob/ff2bb56091a5e846e4ebc662d2ea44d1d6fbecf6/docs/assessment/architecture/hava.md"
+        },
+        {
+          "path": "docs/assessment/architecture/a3/erd.md",
+          "commit": "ff2bb56091a5e846e4ebc662d2ea44d1d6fbecf6",
+          "sha256": "65e9e6bb75411aa62e9ba626d85e2999a5fc1dffad0c704f0a67be1fa68d84f1",
+          "url": "https://github.com/tuanngthuet/CloudCompuAssignment/blob/ff2bb56091a5e846e4ebc662d2ea44d1d6fbecf6/docs/assessment/architecture/a3/erd.md"
+        },
+        {
+          "path": "docs/assessment/architecture/a3/sequences.md",
+          "commit": "ff2bb56091a5e846e4ebc662d2ea44d1d6fbecf6",
+          "sha256": "7b1fdb685f8e68f0bfb0a178099ad3fa643a822c184938dd850b61ab3207a71e",
+          "url": "https://github.com/tuanngthuet/CloudCompuAssignment/blob/ff2bb56091a5e846e4ebc662d2ea44d1d6fbecf6/docs/assessment/architecture/a3/sequences.md"
+        },
+        {
+          "path": "docs/assessment/architecture/a3/supplement-review.md",
+          "commit": "ff2bb56091a5e846e4ebc662d2ea44d1d6fbecf6",
+          "sha256": "8d80e8688bbf67cd79ded5adcaabaecd80bd9661ae5e4ce4d967d8c5b288ff59",
+          "url": "https://github.com/tuanngthuet/CloudCompuAssignment/blob/ff2bb56091a5e846e4ebc662d2ea44d1d6fbecf6/docs/assessment/architecture/a3/supplement-review.md"
+        },
+        {
+          "path": "docs/assessment/architecture/a3/adr/003-redis-admission.md",
+          "commit": "ff2bb56091a5e846e4ebc662d2ea44d1d6fbecf6",
+          "sha256": "dad1facf264c19d82d310361dfb0f0b02aad003eda37ad2fef2af95d70bcc033",
+          "url": "https://github.com/tuanngthuet/CloudCompuAssignment/blob/ff2bb56091a5e846e4ebc662d2ea44d1d6fbecf6/docs/assessment/architecture/a3/adr/003-redis-admission.md"
+        },
+        {
+          "path": "docs/assessment/architecture/a3/adr/004-outbox-email.md",
+          "commit": "ff2bb56091a5e846e4ebc662d2ea44d1d6fbecf6",
+          "sha256": "dd277cdf0b95619e7f6dbb6da175cf99cffb600cae0ac4fe116809feabd36499",
+          "url": "https://github.com/tuanngthuet/CloudCompuAssignment/blob/ff2bb56091a5e846e4ebc662d2ea44d1d6fbecf6/docs/assessment/architecture/a3/adr/004-outbox-email.md"
+        }
+      ],
+      "source_compatibility": [
+        {
+          "path": "app/models.py",
+          "main_sha256": "1cf43d7dac14c0405d773239383aed4388c9de2029b0d9a4fec7362572e141de",
+          "local_sha256": "1cf43d7dac14c0405d773239383aed4388c9de2029b0d9a4fec7362572e141de",
+          "equal": true
+        },
+        {
+          "path": "app/shared/http.py",
+          "main_sha256": "6f7520434ca1eafa9249d720fc6429feafb852fd45993430096ca560fa16d3d9",
+          "local_sha256": "6f7520434ca1eafa9249d720fc6429feafb852fd45993430096ca560fa16d3d9",
+          "equal": true
+        },
+        {
+          "path": "app/modules/booking/service.py",
+          "main_sha256": "d7930097aa67af5dc1a133de1186450d03a5eb16753d20cfbc9a7aaed8b86d8e",
+          "local_sha256": "d7930097aa67af5dc1a133de1186450d03a5eb16753d20cfbc9a7aaed8b86d8e",
+          "equal": true
+        },
+        {
+          "path": "app/modules/notifications/jobs.py",
+          "main_sha256": "c8fbd33b533c72e84bd0d4c4efdfd2d4dd38cd8f5be25482c72850bba91fca29",
+          "local_sha256": "c8fbd33b533c72e84bd0d4c4efdfd2d4dd38cd8f5be25482c72850bba91fca29",
+          "equal": true
+        },
+        {
+          "path": "app/events.py",
+          "main_sha256": "23ad36fc9c7ba6b5dbdef4f83b80d08c274b943d256c9ae24626f6943f564ae1",
+          "local_sha256": "23ad36fc9c7ba6b5dbdef4f83b80d08c274b943d256c9ae24626f6943f564ae1",
+          "equal": true
+        },
+        {
+          "path": "app/infrastructure/redis/admission.py",
+          "main_sha256": "80768ef0956beab3359da2f7de8306f59664f661c515f8d2f3158eed03c5dbd5",
+          "local_sha256": "80768ef0956beab3359da2f7de8306f59664f661c515f8d2f3158eed03c5dbd5",
+          "equal": true
+        },
+        {
+          "path": "app/infrastructure/storage/objects.py",
+          "main_sha256": "002629cff56699cc39e36474fe8190ce7a49175d726cc7b23884120a1a1ddd4b",
+          "local_sha256": "002629cff56699cc39e36474fe8190ce7a49175d726cc7b23884120a1a1ddd4b",
+          "equal": true
+        },
+        {
+          "path": "app/main.py",
+          "main_sha256": "80297afa984bd7723cc6b8d1e5afc12958ba97ad0f1b2e42ce90fd1911328944",
+          "local_sha256": "80297afa984bd7723cc6b8d1e5afc12958ba97ad0f1b2e42ce90fd1911328944",
+          "equal": true
+        }
+      ],
+      "runtime_source_differences": [
+        "app/assessment_seed.py",
+        "app/static/image-map.js"
+      ],
+      "limits": [
+        "A1 dated17 Nov and A2 Hava timestamps incomplete; not a current fault/restore result.",
+        "A3 ADRs are draft source analysis, not accepted decisions or runtime traces.",
+        "Only listed8 source files were byte-compared; this does not map deployed image digest to Git commit."
+      ]
+    },
+    "current_read_only_followup": {
+      "checked_at_utc": "2026-11-19T05:21:46.319898+00:00",
+      "account_verified": true,
+      "region": "ap-southeast-2",
+      "api_subnet_routes": [
+        {
+          "cidr": "10.20.11.0/24",
+          "az": "ap-southeast-2b",
+          "auto_public_ipv4": false,
+          "active_default_nat": true,
+          "active_s3_gateway_route": true
+        },
+        {
+          "cidr": "10.20.10.0/24",
+          "az": "ap-southeast-2a",
+          "auto_public_ipv4": false,
+          "active_default_nat": true,
+          "active_s3_gateway_route": true
+        }
+      ],
+      "s3_gateway_endpoints_available": 1,
+      "s3_tls_deny_policy": [
+        {
+          "all_principals": true,
+          "all_s3_actions": true,
+          "covers_bucket": true,
+          "covers_objects": true
+        }
+      ],
+      "s3_lifecycle_rules": [
+        {
+          "status": "Enabled",
+          "filter_scope": "entire_bucket",
+          "prefix_matches_app": true,
+          "noncurrent_expiration_days": 30,
+          "current_expiration_days": null,
+          "delete_expired_markers": null
+        }
+      ],
+      "object_ownership": [
+        "BucketOwnerEnforced"
+      ],
+      "bucket_identity_sha256": "3c1ef13767867644d6e4274b48c56f4fd8886ad8b261580bcd8720dcf6f83d05",
+      "mutations": [],
+      "limits": [
+        "Routes describe source API subnets only; not proof of private restored-task networking or effective IAM/S3 endpoint policy access.",
+        "Lifecycle metadata is not a successful restore or full review of all possible rule conditions."
+      ]
+    },
+    "application_to_B4": [
+      "Use A1 private-app/DB network and port mapping to plan dedicated recovery SG paths; never assume production app SG permits a private probe.",
+      "Use pinned A3 schema/transaction/dependency descriptions to define restored DB correctness and workflow checks.",
+      "Use fresh S3 TLS/ownership/lifecycle findings for recovery-prefix access and image-version retention limits."
+    ],
+    "not_proven": [
+      "No C4/C5 stable handoff or A4 execution evidence inferred from A1/A2/A3",
+      "No restored DB/app deployment, effective recovery-role permissions, successful network probe or RPO/RTO measurement",
+      "A1 read-only inventory and A2 diagrams do not prove source commit matches a deployed digest"
+    ]
   }
 }

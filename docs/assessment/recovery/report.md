@@ -34,3 +34,9 @@ Trong lượt B4 không tạo DB/app/secret/cache/object phục hồi, không đ
 B5 tổng thể vẫn BLOCKED: chưa kiểm DB reference và ảnh qua app restored của B4. `images_verified=false`; `b5_images=NOT_RUN`, RPO/RTO vẫn null. Ảnh evidence là object GET từ S3, không phải UI screenshot; không dùng kết quả S3 độc lập thay kiểm chứng app/DB.
 
 Rà soát B5 ngày19/11: prompt đã có bằng chứng cho riêng lớp S3; kiểm cleanup lại05:15:03UTC vẫn0 version/delete marker. Bảng trách nhiệm và phần NOT_RUN nằm trong [s3-restore.md](s3-restore.md#đối-chiếu-prompt-và-phần-cần-phối-hợp): người3 bàn giao ổn định C4/C5, người2 thực hiện B4 rồi lượt B5 tích hợp mới. Không coi app restored là việc của người3 hoặc dùng ảnh object thay kiểm UI/DB.
+
+## Kết hợp bàn giao người1
+
+Đã đọc A1/A2/A3 trên main commit `ff2bb56` và đưa thông tin liên quan vào [preflight](preflight.md#bổ-sung-từ-bàn-giao-người1-trên-main), [kế hoạch B4](rds-pitr.md#áp-dụng-bàn-giao-người1-vào-môi-trường-kiểm-chứng-b4). Bổ sung subnet/SG-port, giới hạn readyz, DB/Redis/outbox và vai trò của prefix ảnh private. Tám file source đối chiếu khớp; không coi ADR Draft là quyết định đã Accepted hoặc bản Hava là kết quả fault/restore.
+
+Đã xác minh mới chỉ đọc lúc05:21:46UTC: route NAT/S3 endpoint của hai subnet API; TLS-only bucket policy, BucketOwnerEnforced và lifecycle noncurrent30 ngày của bucket ảnh. Các mục này bổ sung độ rõ của preflight; không thực hiện thay C4/C5, không tạo DB/app restored hoặc đo RPO/RTO. Trạng thái B4 trong evidence hiện vẫn là chuẩn bị/preflight; không có run PITR được ghi nhận để đánh hoàn thành. B1–B3 không bị chạy lại hoặc sửa kết quả.

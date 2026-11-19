@@ -65,3 +65,15 @@ python scripts/recovery/measure.py .local/recovery-record.json
 RPO=incident−commit mới nhất phục hồi được trước incident, mục tiêu≤900giây; RTO=ready-and-verified−incident, mục tiêu≤3600giây. Ghi cả chuẩn bị/provisioning/rollout/verification/cleanup, không loại thời gian trong cửa sổ đo để làm đẹp số liệu. Hiện chưa có record đo thật.
 
 Nguồn API: [AWS RDS PITR](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_PIT.html), [AWS CLI PITR](https://docs.aws.amazon.com/cli/latest/reference/rds/restore-db-instance-to-point-in-time.html). Kết quả test công cụ xem [report.md](report.md#kiểm-chứng-công-cụ).
+
+## Áp dụng bàn giao người1 vào môi trường kiểm chứng B4
+
+Nguồn và timestamp tại [preflight — bàn giao người1](preflight.md#bổ-sung-từ-bàn-giao-người1-trên-main). Các yêu cầu dưới là kế hoạch cho tài nguyên recovery, chưa được apply lên AWS:
+
+- Dùng app private subnet đã kiểm làm cơ sở chọn vị trí probe/app; DB restored trong DB subnet phù hợp, private/encrypted. Tạo SG recovery riêng: app nhận8000 từ SG probe; DB nhận5432 từ SG app recovery; cache riêng nhận6379 từ SG app recovery. SG app production của A1 chỉ nhận8000 từ ALB nên không mặc định dùng lại cho probe private. Giữ egress/TLS/S3 endpoint phù hợp, không gắn production ALB.
+- Tách execution role lấy đúng secret/ECR và task role chỉ đọc/ghi prefix ảnh test. Có route S3 và policy TLS không chứng minh role có quyền; kiểm URL DB, TLS Redis/ACL, prefix/storage và SSM injection thực trước workflows.
+- A3 xác nhận DB là nguồn bền vững cho vé; clone DB không phục hồi lease/epoch/PubSub trong Redis. Kiểm admission/recovery generation trên cache/DB restored riêng trước hold; không dùng Redis production để làm bài restored app có vẻ chạy được.
+- Dữ liệu restored có thể chứa pending outbox/email jobs từ source. Không chạy publisher/worker/maintenance của môi trường restored với SQS/Brevo production. Giữ mail disabled; xác minh DB commit/ownership/ticket và workflow thực, không lấy healthz/readyz200 làm ready_and_verified_at.
+- Với B5, ghi actual room/event image reference và resolved S3 key từ đúng prefix app kiểm chứng; dùng HTTPS và private access, lưu version/hash trước ghi đè. Noncurrent lifecycle30 ngày có thể loại version cũ; chọn version thực sự còn tồn tại, kiểm app và DB reference rồi mới chốt images_verified.
+
+B1/B2 dataset và các lượt B3/B4 đã ghi trước đó được giữ nguyên. Việc bổ sung A1/A2/A3 không chạy lại seed, không đổi tiêu chí và không thay NOT_RUN thành PASS cho PITR, app restored hay RPO/RTO.

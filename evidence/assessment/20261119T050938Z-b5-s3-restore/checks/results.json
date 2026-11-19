@@ -154,6 +154,8 @@
         "deliver": "New integrated run: link synthetic DB record, observe good/wrong/restored image through app, compare DB key/hash/MIME/private/cache, capture evidence, cleanup",
         "consumer": "Set images_verified=true only after all actual checks pass"
       }
-    ]
-  }
+    ],
+    "additional_context": "A1/A2/A3 main pinned source integrated into B4; fresh read-only S3 TLS/lifecycle/ownership/network context. DB reference and restored-app display remain NOT_RUN."
+  },
+  "person1_handoff_reference": "evidence/assessment/20261119T043844Z-b4-preflight/checks/results.json#/person1_handoff"
 }

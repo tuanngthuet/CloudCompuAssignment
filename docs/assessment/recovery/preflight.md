@@ -43,3 +43,26 @@ Thêm `--aws DUONG_DAN_AWS_EXE` nếu CLI chưa có trên PATH. Collector kiểm
 Phần chưa xác minh: IAM/KMS thực trên tài nguyên mới, network/egress/ENI cho app tạm và giá trị secret trỏ đúng DB/cache riêng. Phần thực thi và giới hạn đo được ghi tại [report.md](report.md).
 
 Manifest dùng SHA-256 trên nội dung UTF-8 chuẩn hóa CRLF thành LF để đối chiếu nhất quán giữa Windows và GitHub.
+
+## Bổ sung từ bàn giao người1 trên main
+
+Đối chiếu `origin/main` tại commit **ff2bb56091a5e846e4ebc662d2ea44d1d6fbecf6**; không merge hoặc ghi đè tài liệu của người1. Tài liệu A1/A2/A3 có trên main, chưa có trong tv3/w1-package. Tham chiếu commit cố định để lần review sau không tự đổi nguồn. [Provenance/hash nguồn và phép đọc bổ sung](../../../evidence/assessment/20261119T043844Z-b4-preflight/checks/results.json#/person1_handoff).
+
+| Nguồn người1 | Thông tin dùng được cho B4 | Giới hạn |
+|---|---|---|
+| [A1 inventory](https://github.com/tuanngthuet/CloudCompuAssignment/blob/ff2bb56091a5e846e4ebc662d2ea44d1d6fbecf6/docs/assessment/architecture/inventory.md) | App subnet10.20.10.0/24 và10.20.11.0/24; DB subnet10.20.20.0/24 và10.20.21.0/24; SG/port App→DB5432, App→Redis6379; RDS private/encrypted/Multi-AZ/retention1 ngày | Snapshot17/11, không phải cấu hình recovery hoặc kết quả restore |
+| [A2 Hava](https://github.com/tuanngthuet/CloudCompuAssignment/blob/ff2bb56091a5e846e4ebc662d2ea44d1d6fbecf6/docs/assessment/architecture/hava.md) | Đối chiếu quan hệ subnet/AZ/network/container trước khi chọn môi trường app kiểm chứng | Timestamp ảnh/import chưa đầy đủ; không dùng làm kiểm chứng hiện trạng hoặc fault |
+| [A3 ERD](https://github.com/tuanngthuet/CloudCompuAssignment/blob/ff2bb56091a5e846e4ebc662d2ea44d1d6fbecf6/docs/assessment/architecture/a3/erd.md) và [sequence](https://github.com/tuanngthuet/CloudCompuAssignment/blob/ff2bb56091a5e846e4ebc662d2ea44d1d6fbecf6/docs/assessment/architecture/a3/sequences.md) | Schema/khóa/ràng buộc và transaction của booking/check-in; đặt tiêu chí ownership/vé/session và workflow sau restore | Là phân tích source, chưa phải trace hay test restored app |
+| [ADR Redis](https://github.com/tuanngthuet/CloudCompuAssignment/blob/ff2bb56091a5e846e4ebc662d2ea44d1d6fbecf6/docs/assessment/architecture/a3/adr/003-redis-admission.md), [ADR outbox](https://github.com/tuanngthuet/CloudCompuAssignment/blob/ff2bb56091a5e846e4ebc662d2ea44d1d6fbecf6/docs/assessment/architecture/a3/adr/004-outbox-email.md), [source review](https://github.com/tuanngthuet/CloudCompuAssignment/blob/ff2bb56091a5e846e4ebc662d2ea44d1d6fbecf6/docs/assessment/architecture/a3/supplement-review.md) | PostgreSQL giữ vé; Redis admission/PubSub là dependency riêng; email có outbox/SQS/worker; readyz chỉ kiểm DB | ADR còn Draft; không tự coi Accepted hoặc thay bằng chứng nghiệm thu |
+
+Tám file source đã đối chiếu byte giữa main và nhánh này đều khớp: models, shared/http, booking/service, notifications/jobs, events, redis/admission, storage/objects và main. Hai khác biệt runtime-source ngoài tập này là assessment_seed.py và static/image-map.js; không tuyên bố toàn bộ source giống nhau hoặc digest đã được map tới commit.
+
+### Xác minh bổ sung từ AWS chỉ đọc
+
+Lúc **19/11/2026 12:21:46 UTC+7 / 05:21:46 UTC**:
+
+- Hai subnet API10.20.10.0/24 và10.20.11.0/24 không tự gán public IPv4, đều có default route NAT active và route tới S3 gateway endpoint active; có1 S3 gateway endpoint available. Đây là network nguồn, chưa chứng minh network/SG của app restored hoạt động.
+- Bucket ảnh cùng identity hash với lượt B5: policy Deny cho mọi principal/action S3 khi aws:SecureTransport=false, phủ bucket và objects; ObjectOwnership=BucketOwnerEnforced.
+- Lifecycle Enabled, phạm vi toàn bucket, NoncurrentDays=30. Đây là giới hạn giữ version ảnh cũ, không bảo đảm mọi ảnh cũ luôn có đủ30 ngày phục hồi hoặc thay RDS retention1 ngày.
+
+Như vậy đã bổ sung phần lifecycle/TLS policy mà A1 ghi Pending cho bucket ảnh; không sửa kết luận A1 gốc hoặc nhận là toàn bộ security audit đã hoàn tất. Effective IAM, endpoint policy, recovery prefix, ENI và probe tới tài nguyên mới vẫn cần kiểm lúc triển khai.
