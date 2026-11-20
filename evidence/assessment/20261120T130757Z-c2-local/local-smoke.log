@@ -1,0 +1,45 @@
+TAP version 13
+# Subtest: prepared session uses its cookie, CSRF and assigned seat without login
+ok 1 - prepared session uses its cookie, CSRF and assigned seat without login
+  ---
+  duration_ms: 3.6959
+  ...
+# Subtest: credentials mode still logs in when no session file is supplied
+ok 2 - credentials mode still logs in when no session file is supplied
+  ---
+  duration_ms: 0.8584
+  ...
+# Subtest: credentials mode rejects repeated accounts across VUs
+ok 3 - credentials mode rejects repeated accounts across VUs
+  ---
+  duration_ms: 1.1086
+  ...
+# Subtest: prepared session rejects expired fixture before making requests
+ok 4 - prepared session rejects expired fixture before making requests
+  ---
+  duration_ms: 0.7779
+  ...
+# Subtest: prepared session rejects duplicate tokens across VUs
+ok 5 - prepared session rejects duplicate tokens across VUs
+  ---
+  duration_ms: 0.6181
+  ...
+# Subtest: setup checks distinct users behind distinct tokens
+ok 6 - setup checks distinct users behind distinct tokens
+  ---
+  duration_ms: 0.582
+  ...
+# Subtest: setup rejects two sessions belonging to one user
+ok 7 - setup rejects two sessions belonging to one user
+  ---
+  duration_ms: 0.6026
+  ...
+1..7
+# tests 7
+# suites 0
+# pass 7
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 16.3742
