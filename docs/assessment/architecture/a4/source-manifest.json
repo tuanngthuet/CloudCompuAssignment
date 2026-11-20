@@ -1,0 +1,98 @@
+{
+  "created_date": "2026-11-20",
+  "scope": "A4 evidence review; no AWS calls",
+  "sources": [
+    {
+      "archive": "A4-functional-recovery.zip",
+      "branch": "assessment/functional-recovery",
+      "archive_commit": "05ea11cf3008a42b33e766841320896f4a10eaba",
+      "sha256": "54eccada7eb986ee1906131e5b7a525448b73d046202393df178ada97f4dcf3a"
+    },
+    {
+      "archive": "A4-load-resilience.zip",
+      "branch": "assessment/load-resilience",
+      "archive_commit": "7fa878ac7e7995c25777680e44fe2da36d1e619c",
+      "sha256": "35785dd34a363a88c8b447b201fda60e38a82abcc2284a6f401950d4e7ac562a"
+    }
+  ],
+  "copied_evidence": [
+    {
+      "path": "evidence/20261119T043844Z-b4-preflight/manifest.json",
+      "source_archive": "A4-functional-recovery.zip",
+      "original_path": "evidence/assessment/20261119T043844Z-b4-preflight/manifest.json",
+      "sha256": "f272860eb6a2f0d88a5a7e2f0890c083f65cf1370882c8a75ed9c3bee91f58e0"
+    },
+    {
+      "path": "evidence/20261119T050938Z-b5-s3-restore/cleanup-manifest.json",
+      "source_archive": "A4-functional-recovery.zip",
+      "original_path": "evidence/assessment/20261119T050938Z-b5-s3-restore/cleanup-manifest.json",
+      "sha256": "9231c158db8f53771251508e1d207eb57079611912a6db6c9658f97ff252b69c"
+    },
+    {
+      "path": "evidence/20261119T050938Z-b5-s3-restore/manifest.json",
+      "source_archive": "A4-functional-recovery.zip",
+      "original_path": "evidence/assessment/20261119T050938Z-b5-s3-restore/manifest.json",
+      "sha256": "514ff923254e91b888a0b7868c05e4a0fa2dd7a6a352c7b329c45952baf3caee"
+    },
+    {
+      "path": "evidence/20261119T172832Z-b4-c1-preflight/metrics.csv",
+      "source_archive": "A4-functional-recovery.zip",
+      "original_path": "evidence/assessment/20261119T172832Z-b4-c1-preflight/metrics.csv",
+      "sha256": "9bd38d143c825057e71f5a55d7817af47aab55ef32f41431d95bc9351927180c"
+    },
+    {
+      "path": "evidence/20261119T172832Z-b4-c1-preflight/manifest.json",
+      "source_archive": "A4-functional-recovery.zip",
+      "original_path": "evidence/assessment/20261119T172832Z-b4-c1-preflight/manifest.json",
+      "sha256": "7a4bbf3e2fc33e1e16edd33cadb93453af56d8169dfdf7e7546b80c28dae5b95"
+    },
+    {
+      "path": "evidence/20261119T043844Z-b4-preflight/checks/results.json",
+      "source_archive": "A4-functional-recovery.zip",
+      "original_path": "evidence/assessment/20261119T043844Z-b4-preflight/checks/results.json",
+      "sha256": "c9ad41009d7a54073568a90f612381b4e8e4ee9020ae50cc49a89b83304d604f"
+    },
+    {
+      "path": "evidence/20261119T050938Z-b5-s3-restore/images/before.png",
+      "source_archive": "A4-functional-recovery.zip",
+      "original_path": "evidence/assessment/20261119T050938Z-b5-s3-restore/images/before.png",
+      "sha256": "17c0edfb565b41fbd252608537d227330abfd3aad8cf0a1d95db9f4fbea8e6ac"
+    },
+    {
+      "path": "evidence/20261119T050938Z-b5-s3-restore/images/overwritten.png",
+      "source_archive": "A4-functional-recovery.zip",
+      "original_path": "evidence/assessment/20261119T050938Z-b5-s3-restore/images/overwritten.png",
+      "sha256": "a7022db27680c96f426cdfb9ceecb72424948c8390146e882f7b24e7474f7a6a"
+    },
+    {
+      "path": "evidence/20261119T050938Z-b5-s3-restore/images/restored.png",
+      "source_archive": "A4-functional-recovery.zip",
+      "original_path": "evidence/assessment/20261119T050938Z-b5-s3-restore/images/restored.png",
+      "sha256": "17c0edfb565b41fbd252608537d227330abfd3aad8cf0a1d95db9f4fbea8e6ac"
+    },
+    {
+      "path": "evidence/20261119T050938Z-b5-s3-restore/checks/results.json",
+      "source_archive": "A4-functional-recovery.zip",
+      "original_path": "evidence/assessment/20261119T050938Z-b5-s3-restore/checks/results.json",
+      "sha256": "c08a6a64acd16cc623c01dbc2d2eb4f346e020104470fb4baa91a83dfc748402"
+    },
+    {
+      "path": "evidence/20261119T172832Z-b4-c1-preflight/charts/tasks-ec2-targets.svg",
+      "source_archive": "A4-functional-recovery.zip",
+      "original_path": "evidence/assessment/20261119T172832Z-b4-c1-preflight/charts/tasks-ec2-targets.svg",
+      "sha256": "cf6f3afb5a59d4e0255f2059ecf80494b23781e30086c1af224a0afa198f6f3d"
+    },
+    {
+      "path": "evidence/20261119T172832Z-b4-c1-preflight/charts/rds-connections.svg",
+      "source_archive": "A4-functional-recovery.zip",
+      "original_path": "evidence/assessment/20261119T172832Z-b4-c1-preflight/charts/rds-connections.svg",
+      "sha256": "59400c9f81778501357b9196bc19fd6a37699c0b6381f55d4c47d3727dcd182a"
+    },
+    {
+      "path": "evidence/20261119T172832Z-b4-c1-preflight/checks/results.json",
+      "source_archive": "A4-functional-recovery.zip",
+      "original_path": "evidence/assessment/20261119T172832Z-b4-c1-preflight/checks/results.json",
+      "sha256": "7248ec3a235d19420c7d8fa77219976b5596a041fc58ab48313e0197fd33c9b1"
+    }
+  ]
+}

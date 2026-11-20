@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 800">
+<rect width="100%" height="100%" fill="white"/>
+<text x="75" y="30" font-family="sans-serif" font-size="20">C1 tasks, EC2 and targets</text>
+<text x="75" y="47" font-family="sans-serif" font-size="14">API tasks (count)</text>
+<path d="M75 65V245H1075" fill="none" stroke="#64748b"/>
+<line x1="75" x2="1075" y1="65.0" y2="65.0" stroke="#e2e8f0"/>
+<text x="67" y="69.0" text-anchor="end" font-family="sans-serif" font-size="11">2.0</text>
+<line x1="75" x2="1075" y1="155.0" y2="155.0" stroke="#e2e8f0"/>
+<text x="67" y="159.0" text-anchor="end" font-family="sans-serif" font-size="11">1.0</text>
+<line x1="75" x2="1075" y1="245.0" y2="245.0" stroke="#e2e8f0"/>
+<text x="67" y="249.0" text-anchor="end" font-family="sans-serif" font-size="11">0.0</text>
+<polyline points="75.0,65.0 408.3,65.0 741.7,65.0 1075.0,65.0" fill="none" stroke="#2563eb" stroke-width="2"/>
+<circle cx="75.0" cy="65.0" r="2" fill="#2563eb"/>
+<circle cx="408.3" cy="65.0" r="2" fill="#2563eb"/>
+<circle cx="741.7" cy="65.0" r="2" fill="#2563eb"/>
+<circle cx="1075.0" cy="65.0" r="2" fill="#2563eb"/>
+<text x="75" y="264" font-family="sans-serif" font-size="11" fill="#2563eb">ecs.api.desired</text>
+<polyline points="75.0,65.0 408.3,65.0 741.7,65.0 1075.0,65.0" fill="none" stroke="#dc2626" stroke-width="2"/>
+<circle cx="75.0" cy="65.0" r="2" fill="#dc2626"/>
+<circle cx="408.3" cy="65.0" r="2" fill="#dc2626"/>
+<circle cx="741.7" cy="65.0" r="2" fill="#dc2626"/>
+<circle cx="1075.0" cy="65.0" r="2" fill="#dc2626"/>
+<text x="405" y="264" font-family="sans-serif" font-size="11" fill="#dc2626">ecs.api.running</text>
+<polyline points="75.0,245.0 408.3,245.0 741.7,245.0 1075.0,245.0" fill="none" stroke="#9333ea" stroke-width="2"/>
+<circle cx="75.0" cy="245.0" r="2" fill="#9333ea"/>
+<circle cx="408.3" cy="245.0" r="2" fill="#9333ea"/>
+<circle cx="741.7" cy="245.0" r="2" fill="#9333ea"/>
+<circle cx="1075.0" cy="245.0" r="2" fill="#9333ea"/>
+<text x="735" y="264" font-family="sans-serif" font-size="11" fill="#9333ea">ecs.api.pending</text>
+<text x="75" y="277" font-family="sans-serif" font-size="14">EC2 capacity (count)</text>
+<path d="M75 295V475H1075" fill="none" stroke="#64748b"/>
+<line x1="75" x2="1075" y1="295.0" y2="295.0" stroke="#e2e8f0"/>
+<text x="67" y="299.0" text-anchor="end" font-family="sans-serif" font-size="11">4.0</text>
+<line x1="75" x2="1075" y1="385.0" y2="385.0" stroke="#e2e8f0"/>
+<text x="67" y="389.0" text-anchor="end" font-family="sans-serif" font-size="11">2.0</text>
+<line x1="75" x2="1075" y1="475.0" y2="475.0" stroke="#e2e8f0"/>
+<text x="67" y="479.0" text-anchor="end" font-family="sans-serif" font-size="11">0.0</text>
+<polyline points="75.0,295.0 408.3,295.0 741.7,295.0 1075.0,295.0" fill="none" stroke="#2563eb" stroke-width="2"/>
+<circle cx="75.0" cy="295.0" r="2" fill="#2563eb"/>
+<circle cx="408.3" cy="295.0" r="2" fill="#2563eb"/>
+<circle cx="741.7" cy="295.0" r="2" fill="#2563eb"/>
+<circle cx="1075.0" cy="295.0" r="2" fill="#2563eb"/>
+<text x="75" y="494" font-family="sans-serif" font-size="11" fill="#2563eb">asg.desired</text>
+<polyline points="75.0,295.0 408.3,295.0 741.7,295.0 1075.0,295.0" fill="none" stroke="#dc2626" stroke-width="2"/>
+<circle cx="75.0" cy="295.0" r="2" fill="#dc2626"/>
+<circle cx="408.3" cy="295.0" r="2" fill="#dc2626"/>
+<circle cx="741.7" cy="295.0" r="2" fill="#dc2626"/>
+<circle cx="1075.0" cy="295.0" r="2" fill="#dc2626"/>
+<text x="405" y="494" font-family="sans-serif" font-size="11" fill="#dc2626">asg.in_service</text>
+<polyline points="75.0,295.0 408.3,295.0 741.7,295.0 1075.0,295.0" fill="none" stroke="#9333ea" stroke-width="2"/>
+<circle cx="75.0" cy="295.0" r="2" fill="#9333ea"/>
+<circle cx="408.3" cy="295.0" r="2" fill="#9333ea"/>
+<circle cx="741.7" cy="295.0" r="2" fill="#9333ea"/>
+<circle cx="1075.0" cy="295.0" r="2" fill="#9333ea"/>
+<text x="735" y="494" font-family="sans-serif" font-size="11" fill="#9333ea">ecs.registered_instances</text>
+<text x="75" y="507" font-family="sans-serif" font-size="14">ALB targets (count)</text>
+<path d="M75 525V705H1075" fill="none" stroke="#64748b"/>
+<line x1="75" x2="1075" y1="525.0" y2="525.0" stroke="#e2e8f0"/>
+<text x="67" y="529.0" text-anchor="end" font-family="sans-serif" font-size="11">2.0</text>
+<line x1="75" x2="1075" y1="615.0" y2="615.0" stroke="#e2e8f0"/>
+<text x="67" y="619.0" text-anchor="end" font-family="sans-serif" font-size="11">1.0</text>
+<line x1="75" x2="1075" y1="705.0" y2="705.0" stroke="#e2e8f0"/>
+<text x="67" y="709.0" text-anchor="end" font-family="sans-serif" font-size="11">0.0</text>
+<polyline points="75.0,525.0 408.3,525.0 741.7,525.0 1075.0,525.0" fill="none" stroke="#2563eb" stroke-width="2"/>
+<circle cx="75.0" cy="525.0" r="2" fill="#2563eb"/>
+<circle cx="408.3" cy="525.0" r="2" fill="#2563eb"/>
+<circle cx="741.7" cy="525.0" r="2" fill="#2563eb"/>
+<circle cx="1075.0" cy="525.0" r="2" fill="#2563eb"/>
+<text x="75" y="724" font-family="sans-serif" font-size="11" fill="#2563eb">alb.healthy_targets</text>
+<polyline points="75.0,705.0 408.3,705.0 741.7,705.0 1075.0,705.0" fill="none" stroke="#dc2626" stroke-width="2"/>
+<circle cx="75.0" cy="705.0" r="2" fill="#dc2626"/>
+<circle cx="408.3" cy="705.0" r="2" fill="#dc2626"/>
+<circle cx="741.7" cy="705.0" r="2" fill="#dc2626"/>
+<circle cx="1075.0" cy="705.0" r="2" fill="#dc2626"/>
+<text x="405" y="724" font-family="sans-serif" font-size="11" fill="#dc2626">alb.unhealthy_targets</text>
+<text x="75" y="790" font-family="sans-serif" font-size="11">2026-11-19T17:29:15.732980Z</text>
+<text x="1075" y="790" text-anchor="end" font-family="sans-serif" font-size="11">2026-11-19T17:30:46.516194Z</text>
+</svg>

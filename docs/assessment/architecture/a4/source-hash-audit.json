@@ -1,0 +1,87 @@
+[
+  {
+    "manifest": "evidence/assessment/20261119T043844Z-b4-preflight/manifest.json",
+    "path": "checks/results.json",
+    "match": true
+  },
+  {
+    "manifest": "evidence/assessment/20261119T043844Z-b4-preflight/manifest.json",
+    "path": "summary.md",
+    "match": true
+  },
+  {
+    "manifest": "evidence/assessment/20261119T050938Z-b5-s3-restore/manifest.json",
+    "path": "checks/results.json",
+    "match": true
+  },
+  {
+    "manifest": "evidence/assessment/20261119T050938Z-b5-s3-restore/manifest.json",
+    "path": "cleanup-manifest.json",
+    "match": true
+  },
+  {
+    "manifest": "evidence/assessment/20261119T050938Z-b5-s3-restore/manifest.json",
+    "path": "images/before.png",
+    "match": true
+  },
+  {
+    "manifest": "evidence/assessment/20261119T050938Z-b5-s3-restore/manifest.json",
+    "path": "images/overwritten.png",
+    "match": true
+  },
+  {
+    "manifest": "evidence/assessment/20261119T050938Z-b5-s3-restore/manifest.json",
+    "path": "images/restored.png",
+    "match": true
+  },
+  {
+    "manifest": "evidence/assessment/20261119T050938Z-b5-s3-restore/manifest.json",
+    "path": "summary.md",
+    "match": true
+  },
+  {
+    "manifest": "evidence/assessment/20261119T172832Z-b4-c1-preflight/manifest.json",
+    "path": "charts/rds-connections.svg",
+    "match": true
+  },
+  {
+    "manifest": "evidence/assessment/20261119T172832Z-b4-c1-preflight/manifest.json",
+    "path": "charts/tasks-ec2-targets.svg",
+    "match": true
+  },
+  {
+    "manifest": "evidence/assessment/20261119T172832Z-b4-c1-preflight/manifest.json",
+    "path": "checks/results.json",
+    "match": true
+  },
+  {
+    "manifest": "evidence/assessment/20261119T172832Z-b4-c1-preflight/manifest.json",
+    "path": "metrics.csv",
+    "match": true
+  },
+  {
+    "manifest": "evidence/assessment/20261119T172832Z-b4-c1-preflight/manifest.json",
+    "path": "summary.md",
+    "match": true
+  },
+  {
+    "manifest": "evidence/assessment/20261119T034356Z-b3-functional/manifest.json",
+    "path": "checks/results.json",
+    "match": true
+  },
+  {
+    "manifest": "evidence/assessment/20261119T034356Z-b3-functional/manifest.json",
+    "path": "screenshots/password-reset-success.png",
+    "match": true
+  },
+  {
+    "manifest": "evidence/assessment/20261119T034356Z-b3-functional/manifest.json",
+    "path": "screenshots/sat-ticket-email-redacted.png",
+    "match": true
+  },
+  {
+    "manifest": "evidence/assessment/20261119T034356Z-b3-functional/manifest.json",
+    "path": "summary.md",
+    "match": true
+  }
+]

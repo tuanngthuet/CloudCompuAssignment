@@ -1,0 +1,17 @@
+digraph G {
+graph [rankdir=TB, bgcolor="#ffffff", pad="0.35", nodesep="0.35", ranksep="0.45", fontname="DejaVu Sans", fontsize=20, labelloc=t, label="A4 • S3 component PASS / B5 tổng thể BLOCKED"];
+node [shape=box, style="rounded,filled", fillcolor="#edf5fa", color="#58718a", fontname="DejaVu Sans", fontsize=12, margin="0.18,0.13"];
+edge [color="#58718a", fontname="DejaVu Sans", fontsize=10];
+good [label="Bản tốt\n05:09:49.249 UTC • hash A"];
+bad [label="Ghi đè nội dung sai\n05:09:53.296 UTC • hash B"];
+restore [label="CopyObject từ version tốt\n05:09:56.504 UTC • hash A"];
+check [label="GET bytes/hash/MIME/private\nPASS theo evidence"];
+clean [label="Cleanup đúng 3 version\nCòn 0 version / delete marker"];
+gap [label="DB reference + app + cache\nNOT_RUN • images_verified=false"];
+good -> bad [label="Put cùng key"];
+good -> restore [label="source version tốt"];
+bad -> restore [label="current mới"];
+restore -> check [label="đối chiếu bytes"];
+check -> clean [label="sau lưu evidence"];
+check -> gap [label="giới hạn kết luận"];
+}
