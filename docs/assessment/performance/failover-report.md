@@ -30,4 +30,15 @@ AWS ASG Activity cho thấy desired 4→5 do ECS managed scaling lúc 15:40:16Z,
 3. Thử prepare isolation từng bước theo [runbook](fault-runbook.md), kiểm không có task/EC2 bị chuyển trước inject. Nếu không bảo đảm, rollback và giữ C4 BLOCKED.
 4. Chỉ khi gate PASS mới inject, observe và rollback, ghi timeline/metrics/probe/video cùng run ID. Kết luận PASS chỉ khi app phục hồi ở AZ còn lại và hai AZ trở về baseline.
 
-Raw AWS state của preflight được giữ trong `.local/assessment/` (Git ignore); bản evidence công khai chỉ có số tổng hợp và hash. Không tạo session/credential mới; chưa commit/push C4.
+Raw AWS state của preflight được giữ trong `.local/assessment/` (Git ignore); bản evidence công khai chỉ có số tổng hợp và hash. Không tạo session/credential mới. Tài liệu và script C4 đã được push trong commit `c12a252`; việc push không phải bằng chứng nghiệm thu C4.
+
+## C5 — RDS và Redis failover
+
+**Kết luận: BLOCKED; RDS inject NOT_RUN; Redis inject NOT_RUN.** [Preflight C5 chỉ đọc](../../../evidence/assessment/20261120-c5-readiness/summary.md) xác nhận loại tài nguyên và topology tại snapshot, không có tác động failover. [C4](fault-runbook.md) chưa inject/rollback và chưa có bằng chứng baseline hai AZ sau diễn tập; [C3](load-report.md) còn năm bài AWS NOT_RUN. Windows Time trên runner không chạy, B3 probe/invariants và C2 mail window chưa được xác nhận trong cửa sổ C5. Không dùng snapshot `available` hay ECS rollout hoàn tất để vượt gate.
+
+| Bài | Baseline read-only | Inject/observe | Business/SQL sau fault | Cấu hình cuối đã kiểm | Kết luận |
+|---|---|---|---|---|---|
+| RDS Multi-AZ DB instance | `available`, `MultiAZ=true`, không thuộc DB cluster, primary AZ `ap-southeast-2b`; hai Events backup trong 24 giờ | Không gọi `reboot-db-instance`; không có outage, DNS/reconnect hoặc timeline fault | NOT_RUN | Chỉ snapshot trước fault, không có topology hậu fault | BLOCKED / NOT_RUN |
+| Redis replication group | `available`, Multi-AZ/automatic failover enabled; node group `0001`, primary `ap-southeast-2a`, replica `ap-southeast-2b`; Events replication group 24 giờ trả rỗng | Không gọi `test-failover`; quota toàn account chưa xác minh; không có events chuyển role | NOT_RUN | Chỉ snapshot trước fault | BLOCKED / NOT_RUN |
+
+Không có CSV/chart/video hoặc RTO C5; không điền số giả. Chạy lại [runbook C5](fault-runbook.md#c5--rds-rồi-redis-failover-chưa-kích-hoạt) khi C4 và các gate được chứng minh đạt, rồi cập nhật mỗi hàng bằng evidence run riêng.

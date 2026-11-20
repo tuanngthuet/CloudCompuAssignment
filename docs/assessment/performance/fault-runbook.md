@@ -111,3 +111,49 @@ Sau khi app ổn định ở AZ còn lại, khôi phục nguyên danh sách ASG 
 ```
 
 Gói evidence private `.local/assessment/<c4-run-id>/`: baseline/prepared/final JSON, manifest/hash, target list, AWS activity/events, C1 metrics CSV/charts, runner CSV, HTTP probe, B3/SQL kết quả, video link và timeline UTC. Chỉ chuyển bản đã che sang `evidence/assessment/<c4-run-id>/` và dẫn từ [failover report](failover-report.md). **Hiện chưa có run ID fault, incident, CSV/video C4 hoặc kết quả rollback.**
+
+## C5 — RDS rồi Redis failover (chưa kích hoạt)
+
+**Gate bắt buộc:** C4 đã kết thúc và baseline hai AZ ổn định; C3 không chạy; không có PITR/S3 restore hay fault khác; runner UTC đồng bộ; cửa sổ và người trực rollback đã chốt; B3 probe nghiệp vụ cùng bảy truy vấn trong `scripts/tests/db-invariants.sql` có kết quả trước fault; worker email disabled được xác minh ở task đang chạy và không có mail thật; account/region/quyền đọc cùng quyền `rds:RebootDBInstance`, `elasticache:TestFailover` được kiểm chứng. Một service `running=desired` chỉ xác nhận một phần của gate. Không chạy bước Redis khi RDS/app chưa phục hồi đầy đủ. Nếu gate thiếu, chỉ thực hiện preflight đọc và ghi `BLOCKED`.
+
+Tài liệu AWS hiện hành: [RDS RebootDBInstance](https://docs.aws.amazon.com/AmazonRDS/latest/APIReference/API_RebootDBInstance.html) yêu cầu `ForceFailover` cho **Multi-AZ DB instance**; Multi-AZ DB cluster dùng API khác. [ElastiCache TestFailover](https://docs.aws.amazon.com/AmazonElastiCache/latest/APIReference/API_TestFailover.html) nhận replication group và node group; giới hạn **15 node groups trong 24 giờ trượt**, có thể bị AWS chặn trong sự kiện vận hành. Kiểm Events/account quota thực ngay trước lệnh; sự kiện rỗng của một replication group không chứng minh quota toàn account còn 15. `TestFailover` là bài kiểm thử, không dùng làm công cụ sửa sự cố production.
+
+### Preflight và baseline riêng cho từng bài
+
+Chạy từ runner ngoài ASG với `--profile`/`--region` explicit; đối chiếu STS account private trước mọi resource call. Lưu raw JSON và log chứa ID, endpoint, địa chỉ vào `.local/assessment/<c5-run-id>/` (Git ignored), chỉ công bố bản tổng hợp đã che. Dùng `(Get-Date).ToUniversalTime().ToString('o')` và nguồn NTP/Windows Time đã đồng bộ để gắn mốc; AWS Event Date dùng đối chiếu. Không dùng timestamp từ runner mất đồng bộ để tính downtime. Chụp CLI version, source commit, config worker/task digest, ECS/ASG/ALB targets, RDS/Redis/SQS/alarms và DB connection budget. Ghi endpoint **dưới dạng hash**, DNS resolution theo thời gian private; không đổi endpoint production.
+
+```powershell
+$profileName = '<verified-profile>'
+$region = 'ap-southeast-2'
+aws sts get-caller-identity --profile $profileName --region $region --query Account --output text
+aws rds describe-db-instances --db-instance-identifier '<verified-db-id>' --profile $profileName --region $region --output json
+aws rds describe-events --source-type db-instance --source-identifier '<verified-db-id>' --duration 1440 --profile $profileName --region $region --output json
+aws elasticache describe-replication-groups --replication-group-id '<verified-rg-id>' --profile $profileName --region $region --output json
+aws elasticache describe-events --duration 1440 --profile $profileName --region $region --output json
+```
+
+RDS phải là DB instance `available`, `MultiAZ=true`, **không có `DBClusterIdentifier`**, không có pending modification/backup/maintenance chồng lên; lưu primary AZ, standby topology theo nguồn AWS, endpoint/DNS và Events. Redis phải `available`, `MultiAZ=enabled`, `AutomaticFailover=enabled`, xác minh đúng `NodeGroupId`, primary/replica AZ, TLS/ACL, endpoint và events. Xác nhận account-wide test failover 24 giờ và quyền bằng nguồn audit/CloudTrail/owner; IAM simulation hoặc thiếu AccessDenied không thay cho xác nhận thao tác. B3 marker và giao dịch/vé đã commit phải được đọc lại bằng SQL trước fault. Giữ probe HTTP nhẹ và collector C1 xuyên suốt, ghi `sample_at/source_at/status` và khoảng thiếu metric; CloudWatch period 60 giây không phải sampling 15 giây.
+
+### RDS: inject, observe, phục hồi
+
+Chỉ sau khi gate RDS PASS, chạy đúng **một lần** lệnh dưới đây với DB ID đã đối chiếu ngay trước lệnh. Ghi `incident_at_utc` và response private. Không chạy `failover-db-cluster`, không thay `DATABASE_URL`, DNS hoặc secret để che lỗi.
+
+```powershell
+aws rds reboot-db-instance --db-instance-identifier '<verified-db-id>' --force-failover --profile $profileName --region $region --output json
+```
+
+Lấy `describe-db-instances`, RDS Events và DNS resolution theo chu kỳ 15–30 giây, đồng thời probe GET và một workflow synthetic nhẹ đã duyệt. Ghi HTTP lỗi/timeout, thời gian reconnect DB, DB connections, AZ trước/sau, task/target health, ứng dụng/UI, marker/vé commit và bảy invariant SQL. `available` hoặc `/healthz` 200 chưa đủ: chỉ kết thúc khi B3 workflow và SQL xác nhận đúng. Giới hạn quan sát 60 phút; nếu mất phục vụ ngoài dự kiến, dừng synthetic traffic, chuyển sang recovery/incident với người trực, giữ toàn bộ dữ liệu lỗi. Không force failback để lấy topology mong muốn; ghi AZ cuối thật.
+
+### Redis: inject sau khi RDS/app ổn định
+
+Chụp baseline mới, xác minh node group/quota/events lại. Sau khi probe B3 và SQL hậu RDS PASS, chạy đúng **một lần**:
+
+```powershell
+aws elasticache test-failover --replication-group-id '<verified-rg-id>' --node-group-id '<verified-node-group-id>' --profile $profileName --region $region --output json
+```
+
+Theo dõi `describe-replication-groups`, `describe-events` replication group **và cache cluster**, DNS, kết nối TLS/ACL, admission join/wait/grant/heartbeat/expiry, lease/queue epoch và PubSub/realtime bằng client synthetic đã duyệt. Phân biệt state Redis tạm thời có thể mất hoặc đổi thứ tự với reservation/vé bền trong DB; không tuyên bố queue nguyên vẹn. Đối chiếu ticket/hold invariants và không cấp vượt sức chứa. Nếu cần operator recovery, ghi lệnh, người làm, thời gian và ảnh hưởng thứ tự chờ; không tự chạy failover lần hai. Giới hạn 60 phút và cùng quy tắc dừng/incident như RDS.
+
+### Evidence và kết luận
+
+Mỗi bài có run ID/UTC riêng, baseline/final config, AWS Events, CLI response, HTTP/SQL/B3 probes, CSV metrics/charts, lỗi/timeout, DNS/reconnect, video hoặc link Console đã che, `incident_at_utc`, `ready_and_verified_at`, thời gian thực và mọi operator action. Công bố tại `evidence/assessment/<c5-run-id>/`, dẫn từ [failover-report.md](failover-report.md); giữ raw private trong `.local`. Trạng thái `PASS` chỉ khi role/AZ chuyển được xác nhận **và** nghiệp vụ/invariants phục hồi; nếu chưa inject là `NOT_RUN/BLOCKED`, nếu đã chạy nhưng vi phạm ngưỡng là `FAIL`. Không gộp RDS và Redis thành một kết quả.
