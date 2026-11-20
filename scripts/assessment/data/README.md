@@ -120,3 +120,43 @@ Bảy test tích hợp trong test_tools.py đã PASS trên PostgreSQL16.16/Redis
 prepare-handoff.ps1 mặc định yêu cầu cửa sổ14400giây (4giờ); helper Python trực tiếp mặc định3600giây. Chọn thời lượng bao trùm bài đo cộng phần dự phòng; không sửa TTL app hoặc kéo dài expires_at trong file. Cấp gói production sát lịch C3 sau kiểm readiness, không phát lại token local đã bị cleanup. SQL verify-batch.sql nhận CSV UUID user_ids/event_ids/room_ids từ manifest; không còn tham số batch_prefix. Muốn kiểm production phải truyền danh sách từ manifest private đúng batch, không dùng ID theo tên tìm kiếm.
 
 Sáu nguồn mạng trong assets-sources.csv có trang cấp quyền cụ thể; file nguyên gốc chưa tải do HTTP429 ở request đầu. Các mục upload/nhận diện/chỉnh4–8 vùng, API proof của chính6 ảnh đó và ≥100 session AWS mới/Người3 smoke vẫn chưa hoàn thành. Không sửa sáu ca demo hoặc thay bộ12 ảnh hiện hành để lấp phần thiếu.
+
+## Ca tải riêng có backup — cập nhật 21/11/2026
+
+Yêu cầu mới đã được thực hiện bằng `demo_backup.py`, `protect-backup.ps1`, `isolated_load.py` và hai runner `prepare-isolated-one-off.ps1` / `run-isolated-load.ps1`. Các ghi chú “chưa có 100 phiên AWS mới” phía trên là lịch sử; gói mới đã smoke AWS, còn việc Người 3 xác nhận nhận gói vẫn chờ. Quy mô/thời hạn và backup ở [dataset](../../../docs/assessment/functional/dataset.md).
+
+**Backup hiện có:** `.local/assessment/demo-load-20261121a/backup-manifest.private.json` chỉ tới logical dump AES-GCM và các version ảnh S3, kèm snapshot RDS `labseat-demo-before-load-20261120t201159z`. Thư mục private còn chứa `demo-backup.key`, `source-fingerprint.json`, `demo-fingerprint.json`, `assets-backup.private.json` và kết quả restore. Giữ các file này để khôi phục; không gửi cả thư mục cha cho Người 3.
+
+**Khôi phục khi cần:**
+
+1. Dừng thao tác ghi của bài tải; chọn một DB PostgreSQL 16.13 **mới, rỗng**, không chỉ định DB production. Tải đúng `logical_database.bucket/key/version_id` trong manifest bằng `aws s3api get-object --bucket <bucket> --key <key> --version-id <version> <file-private.aesgcm>`. Đối chiếu SHA-256 ciphertext trong manifest.
+2. Giải mã vào thư mục private bằng `protect-backup.ps1 -Mode Decrypt -InputFile <file-private.aesgcm> -KeyFile <demo-backup.key> -OutputFile <restore.dump>`. Công cụ kiểm GCM và SHA plaintext, từ chối ghi đè. SHA plaintext phải trùng dataset.
+3. Dùng `pg_restore --exit-on-error --no-owner --no-acl --dbname=<DB-moi> <restore.dump>`; cấp role/grant cần thiết cho DB mới riêng vì dump không mang owner/ACL. Không chạy `--clean` vào production.
+4. Với từng record trong `assets-backup.private.json`, tải đúng `backup_key/backup_version`, đối chiếu SHA/content type rồi phục hồi vào bucket/prefix **mới** tương ứng `reference`. App thử phải trỏ DB và storage thử riêng, email disabled. Kiểm 27 bảng/hash, schema/constraints và 7 truy vấn `scripts/tests/db-invariants.sql`, sau đó smoke app trước khi quyết định dùng bản phục hồi.
+5. Lựa chọn thứ hai là restore snapshot RDS sang DB identifier mới, private subnet/security group và secret thử riêng. Lượt này **chưa kiểm restore snapshot RDS**, chỉ logical dump đã được restore thực. Không tự đổi endpoint/secret production. Sau sự cố, việc chuyển production sang bản phục hồi cần được chốt cùng nhóm để tránh ghi đè dữ liệu mới hơn backup.
+
+**Cấp lại phiên và đóng gói:** mở tunnel SSM RDS local 15432 như quy trình đang dùng; có Docker image client `labseat-assessment-b1b2:local`, AWS CLI profile `labseat` còn hạn. Runner kiểm account, TLS/host, backup verified, demo fingerprint, cửa sổ/TTL và ownership UUID. Khi dùng đường dẫn AWS CLI đầy đủ, thêm `-Aws '<path-to-aws.exe>'`.
+
+```powershell
+# Không prepare lại bộ demo. Ca tải hiện tại đã tồn tại; không cần chạy prepare nữa.
+./scripts/assessment/data/run-isolated-load.ps1 -Stage verify
+./scripts/assessment/data/run-isolated-load.ps1 -Stage sessions -MinimumValidSeconds 14400 -Execute
+./scripts/assessment/data/run-isolated-load.ps1 -Stage smoke -MinimumValidSeconds 14400 -Execute
+```
+
+`sessions` thu hồi/thay thế chỉ 100 phiên của batch tải rồi ghi TTL thực, không kéo dài TTL app. `smoke` kiểm 100 danh tính và một vòng đặt/hủy, kiểm worker email disabled ổn định trước khi xác nhận, rồi tạo lại ZIP private gồm đúng 4 file bàn giao. Nếu phiên hết hạn, chỗ đang chiếm hoặc demo/schema thay đổi, công cụ dừng; không sửa file hạn phiên để bỏ qua guard. Gói đầu hết hạn 11:40:52 ngày 21/11, giờ Việt Nam; chạy ngày mai phải cấp lại và smoke mới.
+
+Người 3 giải nén ZIP private, kiểm `manifest.mapping`, TTL và 100 phiên trước bài đo; truyền `BASE_URL=https://labseat.id.vn`, `SESSION_ID=5e024221-c858-5443-be0e-4dbd01fd8800`, `SESSIONS_FILE=<path/synthetic-sessions.json>` cho kịch bản hỗ trợ file phiên. `platform.js` hiện yêu cầu admission-off; queue đang bật nên cần phối hợp cửa sổ/chính sách trước khi chạy. `booking.js` dùng `ACCOUNTS_FILE`, không dùng trực tiếp gói phiên này. Không tự bật email, sửa script của Người 3 hoặc chạy tải trong bước chuẩn bị này. Người 2 cấp lại gói khi Người 3 cần; chưa nhận biên bản bàn giao từ Người 3 thì không ghi đã nghiệm thu.
+
+**Sau khi Người 3 xác nhận đã dừng bài tải:**
+
+```powershell
+# Xem đúng phạm vi trước; chưa xóa khi thiếu -Execute.
+./scripts/assessment/data/run-isolated-load.ps1 -Stage cleanup -ManifestId fcbac39e-8ef7-53a7-809a-e2f867cd7f66
+# Chỉ thực thi sau bài đo:
+./scripts/assessment/data/run-isolated-load.ps1 -Stage cleanup -ManifestId fcbac39e-8ef7-53a7-809a-e2f867cd7f66 -Execute
+```
+
+Cleanup kiểm quan hệ chéo, chỉ xóa user/event/ca/phòng/120 seat và dữ liệu con của UUID scope mới; chạy lại an toàn. Đối chiếu demo nghiệp vụ và 7 invariants trong cùng lượt, giữ backup và ảnh demo. Không truncate/reset. Queue lease được rời qua API khi smoke; các key cache của ca riêng có TTL, nếu phải dọn ngay chỉ xóa 5 key suffix `seq/waiting/admitted/entries/seen` của đúng epoch + SESSION_ID qua operator được phép, không xóa `labseat:queue:ready` hoặc đổi policy toàn hệ thống. Đây là bước sau tải, chưa chạy trên AWS; dry-run hiện chỉ thấy scope mới và các reservation smoke đã hủy.
+
+Test an toàn của công cụ mới: `python -m pytest scripts/assessment/data/test_isolated_load.py -q -p no:cacheprovider` chỉ chạy khi APP_ENV=test, DATABASE_URL=TEST_DATABASE_URL kết thúc `_test`, host `backup-verify-db` disposable. Kiểm enum constraint normalization fail-closed, prepare idempotent, 100 phiên/chỗ riêng, từ chối cleanup khi có lịch ngoại scope, cleanup lặp lại và giữ nguyên toàn bộ 27 bảng. Không chạy test này vào DB demo.

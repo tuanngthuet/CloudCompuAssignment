@@ -114,3 +114,33 @@ Chưa đánh dấu hoàn tất toàn bộ B1. Tài liệu này chỉ ghi đúng 
 Bộ kiểm `python -m pytest scripts/assessment/data/test_tools.py -q -p no:cacheprovider` đạt **7 PASS,0 FAIL/ERROR/SKIP** trên DB/Redis disposable với APP_ENV=test, DATABASE_URL=TEST_DATABASE_URL kết thúc _test và email disabled. Gồm đủ508 user/12 event/24 lịch/300 reservation, hash app, seed/book idempotent; UUID/type/FK guard từ chối sai identity/quan hệ;12 cấu hình ảnh idempotent và capacity17;100 phiên distinct/digest/CSRF, TTL từ expires_at thực; smoke100 user/12 map và hold-cancel qua HTTP; bảy invariants zero rows trước cleanup; cleanup giới hạn batch và chạy lại an toàn. [Bằng chứng](../../../evidence/assessment/b1b2-20261117a/summary.md).
 
 Chưa sửa trạng thái/thời gian ca demo hoặc tạo batch production mới: các fixture sắp mở/hết chỗ/check-in phải được kiểm và bố trí đúng cửa sổ, còn tách batch functional/load độc lập chưa được áp dụng vào bộ demo một batch hiện hành. Không gọi khả năng dùng hai batch ID/namespace khác nhau của helper là bằng chứng AWS đã tách batch. B3 hiện không còn FAIL regression; B4/B5 vẫn chờ fault ổn định. Không sửa endpoint/secret/APP_ENV hay bật email production trong lượt này.
+
+## Cập nhật sau yêu cầu sao lưu và tách ca tải — 21/11/2026
+
+Mục này thay thế riêng trạng thái “chưa tách batch production” ở trên. Bộ demo `b1b2-20261117a` được giữ nguyên; batch tải mới là `demo-load-20261121a`. Không chạy lại seed/reset bộ demo, không đổi lịch/ảnh/tài khoản demo để dùng làm ca tải.
+
+### Backup trước khi tạo dữ liệu tải
+
+| Bản sao | Thời điểm giờ Việt Nam | Kiểm chứng |
+| --- | --- | --- |
+| RDS snapshot `labseat-demo-before-load-20261120t201159z` | 03:12:06 ngày 21/11 | `available`, encrypted, private; chưa thực hiện restore từ chính snapshot RDS |
+| Logical dump public schema, exported transaction snapshot | 03:12:26 ngày 21/11 | Restore thực vào PostgreSQL 16.13 disposable; khớp 27 bảng, số dòng/hash, schema `0002_platform`, constraints; 7 invariants đều 0 |
+| 27 object ảnh đang được tham chiếu | Trước lúc xác nhận backup 03:27 ngày 21/11 | Copy theo S3 version, tải lại kiểm SHA-256/content type; 8.195.242 byte |
+
+Dump đã mã hóa AES-256-GCM, upload vào S3 private rồi tải xuống, giải mã và đối chiếu đúng bytes đã restore. SHA-256 plaintext: `b4da172beb998ff9c95c14148a3ac757a3a7d0b54b8253442bcd652abcee27e8`. Backup được xác nhận trước khi ca tải được tạo lúc khoảng 03:36. Metadata đầy đủ, bucket/key/version, key giải mã và fingerprint nằm riêng trong `.local/assessment/demo-load-20261121a/`; không đưa dữ liệu dump hoặc key vào Git hay gói bàn giao Người 3. Giữ backup cho buổi demo cuối, Người 2 chịu trách nhiệm giữ key và metadata ở nơi lưu private của nhóm.
+
+Đối chiếu constraints giữ raw DDL và chỉ chuẩn hóa hai enum check của `users` khi pg_dump chuyển vị trí cast varchar/text tương đương. Kiểm demo sau thao tác so sánh các PK gốc của 10 bảng nghiệp vụ; chỉ bỏ qua `users.last_activity_at` là metadata đăng nhập. Backup đầy đủ vẫn chứa trường này và toàn bộ 27 bảng. Không gọi kiểm nghiệp vụ này là byte-identical toàn DB: phiên đăng nhập/outbox/audit vận hành có thể phát sinh bình thường.
+
+### Ca tải và gói 100 phiên
+
+- Event riêng: **Ca chịu tải riêng 21–22/11/2026 (không dùng demo)**, loại practice, ACTIVE.
+- `SESSION_ID`: `5e024221-c858-5443-be0e-4dbd01fd8800`; phòng riêng `40086403-b7f1-5e9c-8810-d4324085638d`.
+- 120 chỗ native grid, mỗi chỗ capacity 1; 100 student mới `demo-load-20261121a-s001`…`s100` được gán L001…L100, còn 20 chỗ dự phòng. Không dùng user hoặc phòng demo.
+- Mở từ **03:31 ngày 21/11**, đóng **00:00 ngày 24/11/2026**, giờ Việt Nam. Nếu bài đo vượt mốc này phải bố trí lại cửa sổ trước, không sửa demo.
+- 100 phiên distinct được cấp theo cơ chế app, TTL 8 giờ, gói đầu hết hạn **11:40:52 ngày 21/11/2026**. Phiên có thể bị thu hồi sớm; phải kiểm và cấp lại sát giờ đo nếu chạy muộn hơn.
+- Smoke thực trên `https://labseat.id.vn` lúc 03:45–03:46: 100 `/me` đúng 100 user, 100 seat mapping riêng; một lượt login/logout bằng mật khẩu và giữ → xác nhận → đọc QR → hủy → rời queue thành công. Email job/delivery đều SKIPPED, provider attempts 0.
+- Demo nghiệp vụ không đổi, 7 invariants bằng 0; cả 27 ảnh gốc và bản sao đã được đọc lại kiểm version/hash sau thao tác.
+
+Gói private `.local/assessment/demo-load-20261121a/handoff-person3.zip` gồm **manifest.json, synthetic-sessions.json, smoke-result.json, README.txt**. Manifest có mapping tường minh từng index phiên → user → event/ca/phòng/chỗ, thời gian mở/đóng và hạn phiên. Không có backup key hoặc master mật khẩu trong gói. Hướng dẫn cấp lại/kiểm/dọn nằm ở [README data](../../../scripts/assessment/data/README.md).
+
+Queue vẫn bật và email vẫn tắt. `platform.js` nhận file phiên nhưng cần cửa sổ admission-off do người chạy phối hợp; `booking.js` nhận file tài khoản, không nhận trực tiếp file phiên này. Chưa chạy bài tải, chưa nhận xác nhận Người 3 đã nhận/smoke gói và chưa dọn ca tải trên AWS. Sau bài đo cần Người 3 báo dừng để Người 2 chạy cleanup đúng manifest, kiểm lại demo và ghi kết quả thực; không đánh dấu bước tương lai là đã xong. Các fixture trạng thái/ảnh admin còn thiếu ở mục B1/B2 cũ vẫn giữ nguyên trạng thái.
