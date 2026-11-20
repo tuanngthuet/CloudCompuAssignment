@@ -1,0 +1,21 @@
+# C3 preflight AWS chỉ đọc — 20/11/2026
+
+Đây là phép kiểm readiness, **không phải bài tải C3 hoặc nghiệm thu C1**. Thời điểm ghi bởi runner chỉ là mốc tham khảo: `w32tm /query /status` báo `Leap Indicator: 3`, `Stratum: 0`, `Source: Local CMOS Clock`, không có lần đồng bộ thành công. Lệnh `w32tm /resync` bị từ chối `0x80070005`; clock gate vẫn FAIL.
+
+| Hạng mục | Kết quả quan sát | Giới hạn |
+|---|---|---|
+| AWS identity/read | Profile `tv2-compute` khớp account dự kiến, region `ap-southeast-2`; đọc được ECS/EC2/ASG/ELB, CloudWatch, RDS, ElastiCache, SQS, SNS và alarms. | Quyền đọc không chứng minh quyền sửa queue/worker hoặc quyền restore. Không công bố raw ARN/account. |
+| C1 collector | Một vòng thực, 67 dòng CSV: 55 `OBSERVED`, 2 `MISSING`, 10 `MISSING_OR_DELAYED`, 0 AWS API error. Duration 14,44 s, cấu hình interval 30 s. | Một mẫu không chứng minh nhịp đều 15–30 s; CloudWatch vẫn dùng `Period=60` s. CSV private: `.local/assessment/20261120T160835Z-C1-71938a/metrics.csv`, SHA-256 `FE73400C57BFE68B205E88F398E312D81602568BF98D2F6B82188CBDD817BB4E`. Runner clock chưa tin cậy. |
+| Collector gaps | `ecs.az_a.eni_remaining`, `ecs.az_b.eni_remaining` thiếu; capacity reservation, ALB response/4xx/5xx/healthy CloudWatch, queue wait, Redis latency và hai DLQ CloudWatch metric thiếu/chậm. | ALB target health, queue/DLQ count có đường describe riêng. Thiếu datapoint CloudWatch khi không có traffic không được coi là giá trị 0 hay lỗi hệ thống. |
+| Compute/ALB | ASG desired/in-service 5; API 2/2, worker 1/1, publisher 1/1, deployment completed; 2 API target healthy. | Một snapshot, chưa chứng minh ổn định xuyên suốt cửa sổ chạy. ASG từng có 4 trong ảnh Console trước đó. |
+| ENI placement | 5 máy `t3.small` ở hai AZ, mỗi máy tối đa 3 network interfaces theo EC2 API. Số interface đang gắn theo AZ: 2a = 1, 2; 2b = 1, 2, 3. Không máy nào có thuộc tính `ecs.awsvpc-trunk-id`; ECS `remainingResources` không báo ENI. | Chỉ là cận trên network interface, cần kiểm placement, subnet IP, task ENI và sức chứa khi tăng task/EC2. Không suy ra capacity đủ từ CPU/RAM. |
+| Dependencies | RDS available/MultiAZ, snapshot CloudWatch `DatabaseConnections=8`; 2 ElastiCache node available; SQS chính và DLQ thấy 0 visible, chính 0 in-flight; 14 alarm đều OK ở snapshot; SNS workload có 1 subscription confirmed. | `max_connections`/budget DB hiện tại chưa xác minh bằng SQL; alarm OK một thời điểm không chứng minh delivery SNS; không có job `SKIPPED`/Brevo. |
+| Worker/email | Service worker đang dùng revision 10, `EMAIL_BACKEND=disabled`, 1/1 task. | Chưa có job synthetic SKIPPED, đối chiếu provider và restore. C2 vẫn BLOCKED. |
+| App/queue | GET `/healthz` trả `status=ok`; GET `/lab-sessions` cho `queue_policy.enabled=true`, 25 ca. | Chỉ hai GET nhẹ; queue ON chặn bài Platform. Không chứng minh 100 seat/session hợp lệ. |
+| Runner | Mẫu đo riêng: CPU 23,81%, RAM khả dụng 2547 MiB, network 3557,29 bytes/s. | Chưa đo dưới tải; đồng hồ runner chưa đồng bộ. |
+
+Kiểm nhịp collector tiếp theo bằng **ba mẫu AWS chỉ đọc**: 63 + 62 + 62 = 187 dòng CSV; 151 OBSERVED, 6 MISSING, 30 MISSING_OR_DELAYED, 0 OVER_INTERVAL, không có lỗi collector. Theo đồng hồ runner, hai khoảng mẫu là **30,000344 s** và **30,000781 s**; duration từng vòng 17,99 / 13,28 / 14,52 s. Điều này xác nhận scheduler giữ nhịp 30 s trong ba mẫu, nhưng timestamp UTC tuyệt đối chưa dùng để nghiệm thu vì Windows Time vẫn chưa đồng bộ. Mẫu thiếu/chậm còn ENI, capacity reservation, ALB latency/errors/healthy CloudWatch, queue wait, Redis latency và một CPU credits của EC2. Raw private `.local/assessment/20261120T161726Z-C1-ca895a/metrics.csv`, SHA-256 `56375158F6403B4E4E8B5E38B1A4D4710B35BD20FD54CF65E539B4567FBA4465`.
+
+Raw inventory, CSV, activities, manifest và runner CSV giữ dưới `.local/assessment/`, không đưa vào Git. Manifest collector có SHA-256 mã `5df942238a090435386a7c0ac7146e6a6f000a17947b82818a22b9fd37e0c09e`; file inventory private SHA-256 `EEB4C2B1D8A9446CAEC125C4A28BCBF554222E7852CDBDE81F250A24F219F7AF`.
+
+**Quyết định:** C3 BLOCKED, cả năm bài AWS NOT_RUN. Gate còn thiếu: clock UTC đã đồng bộ, B2 private sessions còn TTL, C2 job SKIPPED/Brevo và cửa sổ email, B3 smoke/invariants cùng cửa sổ, DB budget/placement/quota, queue policy đúng bài, baseline ổn định và runner giám sát liên tục. Không đổi AWS, không phát k6 load.

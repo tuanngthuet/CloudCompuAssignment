@@ -1,7 +1,7 @@
 # C1 — Công cụ quan sát và preflight
 
-Ngày soạn: 19/11/2026. Chủ sở hữu: Người 3. **Trạng thái nghiệm thu C1: BLOCKED.**
-Trong phiên soạn, AWS CLI chưa có profile `tv1` và truy cập mặc định gặp proxy sandbox. Quyền chạy STS ngoài sandbox bị từ chối. Theo chỉ đạo nhóm, không thử AWS thêm trong phiên này. Chưa có smoke collector AWS hoặc kết quả tải được xác nhận.
+Ngày soạn: 19/11/2026; đối chiếu bàn giao: 20/11/2026. Chủ sở hữu: Người 3. **Trạng thái nghiệm thu C1: BLOCKED.**
+Phiên soạn ban đầu không chạy được AWS CLI. Sau đó Người 2 chạy một smoke collector chỉ đọc trên AWS và bàn giao bằng chứng. Smoke này bổ sung baseline, nhưng chưa đáp ứng toàn bộ điều kiện C1; chưa có kết quả tải được xác nhận. Xem [runbook C1 và chuẩn bị C2](runbook.md).
 
 Nguồn: [kế hoạch C1](../../sprints/ke-hoach-nghiem-thu-4-ngay.md), [capacity](../../deployment/capacity.md), [load test](../../testing/load-test.md), [inventory A1](../architecture/inventory.md).
 
@@ -56,14 +56,14 @@ Biểu đồ `tasks-ec2-targets.svg` đối chiếu ba nhóm theo cùng timestam
 
 | Mục | Nguồn và điều kiện cần xác minh | Trạng thái phiên này |
 |---|---|---|
-| Account/region, thời gian runner | STS account khớp; Sydney; UTC đồng bộ | BLOCKED |
-| API/service/ALB | API tối thiểu 2 running, rollout hoàn tất, ít nhất 2 targets healthy, API task cùng digest; worker/publisher ready | NOT_RUN |
-| ASG/ECS placement | Min/desired/max, in-service, container instances ACTIVE; RAM/ENI còn lại từng AZ, rolling headroom và AZ còn lại đủ slot cho dịch vụ thiết yếu | Ảnh Console cho thấy ASG 4/4 Healthy InService và 4 ECS instances Active; có RAM khả dụng của một máy, ENI/headroom theo AZ chưa đo, collector NOT_RUN |
-| DB connections | RDS `DatabaseConnections`; chạy read-only `SHOW max_connections` trong VPC và kiểm budget 66 cùng reserve/rolling trong `capacity.md` | Ảnh Console hiển thị khoảng 8 kết nối tại thời điểm xem; `max_connections` và headroom chưa kiểm, collector NOT_RUN |
-| Restore | RDS Multi-AZ/retention/latest restorable; quota DB instance/storage/snapshot và IAM/KMS cho DB tạm, phối hợp B4 | Ảnh Console cho thấy Multi-AZ, backup tự động 1 ngày và các snapshot Available; Service Quotas báo Access denied, quota/IAM/KMS và restore drill chưa xác minh |
+| Account/region, thời gian runner | STS account khớp; Sydney; UTC đồng bộ | PASS cho account/region trong smoke Người 2; đồng bộ UTC của runner k6 NOT_RUN |
+| API/service/ALB | API tối thiểu 2 running, rollout hoàn tất, ít nhất 2 targets healthy, API task cùng digest; worker/publisher ready | PASS tại snapshot smoke Người 2; phải kiểm lại trước lượt C1/C3 tiếp theo |
+| ASG/ECS placement | Min/desired/max, in-service, container instances ACTIVE; RAM/ENI còn lại từng AZ, rolling headroom và AZ còn lại đủ slot cho dịch vụ thiết yếu | Snapshot smoke: ASG 4/4; capacity theo AZ có cận trên từ RAM/CPU/ENI vật lý. ECS không báo ENI còn lại; placement, subnet/IP và headroom khi mất AZ vẫn BLOCKED |
+| DB connections | RDS `DatabaseConnections`; chạy read-only `SHOW max_connections` trong VPC và kiểm budget 66 cùng reserve/rolling trong `capacity.md` | PASS tại snapshot Người 2: max 79, reserve 3+2, non-reserved 74, budget 66 còn 8, rolling ceiling 65; kiểm lại ở cửa sổ chạy |
+| Restore | RDS Multi-AZ/retention/latest restorable; quota DB instance/storage/snapshot và IAM/KMS cho DB tạm, phối hợp B4 | Quota snapshot Người 2: DB 1/40, storage 20/100000 GiB, manual snapshot 0/100; quyền/KMS, subnet/placement và restore drill chưa chứng minh |
 | Redis | Trạng thái replication group, cả hai node, Multi-AZ/failover và metric từng node; xác nhận cache chỉ giữ admission, DB giữ reservation | Ảnh Console cho thấy Redis 7.1.0, `cache.t3.micro`, hai node Available, Multi-AZ và automatic failover bật; hành vi failover, memory/network headroom chưa kiểm |
-| Queue/email/alarm | Queue/DLQ policy, backlog, worker, SNS subscription confirmed, alarm actions; C2 xác nhận email disabled trước tải | NOT_RUN |
-| Runner | k6 version; CPU, RAM, network và clock trong smoke; runner không nằm trong ASG | BLOCKED: k6 không có trong PATH ở máy soạn |
+| Queue/email/alarm | Queue/DLQ policy, backlog, worker, SNS subscription confirmed, alarm actions; C2 xác nhận email disabled trước tải | Snapshot smoke: queue/DLQ 0 visible/in-flight, redrive queue có cấu hình, 14 alarm OK, 1 SNS subscription confirmed, worker disabled. Chưa chứng minh notification khi workload thật hoặc quy trình C2 restore |
+| Runner | k6 version; CPU, RAM, network và clock trong smoke; runner không nằm trong ASG | Người 2 có 9 mẫu CPU/RAM/network trên host Windows ngoài ASG; chưa có k6 version, đồng bộ UTC hoặc saturation khi tải: BLOCKED |
 
 `preflight.json` chỉ tự thu được phần AWS API phù hợp, **không tự xác nhận** `max_connections`, schema, tốc độ runner hay khả năng restore IAM/KMS. Người chạy điền kết quả kiểm tra bổ sung trong manifest/báo cáo cùng timestamp và nguồn. C1 chỉ đạt khi các mục này có bằng chứng và smoke thật; kết quả collector `COLLECTED_REVIEW_REQUIRED` không phải `PASS`.
 
@@ -71,7 +71,7 @@ Biểu đồ `tasks-ec2-targets.svg` đối chiếu ba nhóm theo cùng timestam
 
 `metrics.csv` có `sample_at,metric,value,unit,source_at,status`. ECS service `desired/running/pending`, ASG `desired/in_service`, ALB healthy lấy từ describe tại thời điểm lấy mẫu. ECS container `runningTasksCount` và `remainingResources` được cộng theo AZ; giá trị thiếu được ghi `MISSING`, không tính thành 0. Không suy có thể đặt task chỉ từ RAM nếu ENI hết. `preflight.json` ghi capacity provider và liên kết ASG để đối chiếu topology. CloudWatch dùng `GetMetricData` period 60 giây, vì vậy lặp lại giá trị giữa các lần lấy mẫu 30 giây là bình thường. Metric không có datapoint được ghi `MISSING_OR_DELAYED`, không ghi 0.
 `alb.request_count` là tổng request trong 60 giây CloudWatch; `alb.rps` chia tổng đó cho 60, không biểu thị RPS tức thời. Target 4xx/5xx và ALB 4xx/5xx được lưu riêng. `ReadLatency`/`WriteLatency` RDS lưu theo giây, dù Console có thể hiển thị mili giây. DB lock wait, thời điểm Redis failover và request stream chứng minh nhiều API task nhận tải chưa có metric xác minh trong phiên này; cần bổ sung nguồn SQL/events/app logs ở các bài C3–C5 và ghi rõ khi thiếu.
-`collector.duration_seconds` cho biết một vòng thu thập mất bao lâu. Nếu vượt `--interval`, status là `OVER_INTERVAL`; CSV giữ timestamp thực, không giả rằng đã đạt chu kỳ 15–30 giây. Khi đó giảm số truy vấn hoặc tăng interval trong giới hạn 30 giây và ghi hạn chế nếu vẫn chậm.
+`collector.duration_seconds` cho biết một vòng thu thập mất bao lâu. Nếu vượt `--interval`, status là `OVER_INTERVAL`; CSV giữ timestamp thực, không giả rằng đã đạt chu kỳ 15–30 giây. Bản mã hiện tại còn ghi `collector.describe_seconds`, `collector.cloudwatch_seconds`, `collector.activities_seconds` để xác định nhóm API chậm mà không tăng số lời gọi AWS. Sau khi đo, cân nhắc gộp/đọc song song truy vấn độc lập; nếu vẫn vượt 30 giây, ghi hạn chế thay vì đổi timestamp.
 
 CloudWatch dimensions được căn theo Terraform: `ClusterName/ServiceName` cho ECS, `ClusterName/CapacityProviderName` cho reservation, `AutoScalingGroupName` cho ASG và EC2 CPU, `LoadBalancer/TargetGroup` cho ALB target, `DBInstanceIdentifier` cho RDS, `CacheClusterId` cho Redis, `QueueName` cho SQS. CPU credits dùng `InstanceId` từng EC2, không dùng dimension ASG. Các metric ứng dụng không có dimensions. Nếu metric vẫn thiếu sau vài phút, dùng CloudWatch Metrics Console kiểm namespace/dimensions và ghi thiếu thật; không tự nội suy.
 
@@ -79,12 +79,30 @@ Redis có hai node nên collector ghi `redis.node_1.*` và `redis.node_2.*` theo
 
 CSV chưa đủ chứng minh autoscaling: ở C3 cần đối chiếu scaling activity, task placement, healthy target và request stream từ nhiều API task, SNS nhận alarm workload thật. C4/C5 cần events, probe nghiệp vụ và timeline riêng. Không diễn giải task tăng là EC2 đã tăng.
 
-## Kết quả kiểm tra trong phiên soạn
+## Kết quả kiểm tra trong phiên soạn ban đầu (19/11)
 
 - `python -m unittest discover -s scripts/assessment/observability -p test_local.py -v`: **6/6 đạt**, gồm account guard, scaling activity, capacity provider, task theo AZ, missing metric, dimensions Redis/EC2, phép tính ALB RPS và khoảng trống trên chart. Fixture dùng thư mục Git ignored vì ACL sandbox Windows chặn `TemporaryDirectory` mode 0700.
 - Python `py_compile` cho collector/chart/test: đạt. Chạy CLI `chart.py` từ CSV synthetic và parse XML: **4/4 SVG hợp lệ**. `runner.ps1` ghi một mẫu local CPU/RAM/network trạng thái `OBSERVED`. Đây là kiểm thử chức năng trên máy soạn, chưa phải runner k6 bên ngoài ASG.
 - Danh mục 20 ảnh Console đã che định danh và SHA-256: **20/20 khớp**. Bản gốc chỉ giữ trong `.local/assessment/c1-originals/` (Git ignored); chưa commit/push.
-- Smoke AWS, collector runtime AWS, chart từ AWS, kiểm `max_connections`, quota và runner k6: **BLOCKED/NOT_RUN**, không có số liệu thật.
+- Tại thời điểm soạn ban đầu: smoke AWS, collector runtime AWS, chart từ AWS, kiểm `max_connections`, quota và runner k6 **BLOCKED/NOT_RUN**. Bằng chứng bổ sung từ Người 2 được đối chiếu riêng bên dưới.
+
+## Đối chiếu smoke AWS Người 2 bàn giao (20/11 giờ Việt Nam)
+
+Nguồn gốc là run private `20261119T172832Z-C1-bedfe3` dùng collector tại commit `7fa878a`; gói công khai mang run ID `20261119T172832Z-b4-c1-preflight`, task B4, trạng thái `PREFLIGHT_PARTIAL`. Xem [manifest](../../../evidence/assessment/20261119T172832Z-b4-c1-preflight/manifest.json), [kết quả](../../../evidence/assessment/20261119T172832Z-b4-c1-preflight/checks/results.json), [CSV](../../../evidence/assessment/20261119T172832Z-b4-c1-preflight/metrics.csv) và [hai SVG](../../../evidence/assessment/20261119T172832Z-b4-c1-preflight/charts/). Đây là một lượt quan sát chỉ đọc do Người 2 chạy, không phải nghiệm thu C1 hoặc bài tải C3.
+
+| Kiểm tra | Kết quả đọc trực tiếp từ gói | Trạng thái C1 |
+|---|---|---|
+| Mốc UTC và nhịp lấy mẫu | Preflight `17:28:32.683204Z`; 4 mẫu bắt đầu `17:29:15.732980Z`, `17:29:45.734073Z`, `17:30:15.735122Z`, `17:30:46.516194Z`. Ba khoảng là 30.001093s, 30.001049s, 30.781072s; từ mẫu đầu đến mẫu cuối 90.783214s. Thời lượng từng vòng 25.14, 26.72, 30.78, 29.78s. Không có mốc kết thúc chính thức của toàn run trong manifest công khai. | 1 vòng `OVER_INTERVAL`; chưa chứng minh chu kỳ 15–30s liên tục |
+| CSV và chart | 252 dòng, 63 dòng/mẫu: `OBSERVED` 211, `MISSING` 8, `MISSING_OR_DELAYED` 32, `OVER_INTERVAL` 1. Hai SVG biểu diễn task/EC2/target và RDS connections; không phải biểu đồ autoscaling dưới tải. | Bằng chứng baseline một phần; không tự đổi thành PASS |
+| Thiếu dữ liệu | ENI còn lại ở cả hai AZ: 8 dòng `MISSING`. Tám metric CloudWatch thiếu cả 4 mẫu: `ecs.capacity_reservation`, `alb.target_response_seconds`, `alb.target_4xx`, `alb.5xx`, `alb.elb_4xx`, `alb.elb_5xx`, `app.queue_wait_ms`, `app.redis_latency_ms`. | Không điền 0 hoặc nội suy; xác minh namespace/dimensions và nguồn thay thế có timestamp |
+| API và baseline | 0 lỗi API; account/region khớp; API 2/2 cùng digest, hai AZ, 2 ALB targets healthy; ASG 4 in-service; queue/DLQ không tồn thư tại snapshot. `alb.request_count=0` trong các bucket quan sát. | Có baseline read-only; chưa có request stream nhiều API task |
+| Runner và phụ thuộc | Host Người 2 ở ngoài ASG có 9 mẫu CPU/RAM/network; DB `max_connections=79`, budget 66 còn 8 tại snapshot. Quota DB 1/40, storage 20/100000 GiB, manual snapshots 0/100. | K6, đồng bộ clock, saturation dưới tải, ENI/placement, quyền restore còn thiếu |
+
+Collector đặt `sample_at` khi bắt đầu vòng; các giá trị CloudWatch có `source_at` theo bucket dữ liệu 60 giây và có thể trễ hoặc lặp giữa hai mẫu 30 giây. `MISSING_OR_DELAYED` không chứng minh metric sai; xem lại dimensions, độ trễ công bố và metric có thực sự phát sinh hay không. **CSV bàn giao cũ** gán `source_at=sample_at` cho giá trị thiếu, chỉ là mốc quan sát chứ không phải thời điểm có datapoint. Mã collector vừa sửa để `source_at` trống khi CloudWatch không trả timestamp; không chỉnh sửa CSV bằng chứng cũ.
+
+B1/B2 có 508 tài khoản và bộ ca synthetic tại snapshot 18/11; **100 session B2 đều hết hạn** tại snapshot đó. Không dùng token cũ cho C2/C3. B3 có ma trận 329 PASS, 3 FAIL, 2 BLOCKED, 3 NOT_RUN theo từng assertion; X01–X03 vẫn NOT_RUN. Xem [B1/B2](../../../evidence/assessment/b1b2-20261117a/summary.md), [B3](../functional/report.md) và [ma trận](../functional/test-cases.csv). Trước C3 cần session mới còn TTL, B3 smoke đúng window và email disabled được C2 xác nhận.
+
+**C1 giữ BLOCKED.** Profile `tv2-compute` đã dùng được cho preflight AWS chỉ đọc ngày 20/11; đồng hồ Windows Time chưa đồng bộ và chưa có smoke C1 đạt đủ điều kiện nghiệm thu. Các việc tiếp theo và checklist theo từng bằng chứng nằm tại [runbook](runbook.md). Không dùng ảnh Console, quota snapshot, SVG hoặc smoke Người 2 riêng lẻ để đánh dấu nghiệm thu C1.
 
 ### Ảnh AWS Console do người dùng cung cấp ngày 19/11/2026
 

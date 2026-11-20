@@ -10,8 +10,9 @@ const source = readFileSync(new URL('./booking.js', import.meta.url), 'utf8')
   .replace('export default function ()', 'function run()')
   + '\nglobalThis.run = run; globalThis.setup = setup; globalThis.options = options;';
 
-function harness(environment, fixtures, userIdForToken = token => `user-for-${token}`) {
+function harness(environment, fixtures, userIdForToken = token => `user-for-${token}`, queueEnabled = false, holdResponse = null) {
   const calls = [];
+  const counters = {};
   const cookies = {};
   const response = (status, data) => ({ status, json: () => data });
   const http = {
@@ -23,6 +24,7 @@ function harness(environment, fixtures, userIdForToken = token => `user-for-${to
       calls.push({ method: 'GET', url });
       if (url.endsWith('/me')) return response(200, { id: userIdForToken(cookies.labseat_session),
         role: 'student', account_status: 'ACTIVE', email_verified: true });
+      if (url.endsWith('/lab-sessions')) return response(200, { queue_policy: { enabled: queueEnabled } });
       if (url.endsWith('/seats')) return response(200, { items: [{ id: 'seat-1', available: true }] });
       return response(200, {});
     },
@@ -30,7 +32,7 @@ function harness(environment, fixtures, userIdForToken = token => `user-for-${to
       calls.push({ method: 'POST', url, body: JSON.parse(body), params });
       if (url.endsWith('/auth/login')) return response(200, {});
       if (url.endsWith('/queue/join')) return response(200, { status: 'ADMITTED', admission_expires_at: new Date(Date.now() + 60000).toISOString() });
-      if (url.endsWith('/holds')) return response(200, { hold_id: 'hold-1' });
+      if (url.endsWith('/holds')) return holdResponse || response(200, { hold_id: 'hold-1' });
       if (url.endsWith('/confirm')) return response(200, { reservation_id: 'reservation-1' });
       return response(200, {});
     },
@@ -39,11 +41,11 @@ function harness(environment, fixtures, userIdForToken = token => `user-for-${to
     __ENV: environment, __VU: 1, Date, JSON, Number, Boolean, String, Set, Error,
     http, check: (r, checks) => Object.values(checks).every(fn => fn(r)), sleep: () => {},
     SharedArray: class { constructor(_name, loader) { return loader(); } },
-    Counter: class { add() {} }, Trend: class { add() {} },
+    Counter: class { constructor(name) { this.name = name; } add(value) { counters[this.name] = (counters[this.name] || 0) + value; } }, Trend: class { add() {} },
     open: path => JSON.stringify(fixtures[path]),
   });
   vm.runInContext(source, context);
-  return { context, calls, cookies };
+  return { context, calls, cookies, counters };
 }
 
 const base = { BASE_URL: 'https://labseat.example', SESSION_ID: 'session-1', VUS: '1', DURATION: '5m' };
@@ -106,4 +108,25 @@ test('setup rejects two sessions belonging to one user', () => {
     SESSION_EXPIRES_AT: new Date(Date.now() + 3600000).toISOString() },
   { 'sessions.json': [fixture, { ...fixture, session_token: 'other-token' }] }, () => 'same-user');
   assert.throws(() => h.context.setup(), /distinct active verified students/);
+});
+
+test('admission mode refuses queue disabled before load', () => {
+  const h = harness({ ...base, SESSIONS_FILE: 'sessions.json', REQUIRE_QUEUE_ENABLED: '1',
+    SESSION_EXPIRES_AT: new Date(Date.now() + 3600000).toISOString() }, { 'sessions.json': [fixture] });
+  assert.throws(() => h.context.setup(), /queue enabled/);
+});
+
+test('admission records expected sold-out separately from unexpected conflict and rate limit', () => {
+  const config = { ...base, SESSIONS_FILE: 'sessions.json',
+    SESSION_EXPIRES_AT: new Date(Date.now() + 3600000).toISOString() };
+  for (const [status, code, metric] of [[409, 'sold_out', 'booking_seat_conflict'],
+    [409, 'active_registration', 'booking_unexpected_conflict'],
+    [429, 'rate_limited', 'booking_rate_limited']]) {
+    const h = harness(config, { 'sessions.json': [fixture] }, undefined, true,
+      { status, json: () => ({ code }) });
+    h.context.setup();
+    h.context.run();
+    assert.equal(h.counters[metric], 1);
+    assert.equal(h.counters.booking_unexpected_error || 0, code === 'sold_out' ? 0 : 1);
+  }
 });

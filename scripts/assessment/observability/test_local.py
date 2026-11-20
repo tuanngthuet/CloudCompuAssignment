@@ -124,6 +124,7 @@ class OfflineTest(unittest.TestCase):
         self.assertEqual(by_name["alb.request_count"]["value"], 120.0)
         self.assertEqual(by_name["alb.rps"]["value"], 2.0)
         self.assertEqual(by_name["rds.connections"]["status"], "MISSING_OR_DELAYED")
+        self.assertEqual(by_name["rds.connections"]["source_at"], "")
         self.assertEqual(by_name["alb.target_4xx"]["status"], "MISSING_OR_DELAYED")
         credits = [q["MetricStat"]["Metric"]["Dimensions"] for q in fake.queries
                    if q["MetricStat"]["Metric"]["MetricName"] == "CPUCreditBalance"]

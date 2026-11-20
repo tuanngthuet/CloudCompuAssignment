@@ -2,6 +2,7 @@
 import argparse
 import csv
 import datetime as dt
+import hashlib
 import json
 import os
 from pathlib import Path
@@ -62,7 +63,7 @@ def resource_value(resources, name):
 
 def add(rows, stamp, name, value, unit="Count", source=None, status=None):
     rows.append({"sample_at": stamp, "metric": name, "value": "" if value is None else value,
-                 "unit": unit, "source_at": source or stamp,
+                 "unit": unit, "source_at": stamp if source is None else source,
                  "status": status or ("MISSING" if value is None else "OBSERVED")})
 
 
@@ -197,11 +198,11 @@ def cloudwatch(aws, args, rows, stamp, dest, instance_ids=None):
                 or name.endswith("WriteLatency") or name.endswith("ApproximateAgeOfOldestMessage")
                 else "Milliseconds" if name.endswith("_ms") else "Count")
         add(rows, stamp, name, values[0] if values else None, unit=unit,
-            source=timestamps[0] if timestamps else stamp,
+            source=timestamps[0] if timestamps else "",
             status="OBSERVED" if values else "MISSING_OR_DELAYED")
         if name == "alb.request_count":
             add(rows, stamp, "alb.rps", round(values[0] / 60, 4) if values else None,
-                unit="Requests/second", source=timestamps[0] if timestamps else stamp,
+                unit="Requests/second", source=timestamps[0] if timestamps else "",
                 status="OBSERVED" if values else "MISSING_OR_DELAYED")
 
 
@@ -368,10 +369,19 @@ def main():
                 start = time.monotonic()
                 rows = []
                 stamp = iso(now())
+                phase_start = time.monotonic()
                 _, group, _ = describe(aws, args, rows, stamp)
+                add(rows, stamp, "collector.describe_seconds",
+                    round(time.monotonic() - phase_start, 2), "Seconds")
                 instance_ids = [i["InstanceId"] for i in group.get("Instances", []) if i.get("InstanceId")]
+                phase_start = time.monotonic()
                 cloudwatch(aws, args, rows, stamp, dest, instance_ids)
+                add(rows, stamp, "collector.cloudwatch_seconds",
+                    round(time.monotonic() - phase_start, 2), "Seconds")
+                phase_start = time.monotonic()
                 activity_writer.writerows(scaling_activities(aws, args, stamp, seen_activities))
+                add(rows, stamp, "collector.activities_seconds",
+                    round(time.monotonic() - phase_start, 2), "Seconds")
                 activity_handle.flush()
                 elapsed = time.monotonic() - start
                 add(rows, stamp, "collector.duration_seconds", round(elapsed, 2), "Seconds",
@@ -387,7 +397,9 @@ def main():
     finally:
         (dest / "manifest.json").write_text(json.dumps({"task_id": "C1", "run_id": run_id,
              "region": args.region, "source_commit": subprocess.run(["git", "rev-parse", "HEAD"],
-             cwd=root, capture_output=True, text=True).stdout.strip(), "errors": aws.errors,
+             cwd=root, capture_output=True, text=True).stdout.strip(),
+             "collector_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
+             "errors": aws.errors,
              "privacy": "PRIVATE; review before publishing"}, indent=2) + "\n", encoding="utf-8")
         metric_file = dest / "metrics.csv"
         counts = {}

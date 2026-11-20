@@ -1,0 +1,18 @@
+{
+  "c3_finished_and_stable": false,
+  "b3_probe_pass": false,
+  "c2_email_disabled_verified": false,
+  "clock_synchronized": false,
+  "no_concurrent_fault_restore": false,
+  "rollback_authority_verified": false,
+  "window_approved": false,
+  "evidence": {
+    "c3_finished_and_stable": "",
+    "b3_probe_pass": "",
+    "c2_email_disabled_verified": "",
+    "clock_synchronized": "",
+    "no_concurrent_fault_restore": "",
+    "rollback_authority_verified": "",
+    "window_approved": ""
+  }
+}

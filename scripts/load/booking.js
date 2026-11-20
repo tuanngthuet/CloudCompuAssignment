@@ -59,12 +59,26 @@ const admissions = new Counter('booking_admitted');
 const waitingPolls = new Counter('booking_waiting_poll');
 const conflicts = new Counter('booking_seat_conflict');
 const errors = new Counter('booking_unexpected_error');
+const heartbeats = new Counter('booking_heartbeat');
+const expiries = new Counter('booking_queue_expired');
+const rateLimited = new Counter('booking_rate_limited');
+const unexpectedConflicts = new Counter('booking_unexpected_conflict');
+const confirmed = new Counter('booking_confirmed');
+const cancelled = new Counter('booking_cancelled');
 const queueWait = new Trend('booking_queue_wait_ms');
 let loggedIn = false;
 let joinedAt = 0;
 let seenAdmission = false;
 
 export function setup() {
+  if (__ENV.REQUIRE_QUEUE_ENABLED === '1') {
+    const policy = http.get(base + '/lab-sessions', {
+      tags: { operation_class: 'preflight', route: '/lab-sessions' },
+    });
+    if (policy.status !== 200 || !policy.json().queue_policy.enabled) {
+      throw new Error('Admission scenario requires queue enabled');
+    }
+  }
   if (!sessionMode) return;
   const seenUsers = new Set();
   for (let i = 0; i < vus; i++) {
@@ -95,7 +109,11 @@ function post(path, body, route) {
 }
 function valid(response, codes) {
   const ok = check(response, { 'Expected Booking response': r => codes.includes(r.status) });
-  if (!ok) errors.add(1);
+  if (!ok) {
+    errors.add(1);
+    if (response.status === 429) rateLimited.add(1);
+    if (response.status === 409) unexpectedConflicts.add(1);
+  }
   return ok;
 }
 export default function () {
@@ -125,14 +143,21 @@ export default function () {
   if (!joinedAt) {
     response = post(root + '/join', {}, 'queue/join');
     joinedAt = Date.now();
-  } else response = post(root + '/heartbeat', {}, 'queue/heartbeat');
+  } else { response = post(root + '/heartbeat', {}, 'queue/heartbeat'); heartbeats.add(1); }
   if (!valid(response, [200])) { joinedAt = 0; sleep(5); return; }
   const state = response.json();
   if (state.status === 'WAITING') { waitingPolls.add(1); sleep(5); return; }
-  if (!['ADMITTED', 'DISABLED'].includes(state.status)) { joinedAt = 0; seenAdmission = false; sleep(5); return; }
+  if (state.status === 'DISABLED' && __ENV.REQUIRE_QUEUE_ENABLED === '1') {
+    errors.add(1); joinedAt = 0; seenAdmission = false; sleep(5); return;
+  }
+  if (!['ADMITTED', 'DISABLED'].includes(state.status)) {
+    if (state.status === 'EXPIRED') expiries.add(1);
+    else errors.add(1);
+    joinedAt = 0; seenAdmission = false; sleep(5); return;
+  }
   if (state.status==='ADMITTED' && !seenAdmission) { admissions.add(1); queueWait.add(Date.now() - joinedAt); seenAdmission = true; }
   // Do not extend the admission lease; honour the server's deadline.
-  if (state.status==='ADMITTED' && Date.parse(state.admission_expires_at) <= Date.now()) { joinedAt = 0; seenAdmission = false; return; }
+  if (state.status==='ADMITTED' && Date.parse(state.admission_expires_at) <= Date.now()) { expiries.add(1); joinedAt = 0; seenAdmission = false; return; }
   response = http.get(base + `/lab-sessions/${session}/seats`, { tags: { operation_class: 'booking', route: 'availability' } });
   if (!valid(response, [200])) { sleep(5); return; }
   const available = response.json().items.filter(s => s.available);
@@ -143,13 +168,24 @@ export default function () {
     post(root + '/leave', {}, 'queue/leave'); joinedAt = 0; seenAdmission = false; sleep(5); return;
   }
   response = post('/holds', { session_id: session, seat_id: seat.id }, '/holds');
-  if (!valid(response, [200, 409])) { sleep(5); return; }
-  if (response.status === 409) { conflicts.add(1); sleep(1); return; }
+  if (response.status === 409) {
+    let code;
+    try { code = response.json().code; } catch { code = ''; }
+    if (['sold_out', 'queue_waiting', 'queue_expired'].includes(code)) {
+      conflicts.add(1);
+      if (code === 'queue_expired') expiries.add(1);
+    }
+    else { errors.add(1); unexpectedConflicts.add(1); }
+    sleep(1); return;
+  }
+  if (!valid(response, [200])) { sleep(5); return; }
   const hold = response.json().hold_id;
   response = post(`/holds/${hold}/confirm`, {}, 'hold/confirm');
   if (valid(response, [200])) {
+    confirmed.add(1);
     const reservation = response.json().reservation_id;
-    valid(post(`/reservations/${reservation}/cancel`, {}, 'reservation/cancel'), [200]);
+    if (reservation && valid(post(`/reservations/${reservation}/cancel`, {}, 'reservation/cancel'), [200])) cancelled.add(1);
+    else if (!reservation) errors.add(1);
   }
   joinedAt = 0; seenAdmission = false; sleep(5);
 }
