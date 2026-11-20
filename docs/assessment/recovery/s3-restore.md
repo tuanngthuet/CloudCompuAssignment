@@ -144,3 +144,9 @@ Ghi cùng session/room alias, DB key, full S3 key, version/hash, registry state 
 ## C1 liên quan B5 như thế nào?
 
 B5 không có đầu vào C1 trực tiếp; phụ thuộc **qua B4**, vì cần app dùng DB restored riêng. C1 hỗ trợ kiểm capacity/DB budget/dependency trước khi dựng app và ghép timestamp khi quan sát; không chứng minh object hash, DB reference hoặc ảnh hiển thị. Đã dẫn [smoke C1 dùng cho B4](../../../evidence/assessment/20261119T172832Z-b4-c1-preflight/checks/results.json) từ7fa878a; không chạy lại object S3 đã PASS và cleanup, không đổi images_verified=false. Các phần kiểm DB/app/cache của B5 vẫn NOT_RUN.
+
+## Đối chiếu A4 của người1 —20/11/2026
+
+Đã đối chiếu [timeline A4](../architecture/a4/timeline.md), [đánh giá recovery](../architecture/a4/recovery-assessment.md) và [sơ đồ S3](../architecture/a4/diagrams/rendered/a4-02-s3-restore.svg) tại commit `39f7ab1cd3cdd925e55fae5c13b0a6a541e8fa3a` với JSON gốc của lượt B5. Toàn lượt từ started_at tới finished_at dài25.793484s, gồm chuẩn bị và cleanup; khoảng giữa hai timestamp stage overwritten và restored là3.207088s. Hai số này không phải downtime hoặc RTO phục vụ của app. JSON gốc giữ độ chính xác timestamp; timeline A4 hiển thị tới mili giây.
+
+A4 dùng được để bàn giao giới hạn kết luận: S3 component PASS, còn DB reference/app/cache vẫn NOT_RUN và images_verified=false. Lượt tích hợp mới sau B4 phải kiểm cùng object/DB reference qua app ở cả ba giai đoạn, phân biệt S3 VersionId với query v của app, lưu bằng chứng và cleanup đúng run rồi bàn giao người1. Các version cũ đã xóa không được dùng làm bằng chứng hiển thị qua app sau này. Không tạo thêm output, chạy lại S3 hoặc coi sơ đồ A4 là ảnh kiểm chứng app.

@@ -99,3 +99,11 @@ Giữ kết quả chưa đạt trong ma trận; chưa thể chốt B3 ngoài ph�
 Đã đọc [C1 của người3](https://github.com/tuanngthuet/CloudCompuAssignment/blob/7fa878ac7e7995c25777680e44fe2da36d1e619c/docs/assessment/performance/observability.md) tại7fa878a và chạy nguyên collector/chart/runner từ bản source private đã kiểm hash. [Smoke và DB supplement](../../../evidence/assessment/20261119T172832Z-b4-c1-preflight/checks/results.json):4 mẫu/252 dòng,0 lỗi API; có missing metrics và1 vòng vượt30s. Đây là cửa sổ quan sát riêng, không phải bài C3/C4/C5 hoặc restore.
 
 C1 hỗ trợ ghép timestamp/source_at, task/EC2/target và dependency metrics với probe nghiệp vụ/invariants của B3. Probe SQL nguồn trong smoke trả7 invariants zero rows, nhưng không chứng minh kết quả trước/sau tải/fault/restore. X01–X03 vẫn NOT_RUN. Khi có cửa sổ thật, ghi run ID/phase/target/digest và thực hiện business probes cùng SQL đúng trước/sau; không lấy metrics, health200 hoặc ảnh Console thay kết quả nghiệp vụ. Không thay kết quả các lượt B3 lịch sử.
+
+## Đối chiếu A4 của người1 —20/11/2026
+
+Đã đối chiếu [bàn giao A4](../architecture/a4/handoff.md) và [rà soát bằng chứng](../architecture/a4/evidence-review.md) tại commit `39f7ab1cd3cdd925e55fae5c13b0a6a541e8fa3a`. Theo sprint, A4 nhận kết quả B/C để tổng hợp kiến trúc; A4 không phải một lượt kiểm thử mới hoặc điều kiện bổ sung cho B3. Nhận xét chưa có A4 ở phần rà soát GitHub ngày19/11 chỉ áp dụng tại thời điểm đó.
+
+Gói snapshot mà A4 đã đọc thiếu CSV; bản chuẩn nằm tại [test-cases.csv](test-cases.csv), hiện có337 dòng:329 PASS,3 FAIL,2 BLOCKED,3 NOT_RUN. Đây là nguồn để người1 đối chiếu lại ma trận, không cần tạo CSV thứ hai. X01 (sau tải), X02 (sau fault), X03 (sau restore) vẫn NOT_RUN; video vẫn chờ người dùng.
+
+Khi nhận cửa sổ thật, bàn giao người1 đúng run ID/phase, commit của công cụ và digest/schema của app được kiểm, mốc UTC, probe nghiệp vụ và invariants trước/sau, liên kết metrics có source_at/status và cleanup/rollback. Phân biệt commit đóng gói tài liệu với commit chạy test; không ghi timestamp gom báo cáo là timestamp mọi test. Giữ bằng chứng trong thư mục run theo sprint và dẫn từ ba output B3 hiện có.

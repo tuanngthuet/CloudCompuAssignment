@@ -35,7 +35,7 @@
   "report_sha256": {
     "docs/assessment/recovery/preflight.md": "6e1e6c0ab92cd1a87847fdaaf94ac139c05910e5b8d6869a08c8bfc5b585e7d7",
     "docs/assessment/recovery/rds-pitr.md": "80ee611f9cc2b100f66119499ee531445d812aabb65c4de1ffc1fa8ff31e6371",
-    "docs/assessment/recovery/report.md": "9d3340ce851a5465c28addde368f51d8968520b07cd6539ae63dd0862331ed60"
+    "docs/assessment/recovery/report.md": "350ee15133b488df9d0d1c527662246d9b10ad2ceb269dc2ed3928b514e708dc"
   },
   "hash_encoding": "UTF-8 text; normalize CRLF to LF before SHA-256, without other content changes",
   "person1_source_commit": "ff2bb56091a5e846e4ebc662d2ea44d1d6fbecf6",

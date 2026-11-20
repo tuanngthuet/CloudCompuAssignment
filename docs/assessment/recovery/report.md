@@ -48,3 +48,11 @@ B5 đã bổ sung từ A3 cách nối session→room/layout→DB key→S3 prefix
 B4 cần C1 quota/capacity trực tiếp. Đã dùng collector7fa878a từ nhánh người3 cho một smoke chỉ đọc và bổ sung SQL max_connections/reserve, quota RDS, RAM/CPU/ENI theo AZ. Chi tiết ở [preflight](preflight.md#bàn-giao-c1-cho-b4) và [evidence](../../../evidence/assessment/20261119T172832Z-b4-c1-preflight/checks/results.json).
 
 Budget66 phù hợp non-reserved limit74 của DB nguồn tại snapshot; rolling ceiling65. Headroom placement chỉ là cận trên1slot AZ2a/3slots AZ2b, chưa chứng minh tài nguyên còn lại đủ cho fault hoặc app restored. Smoke có metric thiếu/chậm và1 vòng vượt interval nên không tự đánh C1 accepted. Chưa chạy PITR/deploy restored app hoặc chốt RPO/RTO; không đổi trạng thái C4/C5/B4/B5 vì có baseline mới.
+
+## Đối chiếu A4 của người1 —20/11/2026
+
+Đã dùng [bàn giao A4](../architecture/a4/handoff.md), [đánh giá recovery](../architecture/a4/recovery-assessment.md) và [sơ đồ PITR planned](../architecture/a4/diagrams/rendered/a4-03-pitr-pending.svg) tại commit `39f7ab1cd3cdd925e55fae5c13b0a6a541e8fa3a` để đối chiếu kế hoạch B4. A4 là đầu ra tổng hợp nhận runbook/evidence B4/B5/C4/C5 theo sprint, không chứng minh đã có DB restored. Không bổ sung một bài diễn tập ngoài prompt.
+
+Thứ tự giữ nguyên: người3 bàn giao C4/C5 đã ổn định → người2 chạy B4 và B5 tích hợp trong cửa sổ riêng → kiểm nghiệp vụ sau restore của B3 → chốt số đo đủ bằng chứng → người1 cập nhật A4. Người2 vẫn chịu trách nhiệm DB identifier mới, DB/app private riêng, cùng digest/schema và kiểm DB/nghiệp vụ/ảnh; không chuyển production sang DB restored.
+
+Trong lượt thật, ghi owner/run ID, commit công cụ tách với commit đóng gói và digest/schema được kiểm, region/định danh đã làm sạch, marker/incident/target/ready UTC, checks và metric source_at/status, cleanup/rollback. Chỉ ghi ready sau khi DB, nghiệp vụ và ảnh B5 đạt; dùng record hợp lệ cho measure.py theo [rds-pitr.md](rds-pitr.md). Giới hạn A4 xác nhận vẫn giữ: source invariants, retention và LatestRestorableTime không thay kiểm DB restored; failover không thay PITR. B4 vẫn BLOCKED, RPO/RTO null và images_verified=false. Không có tài nguyên hay thao tác AWS mới trong lượt đối chiếu này.
