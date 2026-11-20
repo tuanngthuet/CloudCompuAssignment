@@ -60,3 +60,9 @@ Trong lượt thật, ghi owner/run ID, commit công cụ tách với commit đ�
 ## Sử dụng C2 trong B4 —20/11/2026
 
 Đã bổ sung [preflight email isolation](preflight.md) từ runbook người3 tại commit `09f768e168e03517a1636c1030059a7fd915b58a`: phân biệt baseline worker nguồn với cấu hình app restored, kiểm task/digest và drain job cùng cửa sổ, không replay SKIPPED hoặc tự bật Brevo. C2 local PASS không phải bằng chứng switch/restore AWS. Đây là phối hợp đáp ứng yêu cầu email disabled/cô lập SQS của B4, không thêm điều kiện phải hoàn thành toàn bộ C2 trước PITR. B5 không có đầu vào C2 riêng; yêu cầu cô lập app của B5 đã đi qua B4 nên giữ nguyên s3-restore.md. RPO/RTO null, images_verified=false và trạng thái chờ phối hợp không đổi.
+
+## Đối chiếu C3/C4 cho B4/B5 —21/11/2026
+
+Đã bổ sung [preflight](preflight.md) từ commit người3 `c12a252e2b49b876dcdb1a1575d4462526cc0d03`: capacity thay đổi5→4 EC2, giới hạn ENI/API overlap và clock chưa đồng bộ. [C4 report](https://github.com/tuanngthuet/CloudCompuAssignment/blob/c12a252e2b49b876dcdb1a1575d4462526cc0d03/docs/assessment/performance/failover-report.md) chưa có inject/observe/rollback hoặc xác nhận baseline sau fault; C3 cũng chưa chạy tải. Đây là bằng chứng tiền điều kiện còn thiếu, không phải handoff fault đã ổn định để bắt đầu B4.
+
+Người3 cần bàn giao run/target/incident UTC đủ tin cậy, probes/metrics cùng cửa sổ, kết quả rollback và baseline ổn định sau C4/C5; người2 kiểm nghiệp vụ/invariants rồi thực hiện B4/B5 trong cửa sổ riêng, không đồng thời load/fault. Không phát sinh yêu cầu chạy C3/C4 thay người3. B5 chỉ hưởng thông tin này qua môi trường restored của B4; s3-restore.md và kết quả S3 độc lập giữ nguyên. B4/B5 tích hợp còn BLOCKED, X03 NOT_RUN, images_verified=false và RPO/RTO null; không có restore hoặc thao tác AWS mới.

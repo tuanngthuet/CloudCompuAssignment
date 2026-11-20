@@ -115,3 +115,15 @@ Khi nhận cửa sổ thật, bàn giao người1 đúng run ID/phase, commit c�
 C2 có7 test HTTP mô phỏng PASS cho booking sessions/credentials, CSRF, TTL và user riêng; chưa có smoke k6 AWS, job SKIPPED hay lượt switch/restore worker được kiểm chứng. Ảnh cấu hình revision11/Brevo không chứng minh service đã chuyển khỏi revision10/disabled. Các kết quả này không thay test API/UI/concurrency hoặc mail thật của B3 và không đổi trạng thái ma trận.
 
 Trước X01/X02, người3 bàn giao run/phase/UTC, worker baseline và task chạy thực/digest, queue/job/attempts và bằng chứng không gửi trong cửa sổ. B3 vẫn kiểm nghiệp vụ/invariants trước–sau tải/fault. Khi kết thúc, đối chiếu drain job thử và trạng thái cuối với C2, không replay thư SKIPPED. Nếu cần kiểm mail sau restore backend, dùng giao dịch mới và tính chung hạn mức B3; không tự gửi lại hai thư B3 đã có bằng chứng. B2 cấp phiên mới sát giờ khi cần chạy script C2;100 phiên cũ đã hết hạn không được dùng để chốt readiness. Lượt đọc tài liệu này không cấp lại session, đổi worker hoặc gửi mail; giữ email disabled theo chỉ đạo hiện tại.
+
+## Bàn giao C3/C4 mới cho B3 —21/11/2026
+
+Nguồn người3 tại commit `c12a252e2b49b876dcdb1a1575d4462526cc0d03`: [C3 load-report](https://github.com/tuanngthuet/CloudCompuAssignment/blob/c12a252e2b49b876dcdb1a1575d4462526cc0d03/docs/assessment/performance/load-report.md), [C4 failover-report](https://github.com/tuanngthuet/CloudCompuAssignment/blob/c12a252e2b49b876dcdb1a1575d4462526cc0d03/docs/assessment/performance/failover-report.md). Đây là chuẩn bị và preflight chỉ đọc ngày20/11, không phải tải hoặc fault đã chạy. Năm bài C3 AWS còn NOT_RUN; C4 prepare/inject/observe/rollback chưa chạy. X01/X02 vẫn NOT_RUN, không dùng test script local, GET health200 hoặc ASG activity thay kết quả nghiệp vụ.
+
+| Phần B3 | Bổ sung từ C3/C4 và cách phối hợp |
+|---|---|
+| X01 trước/sau tải | C3 yêu cầu smoke nghiệp vụ và bảy invariants đúng run/digest trước tải, kiểm lại sau từng mức và sau recovery. Xác nhận phiên B2 còn TTL, user/seat riêng và lịch còn mở;100 phiên cũ hết hạn. Platform cần queue OFF, Admission cần ON có audit; ghi baseline và kiểm khôi phục policy, không đổi policy trong lượt rà soát này. |
+| X02 trước/sau fault | Người2 cung cấp probe synthetic nhẹ và invariants; người3 thu target/task/replacement/HTTP timeline, rollback và baseline hai AZ. Kiểm không mất vé/oversell; phân biệt lỗi tạm trong fault với kết quả sau ổn định. Chưa có incident hoặc lượt probe C4 thật để điền actual/PASS. C5 chưa có kết quả trong commit này. |
+| Chất lượng timestamp | Runner người3 chưa đồng bộ Windows Time, nên UTC tự ghi không đủ làm mốc incident/recovery; cần sửa và xác minh độ lệch trước cửa sổ thật. Giữ source_at/status của metrics; thiếu/chậm không đổi thành0. Timestamp ASG do AWS trả không tự biến hoạt động managed scaling thành bài C3/C4. |
+
+Các nội dung trên đã dẫn vào actual/evidence của X01/X02 trong [ma trận](test-cases.csv), giữ nguyên expected/status. Không chạy lại B3 hoặc tạo dữ liệu, ảnh/video hay thao tác AWS trong lượt đối chiếu này.
