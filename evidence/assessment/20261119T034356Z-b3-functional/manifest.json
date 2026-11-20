@@ -23,10 +23,10 @@
   ],
   "new_existing_event_checks": "Two existing SAT schedules; no new event created in completion checks",
   "status_counts": {
-    "FAIL": 3,
-    "PASS": 329,
-    "BLOCKED": 2,
-    "NOT_RUN": 3
+    "PASS": 333,
+    "BLOCKED": 1,
+    "NOT_RUN": 3,
+    "FAIL": 0
   },
   "video": {
     "status": "BLOCKED",
@@ -59,13 +59,12 @@
   "limitations": [
     "Historical and completion runs consolidated without rerunning tests",
     "No load/fault/restore coordinated window executed",
-    "User-provided video still pending",
-    "Additional optional regression: 3 FAIL placeholders and 1 BLOCKED fixture; see remaining_regression, not runtime failure attribution."
+    "User-provided video still pending"
   ],
   "files": [
     {
       "path": "checks/results.json",
-      "sha256": "21450519dec005b855614eb07785a24fd9877aa1a8261c7734498d51ec45acf1"
+      "sha256": "c74c86f6b4ac34ba51fe54affbb5aca71023fed86a6c7adcf4c440eff608773c"
     },
     {
       "path": "screenshots/password-reset-success.png",
@@ -77,12 +76,24 @@
     },
     {
       "path": "summary.md",
-      "sha256": "43327d10bd4017902ebecd67483ac7f2e886fea4b0a37912ef1d0587e591fc31"
+      "sha256": "6a88c3b579ce397915bb1107c1bf37fe54cb02d9bcf5a434cf3d10f954a93066"
     }
   ],
   "evidence_format": "Checks consolidated without altering results in checks/results.json; CSV references #/section JSON pointers.",
   "recovery_status": "Preflight collected; actual B4/B5 restore NOT_RUN pending planned fault handoff per user instruction",
   "additional_source_commit": "92668ab",
   "c1_support_run_id": "20261119T172832Z-b4-c1-preflight",
-  "c1_source_commit": "7fa878ac7e7995c25777680e44fe2da36d1e619c"
+  "c1_source_commit": "7fa878ac7e7995c25777680e44fe2da36d1e619c",
+  "regression_retest": {
+    "json_pointer": "checks/results.json#/regression_retest_20261121",
+    "total_tests": 34,
+    "passed": 34,
+    "scope": "local disposable only; no new production image",
+    "test_source_sha256_lf": {
+      "tests/app/test_avatar_browser.py": "78ae3a5bc179b548c8354f90542df17dc339cd89b50a70e436d31e4fc7440f18",
+      "tests/app/test_camera_browser.py": "e7295f56459ebf6182fe8ac71d783192d9f399ca0e7f38eed874d8a3c8d7c7fa",
+      "tests/app/test_image_map_browser.py": "84edd043e7723ee72d7a0342228291b4aceef15d04125d2abdb2b4abbceda221",
+      "tests/app/test_profile_browser.py": "5b54fafc949f6e91b9f1ceb82c921d0dd7532cc6051ecfb7e2bd5fda6d22921c"
+    }
+  }
 }

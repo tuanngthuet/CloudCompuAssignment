@@ -6,6 +6,8 @@ Thực hiện đúng **Prompt AI B3** trong [sprint](../../sprints/ke-hoach-nghi
 
 **Chưa chốt toàn bộ B3.** Đã có kết quả chức năng/regression; X01–X03 chưa có cửa sổ tải/fault/restore và V01 chờ video người dùng cung cấp. Không đổi các mục đó thành PASS. Lần gom đầu ra `20261119T034356Z-b3-functional` không phải lần chạy lại test.
 
+**Cập nhật sau retest21/11/2026:** ma trận337 dòng hiện **333 PASS,0 FAIL,1 BLOCKED (V01),3 NOT_RUN (X01–X03)**. Các lỗi regression/fixture R001/R004/R006/R009 đã được xử lý và chạy lại đạt; chi tiết ở cuối báo cáo. Những số329 PASS/3 FAIL/2 BLOCKED bên dưới mô tả các lượt lịch sử trước retest, không phải tồn đọng hiện tại.
+
 ## Cấu hình
 
 - AWS HTTPS: `https://labseat.id.vn`; run lịch sử API task definition `labseat-lab-api:10`, digest ghi trong [manifest](../../../evidence/assessment/20261119T034356Z-b3-functional/manifest.json).
@@ -51,7 +53,7 @@ Hai ảnh người dùng đã nhận: [reset thành công](../../../evidence/ass
 | --- | --- | --- |
 | X01–X03 chưa chạy | Chưa đủ bằng chứng nghiệm thu phần cửa sổ phối hợp | Chạy probe nghiệp vụ và bảy invariants đúng trước/sau C3/C4/C5/B4/B5 khi nhóm có lịch. |
 | Video chưa được cung cấp | Chưa đủ demo theo prompt | Người dùng gửi video trọn luồng trên ca có sẵn; ghi link kho nhóm/quyền truy cập/thời lượng. |
-| Optional regression bổ sung | 11 mục đã PASS; avatar/map/camera FAIL; profile BLOCKED do thiếu fixture | Chi tiết repro và giới hạn dưới đây; không đổi các mục chưa đạt thành PASS. |
+| Optional regression bổ sung | Retest21/11: avatar5, camera19, map5, profile5 đều PASS | Đã xử lý fixture/kỳ vọng test; giữ nguyên kết quả lỗi lịch sử và bằng chứng lượt mới ở cuối báo cáo. |
 | Schema metadata | Đã lấy thêm bằng truy vấn read-only | RDS trả 0002_platform ngày 19/11/2026 lúc 04:01:04 UTC. Đây là snapshot hiện tại, không ghi ngược là đã thu tại run lịch sử. |
 | Fixture avatar thiếu clean_db ban đầu | Lỗi thiết lập test, không phải lỗi runtime critical | Đã import fixture clean_db để mỗi test có dữ liệu sạch; suite cuối không còn fail/error. Chỉnh tên parameter chỉ phục vụ log đã hoàn nguyên vì không cần cho đầu ra B3. |
 | Mật khẩu thử login 401 | Không xác nhận là lỗi sản phẩm | Người dùng chọn mật khẩu khác, đã xác nhận login; giữ log trung thực và phân biệt xác nhận thủ công. |
@@ -140,3 +142,20 @@ Nguồn người3 tại commit `e2431f306df96abd8043680906e1286243dbf14a`: [C5 r
 Hai bài vẫn nằm trong X02, không thêm case PASS hoặc gộp thời gian thành RTO PITR. Người3 chốt quyền/quota và cửa sổ email disabled; người2 bàn giao probe/SQL đã làm sạch với run/phase/digest/schema và UTC đã đồng bộ. Không tự kích hoạt failover để bổ sung báo cáo.
 
 C6 đối chiếu đúng337 dòng:329 PASS,3 FAIL,2 BLOCKED,3 NOT_RUN; đây là tổng hợp, không phải retest. Phần người2 còn phải bàn giao là triage/retest các lỗi optional/fixture đã ghi ở trên, video do người dùng cung cấp và X01–X03 trong cửa sổ thật. Dẫn bằng chứng từ CSV/report/manifest hiện có; phân biệt commit công cụ, digest được kiểm và commit đóng gói. Không nhận số kiểm link/hash C6 trên workspace người3 là kết quả audit mới của nhánh này, vì C6 ghi nhiều file B chỉ là bản sao untracked.
+
+## Hoàn tất regression có thể tự làm —21/11/2026
+
+Đã xử lý và chạy lại bốn module còn FAIL/BLOCKED trong Docker local, network internal không mở cổng host; PostgreSQL16.16/Redis7.4.11, Python3.12.16, Playwright1.49.1/Chromium. App dùng APP_ENV=test, EMAIL_BACKEND=disabled, storage local; không có publisher/worker gửi mail, AWS calls, runtime deployment hoặc ảnh/video mới. Mốc UTC trong XML thuộc20/11, tương ứng sau00:38 ngày21/11 ở Việt Nam; không dùng thời gian này làm số đo availability/RPO/RTO.
+
+| Case / module | Nguyên nhân và chỉnh sửa | Kết quả mới |
+|---|---|---|
+| R001 / test_avatar_browser | Bổ sung email đăng ký duy nhất; giữ nguyên email khi lưu tên hiển thị để không vô tình gọi luồng đổi email. full_name không phải trường bắt buộc ở bước đăng ký. |5/5 PASS |
+| R004 / test_camera_browser | Dùng Chromium đã cài nếu không chỉ định CHROME_BIN; chờ videoWidth và track ended bằng assertion/evaluate tương thích CSP. Không nới CSP hoặc bỏ kiểm track. |19/19 PASS; camera fake media/API mock, không thay kiểm điện thoại thật |
+| R006 / test_image_map_browser | So đúng tập ID admin events có room, gồm fallback session; giữ email fixture, tránh CCCD trùng, tách giờ ca giữa viewport để không trùng lịch của user seed. Giữ kiểm sức chứa, vé/QR và khóa editor sau có vé. |5/5 PASS |
+| R009 / test_profile_browser | Dùng admin/password của seed; fixture xác minh student qua account challenge service, chỉ cho APP_ENV=test và DATABASE_URL=TEST_DATABASE_URL kết thúc _test; CCCD duy nhất mỗi case. Giữ kiểm chặn thiếu hồ sơ, resume, lưu/reload và xóa dữ liệu khỏi UI khi logout. |5/5 PASS |
+
+Tổng **34 PASS,0 FAIL/ERROR/SKIP** cho bốn module trong lượt retest; không cộng với34 test công cụ B4 hoặc coi là chạy lại toàn suite. Bảy truy vấn scripts/tests/db-invariants.sql sau lượt profile chạy transaction REPEATABLE READ READ ONLY đều zero rows. [Kết quả mới, từng test/source hash/versions/cleanup](../../../evidence/assessment/20261119T034356Z-b3-functional/checks/results.json#/regression_retest_20261121); phần remaining_regression giữ nguyên các lỗi ngày19/11. Các lượt chẩn đoán trong retest cũng đã có lỗi fixture và rate-limit counters tích lũy; lượt cuối dùng DB disposable mới, không tắt/sửa rate limit. Không đổi FAIL thành PASS dựa vào suy luận.
+
+Để tái tạo: dựng môi trường disposable theo tests/app/browser.Dockerfile, migrate DB *_test và seed admin/6 student với SEED_PASSWORD=BROWSER_TEST_PASSWORD riêng; gán email synthetic duy nhất và email_verified_at cho user seed. Giữ DB/Redis fixture mới giữa các lượt để không kế thừa counters. Chạy từng module bằng `python -m pytest tests/app/test_avatar_browser.py -q -p no:cacheprovider --junitxml=<private>/avatar.xml` và tương tự camera/image_map/profile. Cần BROWSER_BASE_URL trỏ app local, BROWSER_TEST_ALLOWED=local-demo-only, RUN_CAMERA_BROWSER_TESTS=1, DATABASE_URL=TEST_DATABASE_URL, APP_ENV=test, EMAIL_BACKEND=disabled và storage local. Fixture xác minh email của profile là tiền điều kiện local; không nhận là mail thật đã gửi/nhận.
+
+Đã dọn đúng7 container và network có nhãn run; PostgreSQL dùng tmpfs, không tạo volume, không dọn tài nguyên khác. Logs/XML chẩn đoán giữ private, chỉ kết quả/hash đã làm sạch được gộp vào evidence hiện có; không thêm output công khai. C6/A4 đã dẫn ở trên là snapshot trước retest này; người3 cần dùng commit B3 mới khi tổng hợp. **Phần còn lại của B3 chỉ là V01 video và X01–X03 cần cửa sổ phối hợp.** B4/B5 không được chạy vượt thứ tự kế hoạch; trạng thái và RPO/RTO/images_verified giữ nguyên.

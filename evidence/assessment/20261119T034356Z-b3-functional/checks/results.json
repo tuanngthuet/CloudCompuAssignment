@@ -1435,5 +1435,276 @@
     "evidence": "evidence/assessment/20261119T172832Z-b4-c1-preflight/checks/results.json",
     "scope": "Indirect: correlate business probes and read-only invariants with timestamped C3/C4/C5/B4/B5 windows; this standalone smoke does not close X01-X03.",
     "no_completion_status_promoted": true
+  },
+  "regression_retest_20261121": {
+    "run_id": "20261120T173805Z-b3-regression-retest",
+    "scope": "Local disposable HTTP/PostgreSQL/Redis; Chromium. Camera uses fake video and mocked APIs; not a new physical-phone/AWS/email/load/fault/restore run.",
+    "source_commit_before_test_changes": "99aaea2b521e4e9497d9e780b52cafd983f48021",
+    "source_worktree_modified": true,
+    "source_hash_encoding": "UTF-8 text, CRLF normalized to LF",
+    "versions": {
+      "python": "3.12.16",
+      "packages": {
+        "pytest": "8.3.4",
+        "playwright": "1.49.1",
+        "sqlalchemy": "2.0.36",
+        "psycopg": "3.2.3",
+        "redis": "6.4.0"
+      }
+    },
+    "postgresql": "16.16",
+    "redis": "7.4.11",
+    "environment": {
+      "app_env": "test",
+      "email_backend": "disabled",
+      "network_internal": true,
+      "host_ports_published": false,
+      "aws_calls": false,
+      "runtime_changes": false,
+      "screenshots_or_video_created": false
+    },
+    "setup": "Migrate disposable *_test DB; reset/seed 6 students and admin between live modules; unique verified synthetic fixture emails. Final map/profile pass used a fresh DB to avoid persisted rate-limit counters; application limits unchanged. Dedicated local Redis fixture reset.",
+    "commands": [
+      "python -m pytest tests/app/test_avatar_browser.py -q -p no:cacheprovider --junitxml=<private>/test_avatar_browser.xml",
+      "python -m pytest tests/app/test_camera_browser.py -q -p no:cacheprovider --junitxml=<private>/test_camera_browser.xml",
+      "python -m pytest tests/app/test_image_map_browser.py -q -p no:cacheprovider --junitxml=<private>/test_image_map_browser.xml",
+      "python -m pytest tests/app/test_profile_browser.py -q -p no:cacheprovider --junitxml=<private>/test_profile_browser.xml"
+    ],
+    "fixes": {
+      "avatar": "Supply required unique registration email; keep the same email when saving display name. full_name is not a registration prerequisite.",
+      "camera": "Use installed Playwright Chromium unless CHROME_BIN provided; assert videoWidth and poll ended tracks through evaluate without unsafe-eval or weakening CSP.",
+      "map": "Compare exact editor IDs against admin event catalogue with session fallback, not public catalogue; preserve fixture email and avoid duplicate CCCD; separate session times across viewport cases.",
+      "profile": "Use seeded admin/password from environment; verify synthetic student via account challenge service guarded by APP_ENV=test and matching *_test DB URLs; unique CCCD per case."
+    },
+    "diagnostic_attempts": "Initial map run interrupted after repeated timeouts, then fail-fast retries exposed admin/public catalogue mismatch and fixture interactions; profile retries exposed duplicate CCCD and inherited DB rate-limit counters. Intermediate failures are not runtime fixes or acceptance runs. Historical remaining_regression is preserved; local diagnostic logs/XML retained private.",
+    "results": [
+      {
+        "module": "test_avatar_browser",
+        "tests": 5,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "duration_seconds": 16.387,
+        "started_at_utc": "2026-11-20T17:38:05.692824+00:00",
+        "source_sha256_lf": "78ae3a5bc179b548c8354f90542df17dc339cd89b50a70e436d31e4fc7440f18",
+        "junit_sha256_raw": "98f761f3a5af01a614192efe2f355e37e9f1f07f85e8e22503c1fc5fa4ff3eec",
+        "cases": [
+          {
+            "name": "test_account_avatar_menu_guest_upload_reload_remove[1440-900]",
+            "status": "PASS"
+          },
+          {
+            "name": "test_account_avatar_menu_guest_upload_reload_remove[1024-768]",
+            "status": "PASS"
+          },
+          {
+            "name": "test_account_avatar_menu_guest_upload_reload_remove[768-1024]",
+            "status": "PASS"
+          },
+          {
+            "name": "test_account_avatar_menu_guest_upload_reload_remove[390-844]",
+            "status": "PASS"
+          },
+          {
+            "name": "test_account_avatar_menu_guest_upload_reload_remove[320-740]",
+            "status": "PASS"
+          }
+        ]
+      },
+      {
+        "module": "test_camera_browser",
+        "tests": 19,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "duration_seconds": 32.144,
+        "started_at_utc": "2026-11-20T17:41:45.303196+00:00",
+        "source_sha256_lf": "e7295f56459ebf6182fe8ac71d783192d9f399ca0e7f38eed874d8a3c8d7c7fa",
+        "junit_sha256_raw": "d9e1b20d74956a776971b2d3f703bc437af0391f32e25f69554f04eeffb29a3d",
+        "cases": [
+          {
+            "name": "test_video_camera_reads_qr_without_native_detector_and_requires_confirmation",
+            "status": "PASS"
+          },
+          {
+            "name": "test_photo_fallback_decodes_locally_without_opening_camera",
+            "status": "PASS"
+          },
+          {
+            "name": "test_permission_denied_explains_browser_permission",
+            "status": "PASS"
+          },
+          {
+            "name": "test_broken_native_detector_falls_back_to_jsqr",
+            "status": "PASS"
+          },
+          {
+            "name": "test_navigation_stops_live_tracks",
+            "status": "PASS"
+          },
+          {
+            "name": "test_plain_http_origin_can_import_photo_without_https",
+            "status": "PASS"
+          },
+          {
+            "name": "test_non_ticket_qr_does_not_navigate_or_check_in",
+            "status": "PASS"
+          },
+          {
+            "name": "test_qr_modal_layout_animation_and_escape[1440-900]",
+            "status": "PASS"
+          },
+          {
+            "name": "test_qr_modal_layout_animation_and_escape[1024-768]",
+            "status": "PASS"
+          },
+          {
+            "name": "test_qr_modal_layout_animation_and_escape[768-1024]",
+            "status": "PASS"
+          },
+          {
+            "name": "test_qr_modal_layout_animation_and_escape[390-844]",
+            "status": "PASS"
+          },
+          {
+            "name": "test_qr_modal_layout_animation_and_escape[320-720]",
+            "status": "PASS"
+          },
+          {
+            "name": "test_qr_modal_close_stops_camera[button]",
+            "status": "PASS"
+          },
+          {
+            "name": "test_qr_modal_close_stops_camera[backdrop]",
+            "status": "PASS"
+          },
+          {
+            "name": "test_qr_modal_close_stops_camera[enter]",
+            "status": "PASS"
+          },
+          {
+            "name": "test_qr_modal_respects_reduced_motion",
+            "status": "PASS"
+          },
+          {
+            "name": "test_manual_entry_previews_ticket_and_profile_without_checkin",
+            "status": "PASS"
+          },
+          {
+            "name": "test_management_switch_controls_checkin_action_on_existing_session",
+            "status": "PASS"
+          },
+          {
+            "name": "test_checkin_preview_remains_within_mobile_viewport",
+            "status": "PASS"
+          }
+        ]
+      },
+      {
+        "module": "test_image_map_browser",
+        "tests": 5,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "duration_seconds": 67.713,
+        "started_at_utc": "2026-11-20T17:45:38.693604+00:00",
+        "source_sha256_lf": "84edd043e7723ee72d7a0342228291b4aceef15d04125d2abdb2b4abbceda221",
+        "junit_sha256_raw": "eba5c56b9605813b9f9b2ff6cdddde148fc808046ab16ca34d7a12993880e38e",
+        "cases": [
+          {
+            "name": "test_room_map_detect_delete_drag_edit_capacity_and_booking[1440-900]",
+            "status": "PASS"
+          },
+          {
+            "name": "test_room_map_detect_delete_drag_edit_capacity_and_booking[1024-768]",
+            "status": "PASS"
+          },
+          {
+            "name": "test_room_map_detect_delete_drag_edit_capacity_and_booking[768-1024]",
+            "status": "PASS"
+          },
+          {
+            "name": "test_room_map_detect_delete_drag_edit_capacity_and_booking[390-844]",
+            "status": "PASS"
+          },
+          {
+            "name": "test_room_map_detect_delete_drag_edit_capacity_and_booking[320-740]",
+            "status": "PASS"
+          }
+        ]
+      },
+      {
+        "module": "test_profile_browser",
+        "tests": 5,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "duration_seconds": 26.533,
+        "started_at_utc": "2026-11-20T17:46:56.957070+00:00",
+        "source_sha256_lf": "5b54fafc949f6e91b9f1ceb82c921d0dd7532cc6051ecfb7e2bd5fda6d22921c",
+        "junit_sha256_raw": "9c1d89baef5f904ebc629ffd521fd39fa99d3ba8318529d48c7c4ecd5b38c36f",
+        "cases": [
+          {
+            "name": "test_profile_exam_gate_resume_and_persistence[1440-900]",
+            "status": "PASS"
+          },
+          {
+            "name": "test_profile_exam_gate_resume_and_persistence[1024-768]",
+            "status": "PASS"
+          },
+          {
+            "name": "test_profile_exam_gate_resume_and_persistence[768-1024]",
+            "status": "PASS"
+          },
+          {
+            "name": "test_profile_exam_gate_resume_and_persistence[390-844]",
+            "status": "PASS"
+          },
+          {
+            "name": "test_profile_exam_gate_resume_and_persistence[320-740]",
+            "status": "PASS"
+          }
+        ]
+      }
+    ],
+    "total_tests": 34,
+    "status": "PASS",
+    "invariants": {
+      "source": "scripts/tests/db-invariants.sql",
+      "source_sha256_lf": "88f8d57e91ec5947d0675188fcad1d006079195b203e704a05e7d2be3cc7b742",
+      "transaction": "REPEATABLE READ READ ONLY",
+      "phase": "after final local profile regression",
+      "query_row_counts": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "log_sha256_lf": "6949c69dde8e9f4ffddb5ed98fa8272a438a10c6680594479c7cbfbdd6b3862a",
+      "not_coordinated_x01_x03": true
+    },
+    "cleanup": {
+      "internal_network_removed": true,
+      "checked_at_utc": "2026-11-20T17:47:58.5542043Z",
+      "production_changes": false,
+      "containers_removed": [
+        "labseat-test-b3-retest-20261121-fresh",
+        "labseat-test-b3-retest-20261121-complete",
+        "labseat-test-b3-retest-20261121-final",
+        "labseat-test-b3-retest-20261121-map",
+        "labseat-test-b3-retest-20261121-runner",
+        "labseat-test-b3-retest-20261121-redis",
+        "labseat-test-b3-retest-20261121-db"
+      ],
+      "run": "b3-retest-20261121",
+      "remaining_containers": 0,
+      "volumes_created": 0,
+      "remaining_networks": 0
+    },
+    "raw_artifacts": "Private .local/assessment/b3-retest-20261121; no raw XML/tracebacks/screenshots copied into public outputs.",
+    "remaining": "V01 user video; X01-X03 coordinated load/fault/restore. No new production release from these test-only changes."
   }
 }
