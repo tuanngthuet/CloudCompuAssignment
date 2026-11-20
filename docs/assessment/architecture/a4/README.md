@@ -2,8 +2,6 @@
 
 **Chủ sở hữu: Người 1. Ngày tổng hợp: 20/11/2026. Trạng thái: tài liệu đã lập; nghiệm thu A4 còn chờ bằng chứng.**
 
-Hai ZIP bàn giao có kết quả S3 component PASS và baseline thật. Chưa có PITR, app restored hay diễn tập C4/C5 trong các gói này. Không kết luận rằng nhánh từ xa hiện tại cũng chưa có: bản tổng hợp chỉ bao phủ hai snapshot đã nhận.
-
 | Hạng mục | Bằng chứng đã có | Kết luận A4 |
 |---|---|---|
 | B3 kiểm nghiệp vụ | Báo cáo 329 PASS, 3 FAIL, 3 NOT_RUN, 2 BLOCKED; trộn nhiều môi trường có phân biệt | Chưa hoàn tất; X01–X03 chưa kiểm sau tải/fault/restore |
@@ -43,10 +41,6 @@ Các sơ đồ dưới có PNG, SVG và source DOT trong diagrams. Nét đứt/m
 ![Fault planned](diagrams/rendered/a4-04-fault-pending.png)
 
 ## Đưa vào repository
-
-Giải nén ZIP vào thư mục gốc repository, để có `docs/assessment/architecture/a4/README.md`. Gói chỉ thêm thư mục A4, không chứa sửa app/migrations hoặc A1–A3. Không cần merge code runtime của hai nhánh để đọc bộ A4: bằng chứng JSON/CSV/ảnh S3 cần thiết được sao chép nguyên bytes trong evidence; nguồn gốc và hash nằm trong manifest.
-
-Kiểm tra trong PowerShell ở repo:
 
 ```powershell
 git status --short -- docs/assessment/architecture/a4
