@@ -33,9 +33,9 @@
   },
   "coverage": "Prepared tools and read-only source preflight only; no AWS PITR rehearsal or RPO/RTO measurement",
   "report_sha256": {
-    "docs/assessment/recovery/preflight.md": "503614bb73a43a985b271d459a98876fb2a2781ea0df5449eda11a26738a2aac",
+    "docs/assessment/recovery/preflight.md": "25918f87fd9feb8a253f429f6e4775f9de588e0106ebcd2100a816cceb8a4999",
     "docs/assessment/recovery/rds-pitr.md": "80ee611f9cc2b100f66119499ee531445d812aabb65c4de1ffc1fa8ff31e6371",
-    "docs/assessment/recovery/report.md": "79ce63e5e67c0b3e189de112c93af02117f19b8fad6210481f9ff4ec283ee376"
+    "docs/assessment/recovery/report.md": "36d249dc1d676ecf5251d9679b845c50a3dc958627521fb99df7dc3380c6e723"
   },
   "hash_encoding": "UTF-8 text; normalize CRLF to LF before SHA-256, without other content changes",
   "person1_source_commit": "ff2bb56091a5e846e4ebc662d2ea44d1d6fbecf6",

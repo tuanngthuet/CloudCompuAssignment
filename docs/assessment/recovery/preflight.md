@@ -103,3 +103,16 @@ C2 tại commit09f768e chỉ có7 test HTTP mô phỏng PASS; smoke AWS, job SKI
 | RDS available/Multi-AZ, CloudWatch connections8; worker revision10 disabled trong snapshot C3 | Không thay SQL max_connections/reserve/budget mới, IAM/KMS/quota PITR hoặc email-isolation của app restored. Không ghi đè kết quả SQL/quota ngày19/11 bằng datapoint CloudWatch khác thời điểm. |
 
 C3 còn BLOCKED; C4 inject/rollback chưa chạy và chưa có baseline sau fault. Vì vậy chưa đủ bàn giao “sau các fault ổn định” của B4; vẫn chờ C4/C5 theo kế hoạch. Clock runner người3 còn FAIL; phải ghi nguồn đồng hồ/độ lệch và timestamp timezone đủ tin cậy khi bàn giao incident/marker/ready. Không dùng thời gian từ các preflight này để tính RPO/RTO.
+
+## Bổ sung snapshot C5/C6 —21/11/2026
+
+Nguồn người3 tại commit `e2431f306df96abd8043680906e1286243dbf14a`: [C5 readiness ngày20/11](https://github.com/tuanngthuet/CloudCompuAssignment/blob/e2431f306df96abd8043680906e1286243dbf14a/evidence/assessment/20261120-c5-readiness/summary.md), [C6 read-only ngày21/11](https://github.com/tuanngthuet/CloudCompuAssignment/blob/e2431f306df96abd8043680906e1286243dbf14a/evidence/assessment/20261121-c6-readonly/summary.md). Đây là hai snapshot riêng do người3 thu; không có timestamp UTC runner đủ tin cậy và không phải snapshot nguyên tử hay preflight mới do người2 chạy.
+
+| Quan sát | Giới hạn áp dụng cho B4 |
+|---|---|
+| RDS available, MultiAZ=true, DBClusterIdentifier=null, primary AZ2b; Redis available, primary2a/replica2b | Xác nhận topology tại snapshot; không phải kết quả C5, PITR hay kiểm correctness sau fault. C5 chưa inject và chưa đủ bàn giao ổn định. Không nhầm failover RDS nguồn với restore vào identifier mới của B4. |
+| C6 ASG min/desired/max2/5/6,5 Healthy/InService chia2a:3/2b:2, suspended processes rỗng; hai target healthy | Mới hơn snapshot4 EC2 của C4 nhưng không chứng minh placement/capacity app restored hoặc rollback sau fault. Đọc lại CPU/RAM/ENI/IP, constraints, quota và DB budget đúng cửa sổ B4; không ép desired về4 để khớp tài liệu cũ. |
+| C6 API2/2, worker/publisher1/1; worker service trỏ revision10 với EMAIL_BACKEND=disabled, APP_ENV=production; queue/DLQ0 visible/not-visible/delayed | Chưa đối chiếu từng running task/digest; số queue gần đúng không chứng minh job test đã SKIPPED/drain hoặc không gửi Brevo sau restore. App B4 vẫn phải có isolation riêng. |
+| Windows Time stopped; chưa có invariants/marker/DB budget mới trong cửa sổ C5/C6 | Không dùng giờ local của các snapshot để tính incident/ready/RPO/RTO. Giữ SQL/quota lịch sử của B4 đúng ngày thu; không suy thành kết quả hiện tại hoặc kết quả DB restored. |
+
+Không có failover C5 hay audit cleanup/chi phí toàn hệ thống trong các snapshot này. Điều kiện B4 sau fault ổn định vẫn chờ; chưa tạo DB/app/secret restored và không đổi email hoặc cấu hình AWS trong lượt rà soát.

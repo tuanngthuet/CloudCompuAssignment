@@ -127,3 +127,16 @@ Nguồn người3 tại commit `c12a252e2b49b876dcdb1a1575d4462526cc0d03`: [C3 l
 | Chất lượng timestamp | Runner người3 chưa đồng bộ Windows Time, nên UTC tự ghi không đủ làm mốc incident/recovery; cần sửa và xác minh độ lệch trước cửa sổ thật. Giữ source_at/status của metrics; thiếu/chậm không đổi thành0. Timestamp ASG do AWS trả không tự biến hoạt động managed scaling thành bài C3/C4. |
 
 Các nội dung trên đã dẫn vào actual/evidence của X01/X02 trong [ma trận](test-cases.csv), giữ nguyên expected/status. Không chạy lại B3 hoặc tạo dữ liệu, ảnh/video hay thao tác AWS trong lượt đối chiếu này.
+
+## Bàn giao C5/C6 cho B3 —21/11/2026
+
+Nguồn người3 tại commit `e2431f306df96abd8043680906e1286243dbf14a`: [C5 readiness](https://github.com/tuanngthuet/CloudCompuAssignment/blob/e2431f306df96abd8043680906e1286243dbf14a/evidence/assessment/20261120-c5-readiness/summary.md), [runbook failover](https://github.com/tuanngthuet/CloudCompuAssignment/blob/e2431f306df96abd8043680906e1286243dbf14a/docs/assessment/performance/fault-runbook.md) và [ma trận C6](https://github.com/tuanngthuet/CloudCompuAssignment/blob/e2431f306df96abd8043680906e1286243dbf14a/docs/assessment/traceability-matrix.md). C5 mới đọc topology/events; RDS và Redis inject đều NOT_RUN, clock runner đang stopped, chưa có probe/invariants cùng cửa sổ. X02 vẫn NOT_RUN; không lấy snapshot hoặc role hiện tại làm kết quả sau fault.
+
+| Cửa sổ X02 | Phần người2 kiểm và bàn giao theo B3/C5 |
+|---|---|
+| RDS failover | Đọc lại giao dịch/vé đã commit và bảy invariants trước fault; duy trì probe synthetic nhẹ, ghi lỗi/timeout/reconnect và kiểm workflow/SQL sau ổn định. Người3 ghi AZ/events/DNS và thời gian; health200 hoặc DB available chưa đủ kết luận nghiệp vụ phục hồi. |
+| Redis failover sau khi RDS/app ổn định | Dùng baseline và run ID riêng; kiểm admission join/wait/grant/heartbeat/expiry, lease/epoch và PubSub/realtime; đối chiếu vé đã commit và không cấp hold vượt capacity. Nếu operator recovery ảnh hưởng thứ tự chờ phải ghi thao tác/thời gian/ảnh hưởng; không hứa state Redis nguyên vẹn. |
+
+Hai bài vẫn nằm trong X02, không thêm case PASS hoặc gộp thời gian thành RTO PITR. Người3 chốt quyền/quota và cửa sổ email disabled; người2 bàn giao probe/SQL đã làm sạch với run/phase/digest/schema và UTC đã đồng bộ. Không tự kích hoạt failover để bổ sung báo cáo.
+
+C6 đối chiếu đúng337 dòng:329 PASS,3 FAIL,2 BLOCKED,3 NOT_RUN; đây là tổng hợp, không phải retest. Phần người2 còn phải bàn giao là triage/retest các lỗi optional/fixture đã ghi ở trên, video do người dùng cung cấp và X01–X03 trong cửa sổ thật. Dẫn bằng chứng từ CSV/report/manifest hiện có; phân biệt commit công cụ, digest được kiểm và commit đóng gói. Không nhận số kiểm link/hash C6 trên workspace người3 là kết quả audit mới của nhánh này, vì C6 ghi nhiều file B chỉ là bản sao untracked.
