@@ -16,7 +16,7 @@ from uuid import NAMESPACE_URL, uuid5
 
 from fastapi import Response
 from PIL import Image, ImageDraw, ImageFilter, ImageFont, ImageOps
-from sqlalchemy import delete, or_, select, text, update
+from sqlalchemy import delete, func, or_, select, text, update
 
 from app import image_maps
 from app.infrastructure.database.session import Session
@@ -220,13 +220,13 @@ def assert_owned(db, batch, *, cleanup=False):
         user = users.get(uid)
         if user and (user.username != batch.username(key) or (not cleanup and user.role != role)):
             raise RuntimeError("Seed user identity or role changed")
+    # Names are editable presentation data. Ownership is the deterministic UUID
+    # namespace, immutable user identities, event types and schedule relationships.
     for event in db.scalars(select(Event).where(Event.id.in_(batch.event_ids))):
-        if not event.name.startswith(f"[{batch.prefix}] "):
-            raise RuntimeError("Seed event identity changed")
+        index = batch.event_ids.index(event.id)
+        if event.session_type != ("exam" if index < 6 else "practice"):
+            raise RuntimeError("Seed event type changed")
     dedicated_rooms = [batch.hsa_room_id, batch.tsa_room_id, batch.hsa05_room_id, batch.bio_room_id, batch.elec_room_id, batch.physics_room_id]
-    for room in db.scalars(select(Room).where(Room.id.in_(batch.room_ids + dedicated_rooms))):
-        if not room.name.startswith(f"[{batch.prefix}] "):
-            raise RuntimeError("Seed room identity changed")
     labs = {row.id: row for row in db.scalars(select(LabSession).where(LabSession.id.in_(batch.lab_ids)))}
     for index, uid in enumerate(batch.lab_ids):
         lab = labs.get(uid)
@@ -1047,20 +1047,33 @@ def save_private(path, data):
         temporary.unlink(missing_ok=True)
 
 
-def create_sessions(db, batch, output):
+def create_sessions(db, batch, output, *, minimum_valid_seconds=3600):
     lab = db.get(LabSession, batch.lab_ids[22])
     clock = booking.now(db)
-    if not lab or not lab.open_at <= clock or lab.close_at < clock + timedelta(hours=1):
-        raise RuntimeError("Load schedule must remain open for at least one hour")
+    window = clock + timedelta(seconds=minimum_valid_seconds)
+    if (minimum_valid_seconds < 3600 or not lab or not lab.open_at <= clock
+            or lab.close_at < window or lab.start_at <= window):
+        raise RuntimeError("Load schedule must stay open and not start during the requested window (minimum one hour)")
+    event = db.get(Event, lab.event_id)
+    if not event or event.status != "ACTIVE":
+        raise RuntimeError("Load event must be active")
     seats = list(db.scalars(select(Seat).where(Seat.room_id == lab.room_id).order_by(Seat.seat_code)))
     if not seats or sum(seat.capacity for seat in seats) < 100:
         raise RuntimeError("Insufficient load seat capacity")
-    result = []
+    used = dict(db.execute(select(Reservation.seat_id, func.count())
+                          .where(Reservation.session_id == lab.id,
+                                 or_(Reservation.status.in_(("CONFIRMED", "CHECKED_IN")),
+                                     (Reservation.status == "HELD") & (Reservation.hold_expires_at > clock)))
+                          .group_by(Reservation.seat_id)).all())
+    slots = [seat for seat in seats for _ in range(max(0, seat.capacity-used.get(seat.id, 0)))]
+    if len(slots) < 100:
+        raise RuntimeError("Insufficient remaining load capacity")
+    result, expires = [], []
     load_users = batch.user_ids[300:400]
     users = {row.id: row for row in db.scalars(select(User).where(User.id.in_(load_users)))}
     for index, uid in enumerate(load_users):
         user = users.get(uid)
-        if not user or user.status != "ACTIVE" or not user.email_verified_at:
+        if not user or user.status != "ACTIVE" or not user.email_verified_at or user.pending_email:
             raise RuntimeError("Load account is missing or ineligible")
         session_id = batch.id(f"load-session-{index}")
         db.execute(delete(LoginSession).where(LoginSession.id == session_id))
@@ -1068,11 +1081,14 @@ def create_sessions(db, batch, output):
         identity = auth.create_session(db, user, response)
         session = next(item for item in db.new if isinstance(item, LoginSession))
         session.id = session_id
+        if session.expires_at < window:
+            raise RuntimeError("App session TTL is shorter than the requested handoff window")
+        expires.append(session.expires_at)
         cookie = next(value for name, value in response.raw_headers
                       if name == b"set-cookie" and value.startswith(b"labseat_session="))
         token = cookie.decode().split(";", 1)[0].split("=", 1)[1]
         result.append({"session_token": token, "csrf_token": identity["csrf_token"],
-                       "seat_id": str(seats[index % len(seats)].id)})
+                       "seat_id": str(slots[index].id)})
         db.flush()
     # Write after commit so a failed transaction never publishes unusable tokens.
     manifest = batch.manifest()
@@ -1093,7 +1109,8 @@ def create_sessions(db, batch, output):
             "seats": [{"seat_id": str(seat.id), "code": seat.seat_code,
                        "capacity": seat.capacity} for seat in room_seats],
         })
-    manifest["sessions_expire_at"] = (clock + timedelta(hours=8)).isoformat()
+    manifest["sessions_expire_at"] = (min(expires)-timedelta(seconds=1)).isoformat()
+    manifest["minimum_valid_seconds"] = minimum_valid_seconds
     return output / "synthetic-sessions.json", result, manifest
 
 
@@ -1165,6 +1182,7 @@ def main():
     parser.add_argument("--execute", action="store_true")
     parser.add_argument("--manifest-id")
     parser.add_argument("--email-window-confirmed", action="store_true")
+    parser.add_argument("--minimum-valid-seconds", type=int, default=3600)
     parser.add_argument("--hsa-map", type=Path)
     parser.add_argument("--hsa-logo", type=Path)
     args = parser.parse_args()
@@ -1199,7 +1217,8 @@ def main():
                 add_users(db, batch, master, clock)
                 add_catalogue(db, batch, clock)
             elif args.stage == "sessions":
-                session_path, sessions, manifest = create_sessions(db, batch, output)
+                session_path, sessions, manifest = create_sessions(
+                    db, batch, output, minimum_valid_seconds=args.minimum_valid_seconds)
             elif args.stage == "restyle":
                 restyle_catalogue(db, batch)
             elif args.stage == "rename":

@@ -6,7 +6,7 @@
 
 Yêu cầu sprint: tìm 6 ảnh sơ đồ có nguồn/quyền dùng, ghi URL, giấy phép và thao tác chỉnh sửa trong [assets-sources.csv](../../../docs/assessment/functional/assets-sources.csv). Phân biệt ảnh sơ đồ với poster; không dùng dữ liệu phòng nhạy cảm. Chỉ đưa ảnh được phép phân phối vào Git.
 
-Đã làm: tích hợp poster và sơ đồ người dùng cung cấp cho cả 12 ca. File nguồn hiện ghi nhiều phiên bản ảnh lịch sử. **Còn thiếu:** URL gốc/giấy phép cho yêu cầu 6 ảnh trên mạng và đánh dấu rõ phiên bản đang dùng. Ảnh được người dùng gửi để demo chưa phải bằng chứng về quyền phân phối trong Git.
+Đã tích hợp poster/sơ đồ người dùng cung cấp cho12 ca; các phiên bản lịch sử được giữ trong CSV, bảng dưới đây xác định bản dùng tại snapshot18/11. Ngày21/11 đã thêm6 nguồn mạng public-domain/CC0 (b2-network-01…06) từ trang mô tả Wikimedia Commons. Chúng mới SOURCED_ONLY: GET file gốc đầu tiên trả HTTP429 nên chưa tải/chuyển định dạng/upload/chỉnh vùng; không nhận6 ảnh usable. Quyền nguồn mới không áp cho các ảnh người dùng gửi hoặc suy thành quyền phân phối chúng trong Git.
 
 ## Bước 2. Chuẩn hóa ảnh, upload và căn vùng
 
@@ -66,7 +66,7 @@ File dùng trực tiếp có dạng:
 
 **Trạng thái tại 21:57:08 ngày 18/11/2026 (UTC+7):** DB có 100 fixture session thuộc 100 user riêng, nhưng **0 session còn hiệu lực**. Hạn thực tế từ 04:26:46 đến 04:28:24 cùng ngày. Manifest ghi mốc bảo thủ `2026-11-18T04:26:45.24717+07:00`. Phải cấp lại sát giờ đo.
 
-**Điểm phải xử lý trước khi chạy lại:** `assert_owned()` còn yêu cầu prefix tên event, trong khi các tên đã đổi trên web. Stage `sessions` có thể bị từ chối dù UUID đúng. Cần thay kiểm tra tên bằng kiểm tra ownership tương đương và kiểm trên DB disposable, không bỏ guard.
+**Đã sửa local21/11:** guard dùng UUID/type/quan hệ thay tên hiển thị; đã kiểm100 session trên bộ đổi tên/12 cấu hình sơ đồ. create_sessions kiểm event ACTIVE, user ACTIVE/verified và không pending email, số chỗ còn lại theo từng vùng, ca chưa bắt đầu và cửa sổ đủ dài. sessions_expire_at là min expires_at thực trong DB trừ1giây, không cộng8giờ từ đồng hồ client.
 
 ## Bước 5. Kiểm readiness và tách lịch tải/UI
 
@@ -84,12 +84,12 @@ Trước mỗi lần bàn giao: kiểm cửa sổ còn đủ dài, ca chưa bắ
 
 `smoke_sessions.py` đã có: tải ảnh, kiểm danh tính qua `/me`, vào hàng chờ, giữ rồi hủy một suất. Lượt bàn giao ban đầu đã thành công; không coi đó là bằng chứng gói mới vẫn chạy được.
 
-**Cần sửa trước khi smoke lại:** bảng số vùng hard-code chưa có `elec` (18), `physics` (34), `chemistry` (42), nên fallback 4–8 vùng báo lỗi với bộ mới. Cần kiểm theo manifest/UUID/capacity thực tế.
+**Đã sửa local21/11:** smoke đối chiếu đúng tập seat UUID/nhãn/capacity từ schedule_rooms, không hard-code4–8 hoặc tên artwork; kiểm format/kích thước/bytes ảnh, timezone/TTL/cửa sổ từ server_time, distinct user/CSRF và số suất gán không vượt remaining. Luồng hold được hủy và rời queue trong finally. Bộ12 cấu hình gồm elec18/physics34/chemistry42 đã qua smoke100 user trên app local; không thay chứng cứ upload/nhận diện6 ảnh mạng qua admin.
 
 Sau khi xử lý guard và smoke, quy trình đã dùng trên Windows là giữ tunnel SSM đến RDS ở cổng 15432, rồi chạy:
 
 ```powershell
-./scripts/assessment/data/prepare-handoff.ps1 -Batch b1b2-20261117a -Execute
+./scripts/assessment/data/prepare-handoff.ps1 -Batch b1b2-20261117a -MinimumValidSeconds 14400 -Execute
 ```
 
 Có thể truyền `-Aws <đường-dẫn-aws.exe>`, `-Profile`, `-Region`, `-TunnelPort` theo môi trường. Helper cần Docker image client `labseat-assessment-b1b2:local` và quyền AWS phù hợp. Không đưa DATABASE_URL/token/password vào tài liệu hoặc log.
@@ -97,7 +97,7 @@ Có thể truyền `-Aws <đường-dẫn-aws.exe>`, `-Profile`, `-Region`, `-Tu
 Để kiểm riêng gói mới sau khi sửa helper:
 
 ```text
-python scripts/assessment/data/smoke_sessions.py .local/assessment/b1b2-20261117a --base-url https://labseat.id.vn
+python scripts/assessment/data/smoke_sessions.py .local/assessment/b1b2-20261117a --base-url https://labseat.id.vn --minimum-valid-seconds 14400
 ```
 
 Bàn giao qua kênh riêng cho Người 3: manifest, file session, tài khoản cần thiết, `SESSION_ID` lịch tải, TTL và kết quả smoke. `platform.js` nhận `SESSIONS_FILE` và `SESSION_ID`. Người 3 phải dùng được gói mà không tự sửa seed.
@@ -107,8 +107,16 @@ Bàn giao qua kênh riêng cho Người 3: manifest, file session, tài khoản 
 - [ ] Nguồn/quyền dùng ảnh và phạm vi 6/12 ảnh được chốt.
 - [ ] Có bằng chứng luồng admin upload/nhận diện/chỉnh vùng theo tiêu chí đã chốt.
 - [x] 12 sơ đồ/poster hiện hành tải được; mapping đã đối chiếu ngày 18/11.
-- [ ] Guard/helper smoke hoạt động với ca đổi tên và bộ ảnh hiện tại.
+- [x] Guard/helper smoke hoạt động local với ca đổi tên/12 cấu hình geometry/capacity; chưa chạy lại AWS sau sửa.
 - [ ] Cấp lại ≥100 session distinct, readiness/TTL đạt, smoke đọc/ghi mới thành công.
 - [ ] Người 3 nhận và dùng được gói bàn giao; phiên bản source/script được chốt.
 
 Chưa đánh dấu B2 hoàn tất. Xem [bằng chứng số liệu](../../../evidence/assessment/b1b2-20261117a/summary.md).
+
+## Retest công cụ và cách tái tạo —21/11/2026
+
+Bảy test tích hợp trong test_tools.py đã PASS trên PostgreSQL16.16/Redis7.4.11 disposable; nguồn/hash/kết quả và giới hạn ở [evidence](../../../evidence/assessment/b1b2-20261117a/summary.md). Chạy với app dependencies, PYTHONPATH trỏ repo, APP_ENV=test, DATABASE_URL=TEST_DATABASE_URL trỏ DB mới kết thúc _test, REDIS_URL riêng, EMAIL_BACKEND=disabled, STORAGE_BACKEND=local và LOCAL_STORAGE_PATH tạm. Dùng `python -m app.migrate`, rồi `python -m pytest scripts/assessment/data/test_tools.py -q -p no:cacheprovider --junitxml=<private>/tests.xml`. Bộ kiểm tự tạo/cấp phiên/smoke/cleanup dataset local; raw logs và session giữ private. Không dùng lệnh này trên AWS hoặc DB demo.
+
+prepare-handoff.ps1 mặc định yêu cầu cửa sổ14400giây (4giờ); helper Python trực tiếp mặc định3600giây. Chọn thời lượng bao trùm bài đo cộng phần dự phòng; không sửa TTL app hoặc kéo dài expires_at trong file. Cấp gói production sát lịch C3 sau kiểm readiness, không phát lại token local đã bị cleanup. SQL verify-batch.sql nhận CSV UUID user_ids/event_ids/room_ids từ manifest; không còn tham số batch_prefix. Muốn kiểm production phải truyền danh sách từ manifest private đúng batch, không dùng ID theo tên tìm kiếm.
+
+Sáu nguồn mạng trong assets-sources.csv có trang cấp quyền cụ thể; file nguyên gốc chưa tải do HTTP429 ở request đầu. Các mục upload/nhận diện/chỉnh4–8 vùng, API proof của chính6 ảnh đó và ≥100 session AWS mới/Người3 smoke vẫn chưa hoàn thành. Không sửa sáu ca demo hoặc thay bộ12 ảnh hiện hành để lấp phần thiếu.

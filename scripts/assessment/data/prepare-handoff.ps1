@@ -6,6 +6,7 @@ param(
     [int]$TunnelPort = 15432,
     [string]$Image = 'labseat-assessment-b1b2:local',
     [string]$BaseUrl = 'https://labseat.id.vn',
+    [ValidateRange(3600, 28500)][int]$MinimumValidSeconds = 14400,
     [switch]$Execute
 )
 $ErrorActionPreference = 'Stop'
@@ -33,7 +34,8 @@ url = url.update_query_dict({
 os.environ["DATABASE_URL"] = url.render_as_string(hide_password=False)
 from app.assessment_seed import main, password, save_private
 batch = sys.argv[1]
-sys.argv = ["assessment_seed", "sessions", "--batch", batch, "--execute"]
+sys.argv = ["assessment_seed", "sessions", "--batch", batch, "--execute",
+            "--minimum-valid-seconds", sys.argv[3]]
 main()
 directory = Path(".local/assessment") / batch
 master_path = directory / "seed-master.txt"
@@ -49,7 +51,7 @@ if master_path.exists():
 $start = @('run', '-i', '--rm', '-w', '/workspace', '-e', 'PYTHONPATH=/srv/labseat', '-e', 'APP_ENV=production',
     '--mount', "type=bind,source=$source,target=/srv/labseat/app,readonly",
     '--mount', "type=bind,source=$privateDir,target=/workspace/.local",
-    $Image, 'python', '-c', $command, $Batch, $TunnelPort)
+    $Image, 'python', '-c', $command, $Batch, $TunnelPort, $MinimumValidSeconds)
 try {
     $url | docker @start
     if ($LASTEXITCODE) { throw 'Could not create B2 login sessions' }
@@ -59,6 +61,7 @@ try {
 $smoke = @('run', '--rm', '--mount', "type=bind,source=$scripts,target=/srv/labseat/scripts,readonly",
     '--mount', "type=bind,source=$privateDir,target=/handoff,readonly",
     $Image, 'python', '/srv/labseat/scripts/assessment/data/smoke_sessions.py',
-    "/handoff/assessment/$Batch", '--base-url', $BaseUrl)
+    "/handoff/assessment/$Batch", '--base-url', $BaseUrl,
+    '--minimum-valid-seconds', $MinimumValidSeconds)
 docker @smoke
 if ($LASTEXITCODE) { throw 'B2 HTTP smoke failed; do not distribute the handoff yet' }

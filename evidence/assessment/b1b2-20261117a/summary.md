@@ -53,6 +53,105 @@ Lượt seed ban đầu tạo 300 đăng ký (298 CONFIRMED, 1 CHECKED_IN, 1 CAN
 
 ## 5. Giới hạn kết luận
 
-Chưa có bằng chứng kiểm lại toàn bộ seed/cleanup sau tất cả tùy chỉnh cuối; guard/SQL còn phụ thuộc tên cũ. Nguồn/quyền dùng ảnh và tiêu chí 6 ảnh/4–8 vùng chưa được chốt; helper smoke chưa hỗ trợ đủ ảnh mới và session đã hết hạn. Vì vậy chưa đóng B1/B2.
+Giới hạn snapshot18/11: chưa kiểm lại seed/cleanup sau tùy chỉnh, guard/SQL phụ thuộc tên và smoke hard-code vùng. Những lỗi công cụ này đã được sửa/kiểm local21/11 như bên dưới; không ghi ngược là đã chạy lại AWS. Bộ6 ảnh mạng mới chưa usable/upload, phiên AWS cũ vẫn hết hạn, fixture đúng cửa sổ và tách batch độc lập chưa chốt. Vì vậy B1/B2 chưa nghiệm thu đầy đủ.
 
 Nội dung từng bước và việc còn lại được ghi tại [B1 dataset](../../../docs/assessment/functional/dataset.md) và [B2 hướng dẫn bàn giao](../../../scripts/assessment/data/README.md).
+
+## 6. Retest phần có thể tự làm —21/11/2026
+
+Đã sửa guard theo UUID/type/FK, SQL đếm theo manifest, session readiness/TTL/capacity và smoke mapping động. **7 PASS** trên bộ đủ508 user/12 event/24 lịch/300 reservation;12 cấu hình ảnh sau đổi tên giữ revision khi chạy lại; Practice10 có4 vùng×17. Bảy invariants zero rows khi dữ liệu còn đủ300 reservation. Có100 session riêng, DB chỉ giữ digest và CSRF digest; smoke HTTP100 danh tính/12 map/hold-cancel đạt. Cleanup từ chối quan hệ ngoài batch, giữ user ngoài batch và chạy lại an toàn. Không có ảnh/video tạo mới hoặc tác động AWS. Các mốc UTC20/11 tương ứng21/11 ở Việt Nam; không dùng làm số đo RPO/RTO.
+
+Sáu trang nguồn mạng được kiểm giấy phép và ghi trong CSV; tải file gốc đầu tiên bị HTTP429, các file tiếp theo chưa tải. Không nhận là đã upload/nhận diện/chỉnh4–8 vùng của6 ảnh này. Hai bộ test đầu dùng để chẩn đoán fixture thời gian; bộ cuối có invariants/capacity17 đạt; raw logs/XML/session giữ private.
+
+```json
+{
+  "task_ids": [
+    "B1",
+    "B2"
+  ],
+  "scope": "Disposable PostgreSQL16.16/Redis7.4.11, local HTTP and local storage only; APP_ENV=test and email disabled; no AWS/data/demo configuration changes.",
+  "source_commit_before_changes": "6c7070834bb9581e81cc2cf81be394a38cfa438c",
+  "source_worktree_modified": true,
+  "started_at_utc": "2026-11-20T18:03:49.946337+00:00",
+  "duration_seconds": 57.131,
+  "tests": 7,
+  "passed": 7,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "test_cases": [
+    "test_counts_hashes_and_idempotency",
+    "test_renamed_custom_catalogue_and_sessions",
+    "test_guard_rejects_identity_and_relationship_changes",
+    "test_handoff_rejects_ineligible_windows",
+    "test_smoke_rejects_bad_private_bundle_before_http[expired]",
+    "test_smoke_rejects_bad_private_bundle_before_http[duplicate-csrf]",
+    "test_cleanup_refuses_foreign_reference_and_preserves_other_data"
+  ],
+  "checks_before_cleanup": {
+    "users": 508,
+    "students": 500,
+    "admins": 2,
+    "staff": 6,
+    "events": 12,
+    "schedules": 24,
+    "reservations_before_smoke": 300,
+    "maps": 12,
+    "zone_range": [
+      4,
+      42
+    ],
+    "mechanic_zones": 4,
+    "mechanic_capacity": 17,
+    "invariant_rows": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "sessions": 100,
+    "distinct_users": 100,
+    "idempotent_custom_maps": true
+  },
+  "cleanup": {
+    "aws_changes": false,
+    "checked_at_utc": "2026-11-20T18:05:30.4373425Z",
+    "remaining_containers": 0,
+    "volumes_created": 0,
+    "internal_network_removed": true,
+    "run": "b1b2-tools-20261121",
+    "remaining_networks": 0,
+    "containers_removed": 5
+  },
+  "source_sha256_lf": {
+    "app/assessment_seed.py": "8c5a43f09185681ba58a2b3518eee9624d1b365ff7ea1178e644e4aa0e40b3a4",
+    "scripts/assessment/data/verify-batch.sql": "fbf5fd27d5a4d22023f2915c3fd5e79d62ecfe99fe2a2558ed4f8237e3ca55ae",
+    "scripts/assessment/data/smoke_sessions.py": "9aad315c4364bbecff6320b56217c3ef1b695dfb0fa27fb0fef24082e60b5b64",
+    "scripts/assessment/data/prepare-handoff.ps1": "97ec345c9fc109b99d1b3aa046343427fb122c9961127fa3444a1c0954316658",
+    "scripts/assessment/data/test_tools.py": "3df0422accd442af583f6c677fb64ed8c60a7c655deece975e90a954eb3394de"
+  },
+  "private_junit_sha256_raw": "acbcdd43b65e12e4c4e1a450edee4e478634b7a240cf7cb64d026883d4a70053",
+  "reproduction": "python -m app.migrate; python -m pytest scripts/assessment/data/test_tools.py -q -p no:cacheprovider --junitxml=<private>/tests.xml with explicit disposable DB/Redis and local storage",
+  "asset_sources": {
+    "count": 6,
+    "csv": "docs/assessment/functional/assets-sources.csv",
+    "state": "SOURCED_ONLY",
+    "page_license_verified_on": "2026-11-21",
+    "first_original_get_url": "https://upload.wikimedia.org/wikipedia/commons/d/d7/Floor_plan1.jpg",
+    "first_original_get_http_status": 429,
+    "remaining_original_files_not_requested": true,
+    "files_downloaded": 0,
+    "admin_uploads_of_these_six": 0
+  },
+  "limitations": [
+    "Artwork integration test used white synthetic raster fixtures with final geometry/configuration, not original user image pixels.",
+    "No new production session handoff or person3 smoke; old AWS tokens remain expired.",
+    "No AWS fixture-window changes or independent functional/load batch migration.",
+    "B3 video/X01-X03 and B4/B5 integrated rehearsal still depend on their planned windows.",
+    "No complete storage GC, billing audit or AWS cleanup acceptance claimed."
+  ]
+}
+```

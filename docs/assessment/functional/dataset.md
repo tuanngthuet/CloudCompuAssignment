@@ -74,21 +74,21 @@ Runner Windows tương tự không thay dữ liệu khi thiếu `-Execute`:
 
 Trình tự đã dùng cho bộ nền: `prepare` → cấp session/bàn giao → xác nhận C2 tắt email → `book`. Stage `book` cần `--email-window-confirmed`; runner chỉ thực thi khi có `-Execute`. Các ảnh tùy chỉnh được áp dụng bằng stage riêng; bộ nền mới mặc định vẫn là sáu sơ đồ synthetic, không tự tái tạo đầy đủ 12 ảnh hiện hành nếu thiếu các ảnh nguồn private.
 
-**Điểm chưa xử lý:** `assert_owned()` còn yêu cầu prefix tên event, trong khi các ca đã đổi tên. Các stage gọi guard này có thể bị từ chối trên batch hiện hành. Không dùng ví dụ dry-run làm bằng chứng rằng execute/cấp phiên/cleanup hiện đã chạy lại được. Cần giữ kiểm tra ownership nhưng chuyển sang cách xác thực phù hợp với UUID và quan hệ batch.
+**Đã sửa và kiểm local21/11:** assert_owned dùng UUID xác định theo batch, username/role, loại event và quan hệ event–lịch–phòng; tên hiển thị có thể đổi. Không bỏ guard. Đã kiểm tên tiếng Việt và12 cấu hình sơ đồ trên DB disposable; chưa chạy lại stage execute/cấp phiên/cleanup trên AWS sau bản sửa.
 
 ## Bước 7. Kiểm count, invariants và idempotency
 
 - Bộ nền đã kiểm trên PostgreSQL 17 disposable: đúng quy mô, chạy lại không tăng số đăng ký seed; tạo session/smoke HTTP và cleanup đã được thử.
 - Các stage ảnh được kiểm riêng về UUID, mã QR, trạng thái vé và chạy lại không tăng revision.
 - Trên production, cả **7 truy vấn** trong `scripts/tests/db-invariants.sql` đều trả **0 dòng vi phạm** lúc 21:57:08 ngày 18/11/2026.
-- `scripts/assessment/data/verify-batch.sql` hiện còn lọc event/lịch/reservation bằng prefix tên event. Tên đã đổi nên phần này có thể bỏ sót dữ liệu; cần sửa theo UUID batch. Snapshot mới dùng UUID, không dùng kết quả lọc tên cũ để kết luận dữ liệu mất.
-- Chưa có bằng chứng chạy lại toàn bộ seed/idempotency/cleanup sau tất cả tùy chỉnh cuối. Phải kiểm trên DB disposable với tên đã đổi, 12 sơ đồ và capacity 17 của Practice 10.
+- verify-batch.sql đã chuyển sang danh sách UUID user_ids/event_ids/room_ids từ manifest private; đã kiểm đếm đúng sau đổi tên, không lấy danh sách ID bằng tìm prefix tên.
+- Retest21/11 đã kiểm seed/idempotency, tên đã đổi,12 cấu hình sơ đồ/capacity17 của Practice10 và cleanup trên PostgreSQL16.16 disposable. Artwork dùng ảnh trắng synthetic với cùng geometry/stage, không nhận là đã tải lại ảnh người dùng hoặc nghiệm thu production.
 
 ## Bước 8. Cleanup chỉ dữ liệu thuộc batch
 
 Công cụ có stage `cleanup`, yêu cầu `--execute --manifest-id <id>`, kiểm quan hệ ngoài batch và xóa theo thứ tự FK. Object không còn tham chiếu được cơ chế maintenance thu gom. Không truncate/reset hoặc xóa dữ liệu thật.
 
-**Chưa chạy cleanup production:** batch còn dùng cho demo/nghiệm thu. Guard prefix tên hiện cũng cần xử lý trước khi có thể cleanup batch đã đổi tên. Bằng chứng cleanup cũ chỉ áp dụng cho bộ nền disposable, chưa chứng minh cleanup toàn bộ cấu hình tùy chỉnh cuối.
+**Chưa chạy cleanup production:** batch còn dùng cho demo/nghiệm thu. Retest21/11 đã kiểm cleanup bộ tùy chỉnh local sau đổi tên: từ chối lịch ngoài batch, giữ user ngoài batch, chạy cleanup lại không lỗi. Đây là cleanup DB; cơ chế thu gom object storage của app không được nhận là đã chạy trên AWS.
 
 ## Đầu ra và điều kiện đóng B1
 
@@ -102,9 +102,15 @@ Công cụ có stage `cleanup`, yêu cầu `--execute --manifest-id <id>`, kiể
 - [x] Đủ 500 student, 2 admin, 6 staff, 12 event, 24 lịch và khoảng 300 đăng ký.
 - [x] Snapshot production có 7 invariants bằng 0; dữ liệu demo/ảnh đã tích hợp.
 - [x] Có dry-run, execute rõ ràng, batch/manifest ID và guard cleanup.
-- [ ] Sửa ownership/truy vấn đếm để hỗ trợ tên ca hiện hành.
-- [ ] Kiểm lại toàn bộ idempotency/cleanup trên DB disposable sau tùy chỉnh.
+- [x] Sửa ownership/truy vấn đếm theo UUID để hỗ trợ đổi tên; kiểm trên DB disposable.
+- [x] Kiểm idempotency/cleanup sau12 cấu hình sơ đồ, đổi tên và capacity17 trên DB disposable.
 - [ ] Có đủ fixture trạng thái và staff đúng lịch tại cửa sổ nghiệm thu.
 - [ ] Chốt việc tách batch functional/load và phiên bản source/script bàn giao.
 
 Chưa đánh dấu hoàn tất toàn bộ B1. Tài liệu này chỉ ghi đúng phần công việc B1; phần ảnh/session và các điểm còn thiếu của B2 nằm trong hướng dẫn bàn giao ở thư mục data.
+
+## Rà soát phần có thể tự làm —21/11/2026
+
+Bộ kiểm `python -m pytest scripts/assessment/data/test_tools.py -q -p no:cacheprovider` đạt **7 PASS,0 FAIL/ERROR/SKIP** trên DB/Redis disposable với APP_ENV=test, DATABASE_URL=TEST_DATABASE_URL kết thúc _test và email disabled. Gồm đủ508 user/12 event/24 lịch/300 reservation, hash app, seed/book idempotent; UUID/type/FK guard từ chối sai identity/quan hệ;12 cấu hình ảnh idempotent và capacity17;100 phiên distinct/digest/CSRF, TTL từ expires_at thực; smoke100 user/12 map và hold-cancel qua HTTP; bảy invariants zero rows trước cleanup; cleanup giới hạn batch và chạy lại an toàn. [Bằng chứng](../../../evidence/assessment/b1b2-20261117a/summary.md).
+
+Chưa sửa trạng thái/thời gian ca demo hoặc tạo batch production mới: các fixture sắp mở/hết chỗ/check-in phải được kiểm và bố trí đúng cửa sổ, còn tách batch functional/load độc lập chưa được áp dụng vào bộ demo một batch hiện hành. Không gọi khả năng dùng hai batch ID/namespace khác nhau của helper là bằng chứng AWS đã tách batch. B3 hiện không còn FAIL regression; B4/B5 vẫn chờ fault ổn định. Không sửa endpoint/secret/APP_ENV hay bật email production trong lượt này.
