@@ -49,4 +49,8 @@ Get-ChildItem .\docs\assessment\architecture\a4\diagrams\rendered\*.png
 endered\*.png
 ```
 
-Sau khi xem nội dung, có thể commit riêng thư mục A4 trên nhánh Người 1. Bộ tài liệu không tự tạo commit, push hoặc chạy AWS.
+## Cập nhật đối chiếu — 20/11/2026
+
+Đã tiếp nhận đối chiếu B3/B4/B5 của Người 2 đối với A4 tại commit `39f7ab1cd3cdd925e55fae5c13b0a6a541e8fa3a`. CSV chuẩn B3 được Người 2 báo cáo có **337 dòng: 329 PASS, 3 FAIL, 2 BLOCKED, 3 NOT_RUN**; CSV chỉ vắng trong ZIP snapshot trước. Xem nguồn và giới hạn kiểm chứng tại [evidence-review.md](evidence-review.md).
+
+A4 tổng hợp đầu ra B/C, không yêu cầu thêm một lượt kiểm thử hoặc CSV thứ hai. Giữ nguyên B4 BLOCKED, B5 tổng thể BLOCKED, X01–X03 NOT_RUN và RPO/RTO null. Bốn sơ đồ vẫn phù hợp; không đổi planned thành kết quả đã chạy chỉ từ việc đối chiếu tài liệu.

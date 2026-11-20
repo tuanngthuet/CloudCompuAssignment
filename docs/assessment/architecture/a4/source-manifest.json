@@ -94,5 +94,25 @@
       "original_path": "evidence/assessment/20261119T172832Z-b4-c1-preflight/checks/results.json",
       "sha256": "7248ec3a235d19420c7d8fa77219976b5596a041fc58ab48313e0197fd33c9b1"
     }
+  ],
+  "document_revision": 2,
+  "supplemental_sources": [
+    {
+      "kind": "user_supplied_text",
+      "received_date": "2026-11-20",
+      "description": "Three Person 2 A4 cross-review sections for B3, B4 and B5 pasted in conversation",
+      "reviewed_a4_commit": "39f7ab1cd3cdd925e55fae5c13b0a6a541e8fa3a",
+      "canonical_b3_csv": "docs/assessment/functional/test-cases.csv",
+      "reported_counts": {
+        "total": 337,
+        "PASS": 329,
+        "FAIL": 3,
+        "BLOCKED": 2,
+        "NOT_RUN": 3
+      },
+      "csv_rows_independently_recounted": false,
+      "csv_commit_verified": null,
+      "new_aws_execution": false
+    }
   ]
 }

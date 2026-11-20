@@ -15,3 +15,13 @@ Theo kế hoạch bàn giao hiện tại: C4/C5 → xác nhận ổn định →
 C1 hỗ trợ quota/capacity trực tiếp cho B4; C3 hỗ trợ tải/scaling nhưng không thay C4/C5. Người 3 không làm app restored thay Người 2. Source của công cụ và test local PASS không thay kết quả AWS.
 
 Mỗi lượt mới cần: owner, run_id, source commit, release digest/schema, region và định danh đã làm sạch, timestamps UTC, thao tác thực tế, checks/probes, metric source_at/status, cleanup/rollback, các phần NOT_RUN. Giữ secret, token, PII và connection string ngoài gói công khai.
+
+## Làm rõ phạm vi sau đối chiếu Người 2
+
+A4 là đầu ra tổng hợp theo sprint, không bổ sung test, điều kiện nghiệm thu hoặc output mới cho B3/B4/B5. Bằng chứng tiếp tục đặt trong thư mục run theo sprint và được dẫn từ ba output B3 hiện có; Người 1 dùng lại các nguồn đó.
+
+Khi có cửa sổ thật, bàn giao run ID **và phase**, commit công cụ tách khỏi commit đóng gói tài liệu, digest/schema của app thực sự được kiểm, marker/incident/target/ready UTC, probe nghiệp vụ và invariants trước/sau, metrics có source_at/status, cleanup/rollback. Không lấy thời điểm gom báo cáo làm thời điểm mọi test.
+
+Người 2 chịu trách nhiệm DB identifier mới, DB/app private riêng và kiểm DB/nghiệp vụ/ảnh; **không chuyển production sang DB restored**. Chỉ ghi ready khi toàn bộ DB, nghiệp vụ và ảnh B5 đã đạt, rồi dùng record hợp lệ cho measure.py. Thứ tự C4/C5 ổn định → B4/B5 tích hợp → B3 sau restore → đo đủ bằng chứng → cập nhật A4 giữ nguyên.
+
+B5 tích hợp phải kiểm cùng object và DB reference qua app ở cả ba giai đoạn tốt/sai/phục hồi. Không dùng version đã cleanup hoặc sơ đồ A4 làm bằng chứng ảnh hiển thị qua app; không chạy lại S3 độc lập chỉ để phản hồi A4.

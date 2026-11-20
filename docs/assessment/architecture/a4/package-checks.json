@@ -1,26 +1,11 @@
 {
   "markdown_local_links": {
-    "checked": 22,
+    "checked": 23,
     "all_exist": true
   },
   "copied_evidence_hashes": true,
-  "csv": {
-    "rows": 252,
-    "samples": 4,
-    "status_counts": {
-      "OBSERVED": 211,
-      "MISSING": 8,
-      "MISSING_OR_DELAYED": 32,
-      "OVER_INTERVAL": 1
-    },
-    "matches_report": true
-  },
-  "pngs": [
-    "a4-02-s3-restore.png",
-    "a4-01-baseline.png",
-    "a4-04-fault-pending.png",
-    "a4-03-pitr-pending.png"
-  ],
-  "svg_parse": true,
-  "text_control_characters": true
+  "unchanged_evidence_and_diagrams": 25,
+  "png_svg_valid": true,
+  "b3_reported_counts_sum": 337,
+  "b3_csv_independently_recounted": false
 }

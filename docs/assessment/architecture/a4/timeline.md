@@ -17,3 +17,7 @@ Các mốc thuộc hai lượt độc lập; không phải timeline một sự c
 | 2026-11-19T17:33:50.533+00:00 | 2026-11-20T00:33:50.533+07:00 | Quota/capacity bổ sung |
 
 Nguồn: [B5](evidence/20261119T050938Z-b5-s3-restore/checks/results.json) và [C1/B4](evidence/20261119T172832Z-b4-c1-preflight/checks/results.json). Các mốc stage là timestamp ghi nhận trong JSON, không phải thời điểm người dùng bắt đầu mất dịch vụ.
+
+## Ghi nhận đối chiếu tài liệu 20/11/2026
+
+Người 2 xác nhận timeline S3 phù hợp timestamp JSON gốc; bản hiển thị chỉ giữ millisecond. Lượt đối chiếu tài liệu không có timestamp thực thi AWS mới, nên không chèn thành sự kiện incident/restore vào bảng trên. Commit A4 được đối chiếu là `39f7ab1cd3cdd925e55fae5c13b0a6a541e8fa3a`, tách biệt commit test và digest runtime.
