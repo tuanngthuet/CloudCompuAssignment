@@ -1,6 +1,6 @@
 # C3 — Thực thi AWS và cleanup
 
-Chỉ target https://labseat.id.vn và batch `demo-load-mechanic21`. Kiểm [backup/TTL/mapping](../functional/dataset.md), workeremaildisabled ổn định, B3smoke, clock/targets/DB/limits trước tải. Không chạy đồng thời fault/restore. Giữ credentials/rawlogs private.
+Chỉ target https://labseat.id.vn. Lượt21/11 dùng batch `demo-load-mechanic21` đã cleanup; các ID/manifest của lượt đó dưới đây là lịch sử. Lượt cấp lại22/11 dùng `demo-load-mechanic22`; chưa chạy tải. Mọi lệnh chạy mới phải truyền rõ `-Batch demo-load-mechanic22 -Run c3-aws-mechanic-20261122` và kiểm gói/TTL hiện hành. Không dùng defaultbatch21 đã thu hồi. Kiểm [backup/TTL/mapping](../functional/dataset.md), workeremaildisabled ổn định, B3smoke, clock/targets/DB/limits trước tải. Không chạy đồng thời fault/restore. Giữ credentials/rawlogs private.
 
 ## Thứ tự
 
@@ -22,4 +22,4 @@ Collector C1 `collect.py`/runner.ps1 với inventorythực, interval30s,DBbudget
 
 ## Kết thúc
 
-Sau tất cả loadtaskdừng: probe/invariants, cleanupdryrun rồi execute đúngbatch vàmanifest `0a59f708-244e-5d0d-80d1-c3907727db17`, kiểm10bảngdemo/7invariants, giữ backup. Gói phiên chuyểnRETIRED khi cleanup. Gỡ đúngRedisusertạm khỏigroup/đợiactive/deleteuser, xóa2SSMparams vàinlinepolicytạm; không sửaTerraformpolicy. Dọn taskdefinitionrevisions/S3versions theo receipts sau tảiartifact về, dừng monitor/collector/tunnel của lượt này. Ghi riêng bước chưa làm và kết quảFAIL.
+Cleanup của lượt21/11 đã hoàn tất và receipt trong load-report. Với lượt22/11, dùng manifest mới trong dataset, không dùng manifest21 bên dưới. Sau tất cả loadtaskdừng: probe/invariants, cleanupdryrun rồi execute đúngbatch vàmanifest `0a59f708-244e-5d0d-80d1-c3907727db17`, kiểm10bảngdemo/7invariants, giữ backup. Gói phiên chuyểnRETIRED khi cleanup. Gỡ đúngRedisusertạm khỏigroup/đợiactive/deleteuser, xóa2SSMparams vàinlinepolicytạm; không sửaTerraformpolicy. Dọn taskdefinitionrevisions/S3versions theo receipts sau tảiartifact về, dừng monitor/collector/tunnel của lượt này. Ghi riêng bước chưa làm và kết quảFAIL.

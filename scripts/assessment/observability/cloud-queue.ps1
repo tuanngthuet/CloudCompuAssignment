@@ -1,5 +1,5 @@
 param(
- [ValidateSet('status','begin','disable','enable','finish','observe')][string]$Operation='status',
+ [ValidateSet('status','begin','disable','enable','finish','observe','cleanup-load-keys','cleanup-assets')][string]$Operation='status',
  [string]$Aws='aws',[string]$Profile='labseat',
  [string]$Run='c3-aws-mechanic-20261121'
 )
@@ -52,6 +52,59 @@ for sample in range(240):
         active=db.execute(text("SELECT count(*) FROM reservations WHERE session_id=CAST(:sid AS uuid) AND (status IN ('CONFIRMED','CHECKED_IN') OR (status='HELD' AND hold_expires_at>clock_timestamp()))"),{'sid':sid}).scalar_one()
         print('C3_QUEUE_SAMPLE='+json.dumps({'at_utc':datetime.now(timezone.utc).isoformat(),'redis_server_ms':values[0],'waiting_live':values[1],'admitted_live':values[2],'waiting_raw':values[3],'active_reservations':active,'capacity':p.capacity,'enabled':p.enabled}),flush=True)
     time.sleep(5)
+print('C3_QUEUE_POLICY='+json.dumps(change('status')),flush=True)
+'@
+}
+if($Operation -eq 'cleanup-load-keys'){
+ $source=$source.Substring(0,$source.IndexOf('result=change('))+@'
+from sqlalchemy import text
+from uuid import uuid5,NAMESPACE_URL
+from app.infrastructure.database.session import Session
+from app.infrastructure.redis.admission import RedisQueue,policy
+sid='3d7ca8f8-07fa-508e-abc7-3f0a7bf69d46'
+with Session() as db:
+    db.execute(text('SET TRANSACTION READ ONLY'))
+    p=policy(db)
+    assert p.enabled and not p.recovery_pending
+    active=db.execute(text("SELECT count(*) FROM reservations WHERE session_id=CAST(:sid AS uuid) AND (status IN ('CONFIRMED','CHECKED_IN') OR (status='HELD' AND hold_expires_at>clock_timestamp()))"),{'sid':sid}).scalar_one()
+    assert active==0,'Active trial reservations remain'
+    known=[str(uuid5(NAMESPACE_URL,'labseat-isolated-load:demo-load-mechanic21:user-'+str(i))) for i in range(100)]
+    script=client(operator=True).register_script("local t=redis.call('TIME');local n=tonumber(t[1])*1000+math.floor(tonumber(t[2])/1000);if redis.call('ZCOUNT',KEYS[3],'('..n,'+inf')>0 or redis.call('ZCOUNT',KEYS[5],n-tonumber(ARGV[1]),'+inf')>0 then return {-1,0} end;local total=redis.call('HLEN',KEYS[4]);local own=0;for i=2,#ARGV do if redis.call('HGET',KEYS[4],ARGV[i]) then own=own+1 end end;if own~=total then return {-2,total} end;return {redis.call('DEL',unpack(KEYS)),own}")
+    cleaned=script(keys=RedisQueue.keys(p,sid)[1:],args=[p.waiting_grace_seconds*1000,*known])
+    assert cleaned[0]>=0,'Live or foreign queue entries; cleanup refused'
+    print('C3_QUEUE_CLEANUP='+json.dumps({'deleted_exact_load_keys':cleaned[0],'owned_entries':cleaned[1],'active_reservations':active,'global_ready_or_policy_modified':False}),flush=True)
+print('C3_QUEUE_POLICY='+json.dumps(change('status')),flush=True)
+'@
+}
+if($Operation -eq 'cleanup-assets'){
+ $source=$source.Substring(0,$source.IndexOf('result=change('))+@'
+import hashlib
+from uuid import UUID,uuid5,NAMESPACE_URL
+from sqlalchemy import select,func
+from botocore.exceptions import ClientError
+from app.models import Room,Event,StorageObject
+from app.infrastructure.database.session import Session
+from app.infrastructure.storage.objects import storage
+from app.infrastructure.storage.registry import is_referenced
+rid=UUID('ca17a86c-2c6a-5fc4-91f7-5e2c01cbaa64');eid=UUID('d3dd7bd8-d8de-5be2-a9aa-6ff6704ef361')
+image='275a4fab45dc28ee77530d2ece6a7642f6f867565a444afbd212a32a3533f41b';poster='22b40371ad2246547bd4a33ebec323eee98652ce84119acf1e95ae3fd4906287'
+owned=lambda name:uuid5(NAMESPACE_URL,'labseat-isolated-load:demo-load-mechanic21:'+name)
+pairs=[(f'rooms/{rid}/maps/{owned("mechanic-image-"+image)}.png',image),(f'events/{eid}/poster/{owned("mechanic-poster-"+poster)}.jpg',poster)]
+backend=storage();deleted=0;absent=0
+with Session.begin() as db:
+    assert db.get(Room,rid) is None and db.get(Event,eid) is None,'Remove exact trial fixture before assets'
+    for key,expected in pairs:
+        row=db.scalar(select(StorageObject).where(StorageObject.key==key).with_for_update())
+        assert row is not None and not is_referenced(db,key),'Referenced/untracked object; cleanup refused'
+        try:body=backend.get(key)
+        except ClientError as exc:
+            if exc.response['Error']['Code'] not in ('NoSuchKey','404'):raise
+            absent+=1
+        else:
+            assert hashlib.sha256(body).hexdigest()==expected,'Trial object hash changed'
+            backend.delete(key);deleted+=1
+        row.state='DELETED';row.deleted_at=db.scalar(select(func.clock_timestamp()));row.quarantine_at=None
+print('C3_ASSET_CLEANUP='+json.dumps({'owned_current_objects_deleted':deleted,'already_absent':absent,'registry_rows':2,'referenced_demo_objects_modified':0,'historical_versions_purged':False}),flush=True)
 print('C3_QUEUE_POLICY='+json.dumps(change('status')),flush=True)
 '@
 }

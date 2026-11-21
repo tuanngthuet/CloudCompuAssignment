@@ -37,6 +37,10 @@ $private=Join-Path $root ".local/assessment/$Batch"
 $manifest=Get-Content -LiteralPath (Join-Path $private 'load/manifest.json') -Raw|ConvertFrom-Json
 $smoke=Get-Content -LiteralPath (Join-Path $private 'load/smoke-result.json') -Raw|ConvertFrom-Json
 if(-not $smoke.verified -or $manifest.capacity -ne 180 -or $manifest.mapping.Count -ne 100){throw 'Verified Mechanic handoff required'}
+if($Phase -ne 'recovery'){
+    $handoff=Get-Content -LiteralPath (Join-Path $private 'handoff-status.private.json') -Raw|ConvertFrom-Json
+    if(-not $handoff.ready -or $handoff.batch -ne $Batch){throw 'Handoff retired or not ready; prepare and smoke a fresh fixture before load'}
+}
 if([datetimeoffset]::Parse($manifest.sessions_expire_at) -lt [datetimeoffset]::UtcNow.AddHours(2)){throw 'Refresh B2 sessions before load'}
 if(-not $K6BinaryPath){$K6BinaryPath=Join-Path $directory 'k6'}
 if(-not (Test-Path -LiteralPath $K6BinaryPath)){throw 'Supply the Linux k6 binary; no installation on application EC2'}

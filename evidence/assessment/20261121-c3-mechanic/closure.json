@@ -1,0 +1,306 @@
+{
+  "measurement_date_vn": "2026-11-21",
+  "base_url": "https://labseat.id.vn",
+  "batch": "demo-load-mechanic21",
+  "phase_result": {
+    "baseline": "PASS",
+    "platform": "PASS",
+    "admission20": "PASS",
+    "admission50": "PASS",
+    "scaling60": "FAIL_SAFETY_ABORT_INCOMPLETE_HOLD",
+    "recovery": "OBSERVED_30_MINUTES"
+  },
+  "recovery": {
+    "started_at_utc": "2026-11-21T12:37:22.078209+00:00",
+    "finished_at_utc": "2026-11-21T13:07:23.208148+00:00",
+    "result": "OBSERVED",
+    "clock": {
+      "ClockErrorBound": 0.4022575,
+      "ReferenceTimestamp": "2026-11-21T12:37:06Z",
+      "ClockSynchronizationStatus": "SYNCHRONIZED"
+    }
+  },
+  "manual_desired_changes": false,
+  "demo_post_recovery": {
+    "execute": false,
+    "before": {
+      "users": 0,
+      "events": 0,
+      "schedules": 0,
+      "seats": 0,
+      "reservations": 0
+    },
+    "manifest_id": "0a59f708-244e-5d0d-80d1-c3907727db17",
+    "foreign_reference_checks": "PASS",
+    "demo_unchanged": {
+      "verified": true,
+      "tables": 10,
+      "invariant_rows": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "db_clock": "2026-11-21T13:15:14.973156+00:00"
+    }
+  },
+  "web_demo_audit": {
+    "base_url": "https://labseat.id.vn",
+    "at_utc": "2026-11-21T12:58:24.094149+00:00",
+    "admin_demo_counts": {
+      "exam": 6,
+      "practice": 6
+    },
+    "demo_status_counts": {
+      "ACTIVE": 11,
+      "CANCELLED": 1
+    },
+    "original_schedules": 24,
+    "original_rooms": 12,
+    "poster_and_map_pairs_verified": 12,
+    "all_image_hashes_match_backup": true,
+    "retired_load_events_absent": true,
+    "temporary_b2_events_absent": true,
+    "public_batch_counts": {
+      "exam": 6,
+      "practice": 5
+    },
+    "note": "Mechanic original demo remains CANCELLED and68capacity; public endpoint intentionally hides cancelled events; original extra SPT reference is outside this12event batch",
+    "events": [
+      {
+        "event_name": "Kì thi đánh gia năng lực ĐHQG - TP.HCM - demo",
+        "session_type": "exam",
+        "status": "ACTIVE",
+        "poster_sha256": "5e9ef9ef103c24d08575018be757daa3dee3efdf5d6ee23dddb2590be3d87b59",
+        "map_sha256": "84ec9898a9d4160eb50b1f8891641330f11ce61ed9ae3a2bc5d15a6d93c876da",
+        "regions": 4,
+        "capacity": 180,
+        "bytes_match_original_backup": true
+      },
+      {
+        "event_name": "Kì thi đánh giá năng lực - HSA - Ca demo",
+        "session_type": "exam",
+        "status": "ACTIVE",
+        "poster_sha256": "00865866a18b08d0dd936d66cc7fb9474fe5befc178fc0c691ab4b0b2f6cb50d",
+        "map_sha256": "c31a68d1b2d19799f276d6e74af15be25da44ddf2973ce3be0b8de3eb970c29f",
+        "regions": 33,
+        "capacity": 1485,
+        "bytes_match_original_backup": true
+      },
+      {
+        "event_name": "Kì thi đánh giá tư duy - TSA",
+        "session_type": "exam",
+        "status": "ACTIVE",
+        "poster_sha256": "3e5a1b0ff913b740836232ea5414410f86040e861b9012dbdc4309c0a001b6eb",
+        "map_sha256": "aa89b0803b1f1444c4383dea7d742e48eb7064570ef72483c45e35c9e3bd7248",
+        "regions": 12,
+        "capacity": 540,
+        "bytes_match_original_backup": true
+      },
+      {
+        "event_name": "Kì thi SAT - Ca demo",
+        "session_type": "exam",
+        "status": "ACTIVE",
+        "poster_sha256": "e9a0810b584ba895f46ffae0755cf31c41a7dba03114e24d1500b60cdec108b2",
+        "map_sha256": "dc25430a867d75107b7858d4c2adaa6b1d5083fa54fd30b4218d8f0481bbd8d7",
+        "regions": 11,
+        "capacity": 495,
+        "bytes_match_original_backup": true
+      },
+      {
+        "event_name": "Kì thi TOEIC - Ca demo",
+        "session_type": "exam",
+        "status": "ACTIVE",
+        "poster_sha256": "94894a38c52daa12544d04ebf16a7882b679735c829fa121174a7e35b226c2f7",
+        "map_sha256": "dc25430a867d75107b7858d4c2adaa6b1d5083fa54fd30b4218d8f0481bbd8d7",
+        "regions": 11,
+        "capacity": 495,
+        "bytes_match_original_backup": true
+      },
+      {
+        "event_name": "Thi IELTS - ca demo",
+        "session_type": "exam",
+        "status": "ACTIVE",
+        "poster_sha256": "26da213248fbc9c128a59d9d397c10306bcfd05521a113eb3614a9c61e441fe9",
+        "map_sha256": "bf4ae2baf3100ae99738294b16144cfb86d273a8df2c01656bd21a47c4d392a9",
+        "regions": 5,
+        "capacity": 225,
+        "bytes_match_original_backup": true
+      },
+      {
+        "event_name": "Thi thực hành kỹ thuật - Ca demo",
+        "session_type": "practice",
+        "status": "CANCELLED",
+        "poster_sha256": "22b40371ad2246547bd4a33ebec323eee98652ce84119acf1e95ae3fd4906287",
+        "map_sha256": "275a4fab45dc28ee77530d2ece6a7642f6f867565a444afbd212a32a3533f41b",
+        "regions": 4,
+        "capacity": 68,
+        "bytes_match_original_backup": true
+      },
+      {
+        "event_name": "Thi thực hành Môn điện dân dụng - Ca demo",
+        "session_type": "practice",
+        "status": "ACTIVE",
+        "poster_sha256": "35a5c22e1a7ff726aa0a42dfa70ae178faf1117626e7acb2c1761714df6f8557",
+        "map_sha256": "300868d862bbb09a0a0a3239214ecb79b54f4bd16e060df6a15d2d9172c33c67",
+        "regions": 18,
+        "capacity": 810,
+        "bytes_match_original_backup": true
+      },
+      {
+        "event_name": "Thi thực hành Môn hóa học - Ca demo",
+        "session_type": "practice",
+        "status": "ACTIVE",
+        "poster_sha256": "a2f8bf8396ce5b256b6a86ad666e84e8aa1f903d2dc81d477aec88a0e877eeba",
+        "map_sha256": "b060c812c9e651ce314110df7f0ab6c84398d6ae84337127deb52ac252acb47e",
+        "regions": 42,
+        "capacity": 1890,
+        "bytes_match_original_backup": true
+      },
+      {
+        "event_name": "Thi thực hành Môn sinh học - Ca demo",
+        "session_type": "practice",
+        "status": "ACTIVE",
+        "poster_sha256": "ef765fe87ee03e9319eb5b2a727dc1e4440eeebdcf6ff713dd9050ae42b9a8d2",
+        "map_sha256": "e3004904ee9db779ff27b7dd44a65e21a6e0dfbba2e9a0aa812688539d4ccbe8",
+        "regions": 6,
+        "capacity": 270,
+        "bytes_match_original_backup": true
+      },
+      {
+        "event_name": "Thi thực hành môn Tin học - Ca demo",
+        "session_type": "practice",
+        "status": "ACTIVE",
+        "poster_sha256": "2ae0c82996226805291c94681eb39ee53c96d0c95131fb522a8817783dd98209",
+        "map_sha256": "f481bf9cfb8ba058d6c2c759bec38f6bc516f41e7ed3180404b47902da57a908",
+        "regions": 20,
+        "capacity": 900,
+        "bytes_match_original_backup": true
+      },
+      {
+        "event_name": "Thi thực hành Môn vật lý - Ca demo",
+        "session_type": "practice",
+        "status": "ACTIVE",
+        "poster_sha256": "a37e444dbbb7ce778c4e9e288144cad51c19c96a5ac9c0b06f9f3c1d56b98c51",
+        "map_sha256": "e72a5c027905f6e7cc490054bfe27c70af122c5c66b82b020e8142df6abc08e5",
+        "regions": 34,
+        "capacity": 1530,
+        "bytes_match_original_backup": true
+      }
+    ]
+  },
+  "load_cleanup": {
+    "execute": true,
+    "before": {
+      "users": 100,
+      "events": 1,
+      "schedules": 1,
+      "seats": 4,
+      "reservations": 4254
+    },
+    "manifest_id": "0a59f708-244e-5d0d-80d1-c3907727db17",
+    "foreign_reference_checks": "PASS",
+    "demo_unchanged": {
+      "verified": true,
+      "tables": 10,
+      "invariant_rows": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "db_clock": "2026-11-21T12:48:56.932765+00:00"
+    }
+  },
+  "additional_sat_probe_cleanup": {
+    "at_utc": "2026-11-21T12:41:10.765192+00:00",
+    "execute": true,
+    "owned_cancelled_reservations": 2,
+    "skipped_jobs": 2,
+    "provider_attempts": 0,
+    "original_demo_mutations": 0,
+    "published_platform_events_left_for_retention": true
+  },
+  "operator_cleanup": {
+    "temporary_redis_user_deleted": true,
+    "parameters_deleted": 2,
+    "at_utc": "2026-11-21T12:56:17.4820100Z",
+    "existing_redis_users_preserved": true,
+    "execution_role_preserved": true,
+    "email_configuration_modified": false,
+    "temporary_iam_policy_deleted": true,
+    "terraform_inline_policy_unchanged": true
+  },
+  "staging_cleanup": {
+    "temporary_task_definitions_deregistered": 20,
+    "at_utc": "2026-11-21T13:10:52.6116956Z",
+    "original_api_task_definition_modified": false,
+    "executed_source_hashes_verified": 3,
+    "owned_active_staging_versions_remaining": 0,
+    "demo_backup_or_original_assets_deleted": false,
+    "owned_staging_versions_deleted": 18
+  },
+  "historical_image_versions_purged": false,
+  "backup_preserved": true,
+  "old_sessions_currently_valid": false,
+  "no_complete_b3_video_or_fault_restore_claimed": true,
+  "later_read_only_state_at_new_handoff_preparation": {
+    "healthy_targets": 2,
+    "asg": {
+      "desired": 5,
+      "in_service": 5
+    },
+    "api": {
+      "desired": 2,
+      "definition": "labseat-lab-api:10",
+      "running": 2,
+      "pending": 0
+    },
+    "at_utc": "2026-11-21T17:37:06.0654771Z",
+    "manual_desired_changes": false,
+    "https": {
+      "/readyz": {
+        "status": 200,
+        "body": {
+          "status": "ready",
+          "version": "0.6.0"
+        }
+      },
+      "/lab-sessions": {
+        "status": 200,
+        "body": {
+          "queue_policy": {
+            "enabled": true,
+            "capacity": 10,
+            "selection_seconds": 120,
+            "heartbeat_seconds": 5,
+            "waiting_grace_seconds": 60,
+            "policy_version": 15
+          }
+        }
+      }
+    },
+    "queues": {
+      "labseat-lab-notifications": {
+        "ApproximateNumberOfMessages": "0",
+        "ApproximateNumberOfMessagesNotVisible": "0"
+      },
+      "labseat-lab-notifications-dlq": {
+        "ApproximateNumberOfMessages": "0",
+        "ApproximateNumberOfMessagesNotVisible": "0"
+      }
+    },
+    "worker": {
+      "desired": 1,
+      "email_backend": "disabled",
+      "running": 1,
+      "pending": 0
+    }
+  }
+}

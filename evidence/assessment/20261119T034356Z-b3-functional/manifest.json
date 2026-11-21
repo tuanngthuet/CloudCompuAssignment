@@ -23,10 +23,10 @@
   ],
   "new_existing_event_checks": "Two existing SAT schedules; no new event created in completion checks",
   "status_counts": {
-    "PASS": 340,
+    "PASS": 341,
     "FAIL": 0,
     "BLOCKED": 1,
-    "NOT_RUN": 3
+    "NOT_RUN": 2
   },
   "video": {
     "status": "BLOCKED",
@@ -57,14 +57,14 @@
     }
   ],
   "limitations": [
-    "Historical and completion runs consolidated without rerunning tests",
-    "C3 load executed; recovery/postchecks not yet complete at checkpoint; fault/restore NOT_RUN",
+    "Historical and completion checks consolidated without rerunning every test",
+    "X01 business recovery PASS; C3 scaling60 performanceFAIL; fault/restore NOT_RUN",
     "User-provided video still pending"
   ],
   "files": [
     {
       "path": "checks/results.json",
-      "sha256": "21f4af1c805e2e7651a88a18f3aaff5214cc1b3a76eccb4f8becd2bcfcefad63"
+      "sha256": "018151479bc813bbb9d1f4495777741502dacb4a522c8c787bb08c32d095f37a"
     },
     {
       "path": "screenshots/password-reset-success.png",
@@ -76,7 +76,7 @@
     },
     {
       "path": "summary.md",
-      "sha256": "1ae86afd96529f76335c609dd68278a1ee85a5a7a9bb40b456bb90934f297484"
+      "sha256": "e7883cdb324e6be5aa4e766f2fa91e504ff296279853868ecc64bf7c329ecceb"
     },
     {
       "path": "screenshots/sat-existing-demo-confirmed.jpg",
@@ -106,5 +106,6 @@
     "cases": 7,
     "new_events_created": false,
     "camera_retested": false
-  }
+  },
+  "updated_at_utc": "2026-11-21T17:43:50.544827+00:00"
 }

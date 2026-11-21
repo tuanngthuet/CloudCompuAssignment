@@ -1,0 +1,17 @@
+{
+  "namespace": "AWS/ECS/ManagedScaling",
+  "metric": "CapacityProviderReservation",
+  "period_seconds": 60,
+  "mode": "HISTORICAL_READBACK_NOT_REALTIME_COLLECTION",
+  "retrieved_after_utc": "2026-11-21T17:37:06Z",
+  "export_end_utc": "2026-11-21T13:16:00+00:00",
+  "datapoints": 94,
+  "original_missing_rows_preserved": true,
+  "active_collector": {
+    "active_collector_sha256": "5df942238a090435386a7c0ac7146e6a6f000a17947b82818a22b9fd37e0c09e",
+    "active_collector_reference_commit": "e2431f306df96abd8043680906e1286243dbf14a",
+    "active_collection": "20261121T114346Z-C1-042424",
+    "note": "Active process loaded old AWS/ECS namespace; do not overwrite historical MISSING rows. Corrected namespace applies to future processes; dedicated historical retrieval is separate evidence."
+  },
+  "corrected_source_sha256_for_future_processes": "34c8513b9c829e0d8cb01406a68889fb7bf16f3836ccfb57d2b34a71da63a58b"
+}

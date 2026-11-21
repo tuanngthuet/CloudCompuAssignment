@@ -162,6 +162,8 @@ Sáu ca `[B2 WEB]` dùng nguồn HNUE đã được xóa trên AWS lúc13:59:28:
 
 B3 kiểm lại **Kì thi SAT - Ca demo** có sẵn: UI giữ/xác nhận/hủy; replay; QR/ownership; staff04 lookup; CSV; phòng hết chỗ; race suất cuối200/409 sold_out.45reservation thử đã hủy/45job SKIPPED được dọn lúc14:30:12, provider attempts0; không đổi lịch/capacity/vé gốc. Camera thật không được kiểm lại ở lượt này.
 
-Ca tải riêng hiện hành là **Mechanic — Ca chịu tải riêng 21–22/11/2026**, batch `demo-load-mechanic21`,4×45=180 suất,100phiên đã smoke. Mechanic demo4×17=68 giữ nguyên. Ca tải Vật lý cũ đã cleanup; backup gốc vẫn giữ. [Cấu hình và hạn phiên](../../../docs/assessment/functional/dataset.md).
+Ca tải riêng đã dùng ngày21/11 (nay đã cleanup) là **Mechanic — Ca chịu tải riêng 21–22/11/2026**, batch `demo-load-mechanic21`,4×45=180 suất,100phiên đã smoke. Mechanic demo4×17=68 giữ nguyên. Ca tải Vật lý cũ đã cleanup; backup gốc vẫn giữ. [Cấu hình và hạn phiên](../../../docs/assessment/functional/dataset.md).
 
 Verify AWS lúc14:31:07:10bảng nghiệp vụ demo theo PK gốc không đổi, chỉ bỏ qua users.last_activity_at;7invariants đều0. Không gọi đây là hậu kiểm hoàn tất C3 hoặc bằng chứng mọi fixture trạng thái đã đủ.
+
+Gói hiện hành22/11 là `demo-load-mechanic22` với ID/phiên mới; xem dataset để lấy hạn thực. Gói21/11 đã thu hồi, không dùng ZIP cũ.

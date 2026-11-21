@@ -4,9 +4,9 @@
 
 Thực hiện đúng **Prompt AI B3** trong [sprint](../../sprints/ke-hoach-nghiem-thu-4-ngay.md#b3-kiểm-thử-chức-năng-regression-và-demo): dùng dataset B1/B2, kiểm nghiệp vụ LABSEAT thật, ma trận expected/actual/evidence; phân biệt local/emulation/thiết bị thật; email giới hạn; SQL invariants read-only. Không chạy truncate/reset trên AWS.
 
-**Chưa chốt toàn bộ B3.** Đã có kết quả chức năng/regression; X01 đang thu cửa sổ C3 thực và chưa chốt hậu kiểm hồi phục; X02/X03 chờ fault/restore, V01 chờ video người dùng cung cấp. Không đổi các mục đó thành PASS. Lần gom đầu ra `20261119T034356Z-b3-functional` không phải lần chạy lại test.
+**Chưa chốt toàn bộ B3.** Đã có kết quả chức năng/regression; X01 đã PASS nghiệp vụ trước/sau tảiAWS21/11 và hậu kiểm hồi phục; X02/X03 chờ fault/restore, V01 chờ video người dùng cung cấp. Không đổi các mục chưa có bằng chứng thành PASS. Lần gom đầu ra `20261119T034356Z-b3-functional` không phải lần chạy lại test.
 
-**Cập nhật sau retest21/11/2026:** ma trận344 dòng hiện **340 PASS,0 FAIL,1 BLOCKED (V01),3 NOT_RUN (X01–X03)**. Có7case AWS bổ sung dùng SAT demo có sẵn;333PASS trước đó vẫn giữ môi trường/provenance riêng. Các lỗi regression/fixture R001/R004/R006/R009 đã được xử lý và chạy lại đạt; chi tiết ở cuối báo cáo. Những số329 PASS/3 FAIL/2 BLOCKED bên dưới mô tả các lượt lịch sử trước retest, không phải tồn đọng hiện tại.
+**Cập nhật sau retest21/11/2026:** ma trận344 dòng hiện **341 PASS,0 FAIL,1 BLOCKED (V01),2 NOT_RUN (X02–X03)**. Có7case AWS bổ sung dùng SAT demo có sẵn;333PASS trước đó vẫn giữ môi trường/provenance riêng. Các lỗi regression/fixture R001/R004/R006/R009 đã được xử lý và chạy lại đạt; chi tiết ở cuối báo cáo. Những số329 PASS/3 FAIL/2 BLOCKED bên dưới mô tả các lượt lịch sử trước retest, không phải tồn đọng hiện tại.
 
 ## Cấu hình
 
@@ -158,7 +158,7 @@ Tổng **34 PASS,0 FAIL/ERROR/SKIP** cho bốn module trong lượt retest; khô
 
 Để tái tạo: dựng môi trường disposable theo tests/app/browser.Dockerfile, migrate DB *_test và seed admin/6 student với SEED_PASSWORD=BROWSER_TEST_PASSWORD riêng; gán email synthetic duy nhất và email_verified_at cho user seed. Giữ DB/Redis fixture mới giữa các lượt để không kế thừa counters. Chạy từng module bằng `python -m pytest tests/app/test_avatar_browser.py -q -p no:cacheprovider --junitxml=<private>/avatar.xml` và tương tự camera/image_map/profile. Cần BROWSER_BASE_URL trỏ app local, BROWSER_TEST_ALLOWED=local-demo-only, RUN_CAMERA_BROWSER_TESTS=1, DATABASE_URL=TEST_DATABASE_URL, APP_ENV=test, EMAIL_BACKEND=disabled và storage local. Fixture xác minh email của profile là tiền điều kiện local; không nhận là mail thật đã gửi/nhận.
 
-Đã dọn đúng7 container và network có nhãn run; PostgreSQL dùng tmpfs, không tạo volume, không dọn tài nguyên khác. Logs/XML chẩn đoán giữ private, chỉ kết quả/hash đã làm sạch được gộp vào evidence hiện có; không thêm output công khai. C6/A4 đã dẫn ở trên là snapshot trước retest này; người3 cần dùng commit B3 mới khi tổng hợp. **Phần còn lại của B3 chỉ là V01 video và X01–X03 cần cửa sổ phối hợp.** B4/B5 không được chạy vượt thứ tự kế hoạch; trạng thái và RPO/RTO/images_verified giữ nguyên.
+Đã dọn đúng7 container và network có nhãn run; PostgreSQL dùng tmpfs, không tạo volume, không dọn tài nguyên khác. Logs/XML chẩn đoán giữ private, chỉ kết quả/hash đã làm sạch được gộp vào evidence hiện có; không thêm output công khai. C6/A4 đã dẫn ở trên là snapshot trước retest này; người3 cần dùng commit B3 mới khi tổng hợp. **Cập nhật sauC3: phần còn lại của B3 là V01video và X02/X03 cần fault/restore.** B4/B5 không được chạy vượt thứ tự kế hoạch; trạng thái và RPO/RTO/images_verified giữ nguyên.
 
 ## Kiểm lại bằng ca demo có sẵn trên AWS —21/11/2026
 
@@ -168,4 +168,8 @@ Lượt14:23–14:30 dùng **Kì thi SAT - Ca demo**, student498 và staff04/adm
 
 ![Xác nhận SAT demo có sẵn](../../../evidence/assessment/20261119T034356Z-b3-functional/screenshots/sat-existing-demo-confirmed.jpg)
 
-Sáu ca B2 WEB và ca tải Vật lý cũ đã thu hồi; không dùng ảnh của chúng làm bằng chứng hiện tại. C3 dùng Mechanic riêng180suất; Mechanic demo68suất giữ nguyên. Xem [dataset](dataset.md) để lấy ID/hạn phiên hiện hành. V01 vẫn chờ video; staff lookup lượt này không thay camera điện thoại thật. X01 chưa đóng vì mới có tải nền, chưa đủ các cửa sổ C3 và hậu kiểm; X02/X03 vẫn chưa chạy.
+Sáu ca B2 WEB và ca tải Vật lý cũ đã thu hồi; không dùng ảnh của chúng làm bằng chứng hiện tại. C3 dùng Mechanic riêng180suất; Mechanic demo68suất giữ nguyên. Xem [dataset](dataset.md) để lấy ID/hạn phiên hiện hành. V01 vẫn chờ video; staff lookup lượt này không thay camera điện thoại thật. X01 đã PASS sau Platform/admission/scalingabort/recovery30phút và hậu kiểmDB; X02/X03 vẫn chưa chạy.
+
+## Chốt cửa sổ tảiAWS21/11
+
+X01 PASS kiểm nghiệp vụ, không phải nghiệm thu hiệu năng: Platform/admission PASS nhưng scaling60 FAIL/dừng an toàn. SATdemo giữ–xác nhận–QR–hủy trước tải/giữa phase/sau dừng, availability khôi phục. Recovery19:37–20:07 giờVN:API tự3→2,ASG6→5; SQL20:15:14 kiểm10bảng nghiệp vụ demo/7invariants đạt và scope tải còn0. Hai véSATprobe/2jobSKIPPED đã dọn, không đổi vé gốc. [Closure](../../../evidence/assessment/20261121-c3-mechanic/closure.json),[C3report](../performance/load-report.md). Các nhận xét X01NOT_RUN ở mục lịch sử bên trên giữ mốc thời điểm trước lượt đo. V01video và X02/X03 chưa làm; gói22/11 là cấp lại, chưa có số đo mới.

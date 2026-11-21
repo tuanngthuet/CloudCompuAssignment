@@ -140,7 +140,7 @@ def cloudwatch(aws, args, rows, stamp, dest, instance_ids=None):
         ("ecs.memory_percent", "AWS/ECS", "MemoryUtilization", {"ClusterName": args.cluster, "ServiceName": args.api_service}, "Average"),
         ("ecs.running_tasks_cw", "ECS/ContainerInsights", "RunningTaskCount", {"ClusterName": args.cluster, "ServiceName": args.api_service}, "Average"),
         ("ecs.pending_tasks_cw", "ECS/ContainerInsights", "PendingTaskCount", {"ClusterName": args.cluster, "ServiceName": args.api_service}, "Average"),
-        ("ecs.capacity_reservation", "AWS/ECS", "CapacityProviderReservation", {"ClusterName": args.cluster, "CapacityProviderName": args.capacity_provider}, "Average"),
+        ("ecs.capacity_reservation", "AWS/ECS/ManagedScaling", "CapacityProviderReservation", {"ClusterName": args.cluster, "CapacityProviderName": args.capacity_provider}, "Average"),
         ("ec2.cpu_percent", "AWS/EC2", "CPUUtilization", {"AutoScalingGroupName": args.asg}, "Average"),
         ("asg.desired_cw", "AWS/AutoScaling", "GroupDesiredCapacity", {"AutoScalingGroupName": args.asg}, "Average"),
         ("asg.in_service_cw", "AWS/AutoScaling", "GroupInServiceInstances", {"AutoScalingGroupName": args.asg}, "Average"),
@@ -349,6 +349,9 @@ def main():
     if not re.fullmatch(r"\d{12}", args.expected_account) or args.interval < 15 or args.interval > 30 or args.samples < 1:
         parser.error("expected-account must be 12 digits; interval 15–30 seconds; samples >= 1")
     root = Path(__file__).resolve().parents[3]
+    runtime_commit = subprocess.run(["git", "rev-parse", "HEAD"], cwd=root,
+                                    capture_output=True, text=True).stdout.strip()
+    runtime_collector_sha256 = hashlib.sha256(Path(__file__).read_bytes()).hexdigest()
     if subprocess.run(["git", "-C", str(root), "check-ignore", "-q", ".local/assessment/check"]).returncode:
         parser.error(".local/ must be Git-ignored")
     run_id = now().strftime("%Y%m%dT%H%M%SZ") + "-C1-" + os.urandom(3).hex()
@@ -396,9 +399,8 @@ def main():
         failed = True
     finally:
         (dest / "manifest.json").write_text(json.dumps({"task_id": "C1", "run_id": run_id,
-             "region": args.region, "source_commit": subprocess.run(["git", "rev-parse", "HEAD"],
-             cwd=root, capture_output=True, text=True).stdout.strip(),
-             "collector_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
+             "region": args.region, "source_commit": runtime_commit,
+             "collector_sha256": runtime_collector_sha256,
              "errors": aws.errors,
              "privacy": "PRIVATE; review before publishing"}, indent=2) + "\n", encoding="utf-8")
         metric_file = dest / "metrics.csv"

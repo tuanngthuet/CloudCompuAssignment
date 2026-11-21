@@ -1804,7 +1804,7 @@
     "physical_camera_retested": false,
     "new_demo_events_created": false
   },
-  "c3_window_in_progress": {
+  "c3_load_window_20261121": {
     "completed_business_probes": [
       {
         "case": "C3 after-platform-before-scaling existing SAT HTTPS workflow",
@@ -1835,8 +1835,26 @@
         "at_utc": "2026-11-21T12:37:11.124465+00:00"
       }
     ],
-    "recovery_complete": false,
-    "x01_closed": false,
-    "load_report": "docs/assessment/performance/load-report.md"
+    "recovery_complete": true,
+    "x01_closed": true,
+    "load_report": "docs/assessment/performance/load-report.md",
+    "post_recovery_demo": {
+      "verified": true,
+      "tables": 10,
+      "invariant_rows": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "db_clock": "2026-11-21T13:15:14.973156+00:00"
+    },
+    "load_cleanup_verified": true,
+    "performance_scaling60": "FAIL; business recovery PASS does not mean performance passed",
+    "phase_evidence": "evidence/assessment/20261121-c3-mechanic/closure.json",
+    "snapshot_restore_or_fault_executed": false
   }
 }

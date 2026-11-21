@@ -1,53 +1,42 @@
-# C3 — Tải trên AWS thật
+# C3 — Tải AWS thật ngày21/11/2026
 
-Target https://labseat.id.vn, ngày21/11/2026. **Đang thực hiện; chưa nghiệm thu toàn bộ C3.** Dùng ca Mechanic riêng180suất, batch `demo-load-mechanic21`, giữ nguyên ca demo có poster. [Backup/mapping/TTL](../functional/dataset.md).
+Target https://labseat.id.vn. **Platform/admission đạt ngưỡng kịch bản; scaling60 FAIL, đã dừng an toàn; recovery30phút và cleanup đã thực hiện.** Không kết luận đạt60VU ổn định. Các kết quả này thuộc batch `demo-load-mechanic21` đã thu hồi; gói cấp lại22/11 là chuẩn bị riêng, không phải chạy lại C3.
 
-| Gate | Kết quả đã kiểm |
-| --- | --- |
-| Backup | Logical dump restore/hash/schema27bảng/7invariants PASS; chưa restore chính RDSsnapshot |
-| B3 | SATdemo có sẵn hold/confirm/cancel/QR/CSV/stafflookup/race cuối PASS; dọn45vé thử |
-| B2 | 100distinctuser/session/CSRF; smokeAWS14:15–14:16; hạn22:13:07 ngày21/11 giờVN |
-| Generator | Fargate riêng2vCPU/4GiB ngoàiASG, k6v1.0.0Linux; baselineClockDrift SYNCHRONIZED/bound0,6614495ms |
-| Email | Workerrevision10 disabled/stable; smokejob/deliverySKIPPED, providerattempts0 |
-| Tài nguyên | APImin2/max8, ASGmin2/max6, DBbudget51; targetkhỏe/DB8 trước tải |
-| Metrics | Collector30s, giữ source_atCloudWatch/missing; monitorstale120s/targets/DB/giới hạn |
+Backup logical restore/hash/schema27bảng/7invariants PASS trước thay đổi; snapshotRDS available nhưng chưa restore chính snapshot. Ca Mechanic riêng180suất,100user/token/CSRF riêng đã smokeAWS; demo68suất giữ nguyên. [Backup/mapping](../functional/dataset.md).
 
-## Kết quả theo phase
+Generator Fargate2vCPU/4GiB ngoài ASG, Linuxk6v1.0.0; clockmetadata SYNCHRONIZED. Không nhận Windowscontroller đã sửa NTP. API:10/schema0002_platform/digest `sha256:8cf4b144a8c1260b22ad4a6be6277d5d3b66552cdeda407dab894258243256ee`; không deploy appfix. Worker:10 emaildisabled; trialjob/deliverySKIPPED,attempts0. API2–8task,ASG2–6node,DBstopbudget51connections; không chỉnhdesired/policy để dựng autoscaling.
 
-| Phase | Kết quả | Trạng thái |
-| --- | --- | --- |
-| Baseline5VU | 14:34:00–14:41:01 giờVN;7467requests;17,7647RPS;p95=269,171ms;p99=585,146ms;max1276,048ms;HTTPfailure0% | PASS thresholdbaseline |
-| Platform | 18:53:11–19:08:27 giờ VN; 27.106 requests, 29,735 RPS cả setup; 1.801/1.801 workflow hoàn tất; dropped0 | PASS ngưỡng Platform |
-| Admission | 20 và50 VU, đủ5 phút mỗi mức; queueON | PASS ngưỡng checks>99% |
-| Scaling | 60 VU bị dừng sớm do lỗi/độ trễ; không chạy mức cao hơn | FAIL, không đạt đủ hold15 phút |
-| Recovery | Đã bắt đầu quan sát30 phút sau dừng tải; chưa kết luận scale-in cuối | Đang đo |
+## Số đo thực
 
-BaselineRPS là trung bình cả ramp1phút/hold5phút/rampdown1phút, không phải cam kết năng lực. [CSV và chart](../../../evidence/assessment/20261121-c3-mechanic/baseline/). EC2dao động4–5 quanh one-offtooling trước tải không tính là autoscalingC3. Chưa đủ kết luận sức chịu tải hoặc điểm nghẽn; correctness/performance/autoscaling phải đánh giá riêng.
+Giờ Việt Nam ngày21/11. RPS là trung bình trên khoảng ghi được. Baseline và Platform cách nhau vài giờ, không phải chuỗi liên tục.
 
-Mã tải/collector từ Người3 commit e2431f3, bổ sung mapping nhiều user/phòng capacity45 và guard100user/token/CSRF.17testscript PASS chỉ kiểm logic, không thay số đo AWS. Dừng khi sai dữ liệu,0targetkhỏe,5xx>5% trong2phút,DB≥51,API>8/ASG>6 hoặc stale120s. Không chỉnh desired để dựng kết quả.
+| Phase | Khoảng đo | Requests / RPS | Độ trễ/lỗi | Kết luận |
+| --- | --- | --- | --- | --- |
+| Baseline5VU |14:34:00–14:41:01; ramp1/hold5/down1phút |7.467 /17,765 |p95 269,171ms;p99 585,146ms;HTTPerror0 |PASS ngưỡng |
+| Platform |18:53:11–19:08:27;15phút |27.106 gồm setup /29,735 |p95đọc339,745ms/ghi406,087ms;1HTTP502,0,00369% |PASS;1.801workflow hoàn tất,dropped0 |
+| Admission20VU |khoảng19:12–19:17;5phút |5.772 /18,778 |p95HTTP119,985ms;1HTTP502,0,0173%;chờp95 1ms/max5.039ms |PASS checks>99%;1.144confirm/cancel |
+| Admission50VU |khoảng19:19–19:24;5phút |8.267 /26,614 |p95HTTP186,072ms;1HTTP502,0,0121%;chờp95 10.113,95ms/max15.722ms |PASS checks>99%;1.308confirm/cancel |
+| Scaling60VU |19:27:49–19:35:22;dừng trong hold |5.426response ghi được /khoảng12 |189HTTP500=3,4832%;p95nearest-rank5.735,37ms;p9955.978,585ms |FAIL;không đủ hold15phút |
+| Recovery |19:37:22–20:07:23;30phút |Không phát tải nghiệp vụ |API tự3→2,ASG tự6→5,targetkhỏe |OBSERVED tự giảm hai tầng |
 
-Sau tải phải phục hồi queueON, giữ emaildisabled, kiểm probe/7invariants, cleanup đúngmanifest, kiểm10bảng demo và thu hồi Redis/SSM/IAM/task/S3tạm. Các bước này và biểu đồresource/video cuối chưa được đánh dấu hoàn tất. [Runbook](runbook.md), [metrics](observability.md), [B3](../functional/report.md).
+[CSV/chart/summary](../../../evidence/assessment/20261121-c3-mechanic/). Scaling có NDJSON-derived partial-summary, không có k6summary hoàn chỉnh sauSIGTERM. RPS khoảng12 tính trên spanresponse452,31s, không phải throughputsteady đạt ngưỡng. Không chạy100/150/200VU sau lỗi.
 
-## Platform đã hoàn tất — 21/11
+QueueON capacity10/lease120s/heartbeat5s/grace60s; chỉ Platform có cửa sổOFF rồi khôi phụcON. Observer chỉ đọc240mẫu/5s: waitingmax30,admittedmax10,activeReservationsmax3. Đây là maxima lấy mẫu, không phải mọi thời điểm. Queuewait đo sau responsejoin, không gồm latencyHTTPjoin.
 
-P95 đọc **339,745 ms**, ghi **406,087 ms**, đều dưới ngưỡng 500/1.000 ms. Có một HTTP502 ở availability lúc18:55:58, chưa xác định nguyên nhân; HTTP failure khoảng0,00369%, không được mô tả là không có lỗi. Cả1.801 hold, confirm và cancel đều thành công; dropped iterations0. Generator RAM cao nhất438,34 MiB/4GiB, CPU cao nhất3,40% của2vCPU, clock luônSYNCHRONIZED. [Summary và chart Platform](../../../evidence/assessment/20261121-c3-mechanic/platform/).
+## Autoscaling và giới hạn
 
-Verify RDS sau Platform xác nhận demo không đổi và7invariants0. Đã bật lại queue:capacity10,lease120s,heartbeat5s,grace60s;1.802job/delivery của batch đềuSKIPPED, attempts0, toàn bộ vé thửCANCELLED. PolicyCPU tự tăng API2→3, policyrequests tiếp tục3→5; đã có5running/5healthy, không chỉnhdesired thủ công. ASG4→5 do managedcapacity80%; cần đối chiếu bài scaling/recovery trước khi nhận hoàn tất hai tầng.
+API tự2→3 doCPU18:59:01, rồi3→5 do requestpolicy19:01:43; đã đạt5running/5healthy. ASG tự4→5 lúc18:55:30, rồi5→6 lúc19:10:25. ASG đã dao động nền4–5 do capacityprovider/tooling; không gán mọi activity cho tải. Sau tải, API3→2 policy19:49:18/fulfilled19:49:50; ASG6→5 policy19:55:32/termination19:56:31. Không chỉnhdesired thủ công. Sau recovery:2task/2healthy,ASG5,DBkhoảng8connections; không nhận đã về minimum2 hoặc đúng4node. [Activities/charts](../../../evidence/assessment/20261121-c3-mechanic/resources/).
 
-## Admission đã hoàn tất
+Scaling60 chạm32target5xx/358request trong1phút=8,9% và targetresponse gần30s; operator dừng riêng generator. CPUAPI khoảng89% đầu ramp,DBkhoảng10%/connections≤15,desired/running3,pending0; snapshotENI không thấy cạn chỗ. **Chưa có stacktrace đủ để xác nhận rootcause.** Không khẳng định DBpooldeadlock hoặcCPU là nguyên nhân sâu; cần điều tra app trước tăng tải tiếp. Ba502 lẻ khớp ELB5XX phút tương ứng; [AWS phân biệt ELB5XX phát sinh ở loadbalancer](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-cloudwatch-metrics.html), không gộp với target500 của60VU.
 
-- 20 VU:5.772 requests,18,778 RPS;1.144 admitted/confirm/cancel; p95 HTTP119,985 ms, p95 chờ1 ms, max chờ5.039 ms. Một lỗi HTTP502 trên availability; tỷ lệ HTTP failure0,0173%.
-- 50 VU:8.267 requests,26,614 RPS;1.308 admitted/confirm/cancel; p95 HTTP186,072 ms, p95 chờ10.113,95 ms, max15.722 ms. Một lỗi request; failure0,0121%. Không tăng capacity hàng chờ10.
-- 240 mẫu chỉ đọc mỗi5 giây: waiting cao nhất30, admitted cao nhất10, active reservations cao nhất3. Đây là maxima lấy mẫu, không phải trace bao quát mọi thời điểm. [CSV/chart queue](../../../evidence/assessment/20261121-c3-mechanic/resources/admission.svg).
-- Sau admission, verify RDS19:27:07 giờ Việt Nam xác nhận demo không đổi và7invariants0. Probe SAT demo hiện hữu trước scaling đã giữ–xác nhận–QR–hủy thành công, availability trả về như trước. Phiên student498 cũ được đăng nhập lại; không đổi mật khẩu.
-- Check ENI/placement lúc19:30:6t3.small, tối đa3ENI/node; attached2/3/1/3/1/1. Không có placement constraint; spread theoAZ rồi binpackMEMORY. Đây là snapshot trong ramp, không ghi ngược là đã đo trước baseline.
+Guard cũ yêu cầu từng bucket10s đều>5%, có thể phản ứng muộn hơn tỷ lệ gộp2phút. Đã sửa weightedwindow,4unit safetytests PASS trong runtime không mạng; không nhận đã rerun60VU.17testscript PASS chỉ kiểm công cụ. Sourcehash thực thi giữ trong runsummary, khác source sửa cho lượt sau.
 
-## Scaling60 bị dừng an toàn — kết quả không đạt
+Collector cũ dùng sai namespaceCapacityProviderReservation; giữ MISSING gốc, xuất readback lịch sử namespaceđúng riêng có provenance. Capacityprovider target80%/placement spreadAZ trước binpackMEMORY cần rà soát theo [AWS ECS](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/cluster-auto-scaling.html); đây là hướng điều tra, cấu hình chưa đổi. [Chất lượng metrics](observability.md).
 
-Lượt19:27:49–19:35:22 giờ Việt Nam bị dừng sau khoảng7phút32giây, chưa hoàn tất hold15phút. Trong một phút CloudWatch ghi32target5xx/358requests (8,9%) và target response gần30giây. Operator dừng sớm để bảo vệ production, không đợi đủ12bucket; không tăng100/150/200VU và không đổi desired/policy/limits. [NDJSON-derived partial summary](../../../evidence/assessment/20261121-c3-mechanic/scaling60/partial-summary.json) giữ lỗi và toàn bộ các chart đã thu; không có k6summary hoàn chỉnh sauSIGTERM.
+## Hậu kiểm/cleanup
 
-Bộ dừng cũ kiểm từng bucket10giây đều vượt5%, chặt hơn ý nghĩa tỷ lệ gộp2phút nên có thể phản ứng muộn. Đã sửa phép gộp và4unit safety tests đạt trong runtime không mạng/credentials. Thay đổi này phục vụ lượt sau; không nhận là đã chạy lại60VU hoặc đã sửa lỗi sản phẩm. Run hash nguồn cũ giữ nguyên trong receipt.
+SATdemo có sẵn hold→confirm→QR→cancel trước tải, giữa phase và sau dừng; availability trở lại. DBhậu kiểm20:15:14:scope tải còn0user/event/schedule/seat/reservation;10bảng nghiệp vụ demo theo PKgốc không đổi (chỉ bỏ qua users.last_activity_at),7invariants0.12poster/map demo đọc được/SHAkhớpbackup. Không nhận toàn27bảng production byte-identical sau đăng nhập/outbox/audit.
 
-Probe HTTPS SAT demo sau dừng tải đã giữ–xác nhận–QR–hủy thành công, availability trở về như trước. Hậu kiểm RDS/cleanup đang thực hiện. Recovery chạy riêng30phút để quan sát tự giảm task/EC2; checkpoint này chưa đánh dấu hoàn tất.
+Đã cleanup100user/1event/1schedule/4vùng/4.254vé tảiCANCELLED,job/deliverySKIPPED attempts0; dọn2véSATprobe bổ sung. Dọn5Rediskey đúngepoch/ca,2ảnh bản sao hiện hành/registryrow; versionảnh lịch sử giữ retention. Đã xóa Redisoperator tạm/2SSMparams/inlineIAMpolicytạm, giữuser/policygốc. Đã xóa18versionstaging/deregister20taskdefinitiontạm, không sửaAPI:10/backup/ảnhdemo. Token/ZIP/master cũ đã loại khỏi bàn giao. [Receipt](../../../evidence/assessment/20261121-c3-mechanic/closure.json).
 
-Ba lỗi502 nhỏ ở Platform/admission khớp ba datapointELB5XX tại các phút tương ứng. Theo [định nghĩa AWS](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-cloudwatch-metrics.html), ELB5XX là lỗi phát sinh từ load balancer; chưa có root cause của lỗi lẻ. Mức60VU có target5xx và độ trễ~30giây; chưa có stacktrace để khẳng định nguyên nhân sâu, không suy ra RDS cạn tài nguyên chỉ từ latency.
+[Runbook](runbook.md),[B3](../functional/report.md). B3video và X02fault/X03restore chưa hoàn tất; recovery30phút này không thay fault/PITR/S3restore. Gói22/11 cóID/TTL riêng, chưa chạy tải, giữ chờ đo và cleanup sau đó.

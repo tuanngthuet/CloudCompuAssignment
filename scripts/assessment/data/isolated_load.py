@@ -133,7 +133,7 @@ def prepare(db,scope,master,close_at):
                 full_name=f'Tài khoản tải {i+1:03}',cccd=f'98{uid.int%10**10:010}',
                 email=scope.username(i)+'@example.invalid',email_verified_at=clock))
     if not db.get(Room,scope.room):db.add(Room(id=scope.room,name='['+scope.name+'] Phòng chịu tải riêng'))
-    if not db.get(Event,scope.event):db.add(Event(id=scope.event,name='Ca chịu tải riêng 21–22/11/2026 (không dùng demo)',
+    if not db.get(Event,scope.event):db.add(Event(id=scope.event,name=f'Ca chịu tải riêng [{scope.name}] (không dùng demo)',
         session_type='practice',status='ACTIVE',description='Synthetic load fixture; namespace='+scope.name,
         venue='Khu vực kiểm thử tách riêng',address='Synthetic — không phải địa điểm thi thật'))
     db.flush()
@@ -296,7 +296,7 @@ def mechanic_map(db,scope,output):
     db.execute(delete(Seat).where(Seat.room_id==scope.room,Seat.id.in_(scope.seats[4:])))
     copied.update(image_key=image_key,assessment_artwork='load-mechanic',source_room_id=str(MECHANIC_ROOM),source_layout_sha256=source_hash)
     target.layout=copied;target.revision+=1
-    event.name='Mechanic — Ca chịu tải riêng 21–22/11/2026'
+    event.name=f'Mechanic — Ca chịu tải riêng [{scope.name}]'
     event.description=('Synthetic load fixture; namespace='+scope.name+
         '. Poster/sơ đồ sao chép từ Mechanic demo, không dùng phòng/lịch demo. '+
         'Ca tải: 4 phòng ×45 =180 suất. Số 17 thí sinh in trong ảnh là cấu hình demo gốc, không phải capacity ca tải. '+

@@ -22,7 +22,7 @@
       0,
       0
     ],
-    "db_clock": "2026-11-21T07:31:07.746388+00:00"
+    "db_clock": "2026-11-21T13:15:14.973156+00:00"
   },
   "smoke": {
     "started_at_utc": "2026-11-21T07:15:20.958272+00:00",
@@ -62,5 +62,37 @@
   "current_scope": "Existing demo events for functional checks; isolated Mechanic event for load only",
   "handoff_credentials": "PRIVATE; not included",
   "full_load_assessment_complete": false,
-  "screenshot": "screenshots/mechanic-current.jpg"
+  "screenshot": "screenshots/mechanic-current.jpg",
+  "fixture_status": "RETIRED_AFTER_MEASUREMENTS",
+  "sessions_currently_valid": false,
+  "handoff_used_for_actual_aws_measurements": true,
+  "recovery_observation": "COMPLETED_30_MINUTES",
+  "cleanup": {
+    "execute": true,
+    "before": {
+      "users": 100,
+      "events": 1,
+      "schedules": 1,
+      "seats": 4,
+      "reservations": 4254
+    },
+    "manifest_id": "0a59f708-244e-5d0d-80d1-c3907727db17",
+    "foreign_reference_checks": "PASS",
+    "demo_unchanged": {
+      "verified": true,
+      "tables": 10,
+      "invariant_rows": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "db_clock": "2026-11-21T12:48:56.932765+00:00"
+    }
+  },
+  "next_handoff": "demo-load-mechanic22; new IDs and sessions required",
+  "old_endpoints_rechecked_404_at_utc": "2026-11-21T17:32:07.638160+00:00"
 }

@@ -1,5 +1,7 @@
 # B2 — Ảnh sơ đồ và gói dữ liệu/session bàn giao
 
+**Hiện hành22/11: batch `demo-load-mechanic22`; ca21/11 đã cleanup/404. Xem mục cuối để lấy gói mới; các lệnh batch21 phía trên là lịch sử.**
+
 Đầu ra hướng dẫn/session helper trong thư mục data theo B2 của [kế hoạch sprint](../../../docs/sprints/ke-hoach-nghiem-thu-4-ngay.md). B1 được ghi tại [dataset.md](../../../docs/assessment/functional/dataset.md). Hiện trạng và bằng chứng dưới đây đối chiếu ngày **18/11/2026**; không phải xác nhận phiên vẫn còn hiệu lực ở lần sử dụng tiếp theo.
 
 ## Bước 1. Chuẩn bị và ghi nguồn ảnh
@@ -89,7 +91,7 @@ Yêu cầu mới đã được thực hiện bằng `demo_backup.py`, `protect-b
 
 1. Dừng thao tác ghi của bài tải; chọn một DB PostgreSQL 16.13 **mới, rỗng**, không chỉ định DB production. Tải đúng `logical_database.bucket/key/version_id` trong manifest bằng `aws s3api get-object --bucket <bucket> --key <key> --version-id <version> <file-private.aesgcm>`. Đối chiếu SHA-256 ciphertext trong manifest.
 2. Giải mã vào thư mục private bằng `protect-backup.ps1 -Mode Decrypt -InputFile <file-private.aesgcm> -KeyFile <demo-backup.key> -OutputFile <restore.dump>`. Công cụ kiểm GCM và SHA plaintext, từ chối ghi đè. SHA plaintext phải trùng dataset.
-3. Dùng `pg_restore --exit-on-error --no-owner --no-acl --dbname=<DB-moi> <restore.dump>`; cấp role/grant cần thiết cho DB mới riêng vì dump không mang owner/ACL. Không chạy `--clean` vào production.
+3. Chỉ trên DB disposable mới đã xác nhận rỗng, nếu dump có `CREATE SCHEMA public`, bỏ schema public rỗng trước bằng `DROP SCHEMA public` (không CASCADE; phải dừng nếu có dữ liệu). Dùng `pg_restore --exit-on-error --no-owner --no-acl --dbname=<DB-moi> <restore.dump>`; cấp role/grant cho DB mới riêng vì dump không mang owner/ACL. Không chạy DROP hoặc `--clean` vào production.
 4. Với từng record trong `assets-backup.private.json`, tải đúng `backup_key/backup_version`, đối chiếu SHA/content type rồi phục hồi vào bucket/prefix **mới** tương ứng `reference`. App thử phải trỏ DB và storage thử riêng, email disabled. Kiểm 27 bảng/hash, schema/constraints và 7 truy vấn `scripts/tests/db-invariants.sql`, sau đó smoke app trước khi quyết định dùng bản phục hồi.
 5. Lựa chọn thứ hai là restore snapshot RDS sang DB identifier mới, private subnet/security group và secret thử riêng. Lượt này **chưa kiểm restore snapshot RDS**, chỉ logical dump đã được restore thực. Không tự đổi endpoint/secret production. Sau sự cố, việc chuyển production sang bản phục hồi cần được chốt cùng nhóm để tránh ghi đè dữ liệu mới hơn backup.
 
@@ -126,3 +128,13 @@ Batch `demo-load-mechanic21`, 4vùng ×45 =180 suất; poster/sơ đồ sao ché
 Stage `mechanic-map` có ownership/cross-scope/history guards, copy và kiểm hash ảnh. Không chạy stage này khi đang có vé hoạt động hoặc bài tải đang chạy. Ca Vật lý cũ đã cleanup; không chạy lại `physics-map` để tái tạo nó. Runner mặc định batch Mechanic; mọi lệnh bàn giao/cleanup vẫn nên ghi rõ `-Batch` và manifest.
 
 Ba test an toàn chọn lọc trên backup restore PostgreSQL16.13 đạt3PASS: enum fail-closed; fixture/session/cleanup guard; clone Mechanic/idempotency/100phiên và bảo toàn demo. Test disposable không thay smoke AWS. Xem cấu hình, hạn phiên và trạng thái cleanup thực tại [dataset](../../../docs/assessment/functional/dataset.md).
+
+## Trạng thái sau lượt C3 ngày21/11
+
+Batch `demo-load-mechanic21` đã cleanup sau các bài đo; ZIP/phiên cũ không còn hợp lệ. Các lệnh verify/sessions/smoke phía trên mô tả thao tác khi fixture còn tồn tại. Muốn chạy lại phải có backup được kiểm chứng, prepare một fixture riêng với CloseAt mới, áp dụng mechanic-map rồi cấp phiên/smoke; không sửa ca demo. Không chạy cleanup hoặc nhận gói cũ là sẵn sàng cho lượt mới.
+
+## Gói hiện hành22/11 — thay ca Mechanic404 đã thu hồi
+
+Batch `demo-load-mechanic22` đã prepare/mechanic-map trênAWS,180suất, không sửa ca Mechanic demo. Không prepare lại hoặc dùng ID/ZIP21/11. [ID/hạn phiên/backup đã kiểm](../../../docs/assessment/functional/dataset.md#bàn-giao-cấp-lại-ngày22112026--mechanic-riêng-mới). ZIP private theo yêu cầu dùng `synthetic_sessions.json` (underscore); file nguồn nội bộ của runner vẫn `synthetic-sessions.json`. Trỏ SESSIONS_FILE vào đúng file đã giải nén, không đổi nội dung token/expiry.
+
+Khi cần cấp lại, dừng lượt đo cũ, mở tunnelSSM/TLS và dùng `run-isolated-load.ps1 -Stage sessions -Batch demo-load-mechanic22 -MinimumValidSeconds 21600 -Execute`, rồi `-Stage smoke` cùng batch/minimum. Đóng lại gói4file/checksum sau smoke; chạy `package.private.py` trong thư mục private batch của Người2 để tạo bản delivery underscore mới. Cấp lại thu hồi100phiên cũ; phải báo người chạy dùng ZIP mới. Các lệnh batch21/11 bên trên chỉ còn là lịch sử. Load-master/backupkey tách khỏi ZIP, không gửi cả thư mục private hoặc commit credentials. Lượt22/11 mới chuẩn bị, chưa chạy chịu tải và chưa cleanup.

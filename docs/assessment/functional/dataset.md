@@ -1,5 +1,7 @@
 # B1 — Công cụ seed và bộ dữ liệu synthetic
 
+**Trạng thái hiện hành22/11: dùng batch `demo-load-mechanic22`; ca tải21/11 đã thu hồi. Xem mục bàn giao cuối tài liệu để lấy ID/hạn phiên mới.**
+
 Đầu ra `functional/dataset.md` theo B1 trong [kế hoạch sprint](../../sprints/ke-hoach-nghiem-thu-4-ngay.md). Ghi nhận ngày **18/11/2026**. Hướng dẫn B2 nằm tại [scripts/assessment/data/README.md](../../../scripts/assessment/data/README.md); số liệu kiểm chứng tại [evidence summary](../../../evidence/assessment/b1b2-20261117a/summary.md).
 
 ## Bước 1. Xác định đầu vào, target và phạm vi batch
@@ -109,7 +111,7 @@ Các kết quả disposable trong mục này là lịch sử. Ca demo giữ nguy
 
 ## Cập nhật sau yêu cầu sao lưu và tách ca tải — 21/11/2026
 
-Mục này thay thế riêng trạng thái “chưa tách batch production” ở trên. Bộ demo `b1b2-20261117a` được giữ nguyên; batch tải hiện hành là `demo-load-mechanic21`; batch `demo-load-20261121a` đã thu hồi. Không chạy lại seed/reset bộ demo, không đổi lịch/ảnh/tài khoản demo để dùng làm ca tải.
+Mục này thay thế riêng trạng thái “chưa tách batch production” ở trên. Bộ demo `b1b2-20261117a` được giữ nguyên; batch tải đã dùng ngày21/11 là `demo-load-mechanic21` (đã cleanup); batch `demo-load-20261121a` đã thu hồi. Không chạy lại seed/reset bộ demo, không đổi lịch/ảnh/tài khoản demo để dùng làm ca tải.
 
 ### Backup trước khi tạo dữ liệu tải
 
@@ -123,7 +125,7 @@ Dump đã mã hóa AES-256-GCM, upload vào S3 private rồi tải xuống, gi�
 
 Đối chiếu constraints giữ raw DDL và chỉ chuẩn hóa hai enum check của `users` khi pg_dump chuyển vị trí cast varchar/text tương đương. Kiểm demo sau thao tác so sánh các PK gốc của 10 bảng nghiệp vụ; chỉ bỏ qua `users.last_activity_at` là metadata đăng nhập. Backup đầy đủ vẫn chứa trường này và toàn bộ 27 bảng. Không gọi kiểm nghiệp vụ này là byte-identical toàn DB: phiên đăng nhập/outbox/audit vận hành có thể phát sinh bình thường.
 
-### Ca tải hiện hành và gói 100 phiên — đối chiếu AWS ngày 21/11
+### Ca tải đã dùng và gói 100 phiên — đã thu hồi sau bài đo21/11
 
 | Mục | Giá trị đã kiểm |
 | --- | --- |
@@ -151,3 +153,31 @@ Sau lượt kiểm SAT, verify AWS lúc14:31:07 xác nhận 10 bảng nghiệp v
 - Ca tải Vật lý cũ `demo-load-20261121a` đã cleanup theo manifest:100user,1event,1lịch,34vùng và3reservation thử đã hủy. Demo unchanged và7 invariants0. Gói phiên cũ không còn hợp lệ. **Giữ backup gốc** trong thư mục batch cũ để khôi phục demo.
 - B3 kiểm lại bằng SAT demo có sẵn;45reservation thử đã hủy và45job SKIPPED được dọn đúng scope, không đổi event/lịch/vùng hoặc vé gốc. Chi tiết ở [report.md](report.md).
 - Các fixture sắp mở/check-in và video chưa được kiểm đủ tại cửa sổ trình diễn vẫn ghi thiếu; không tạo thêm ca demo để thay yêu cầu này.
+
+### Sau bài đo: ca tải đã thu hồi
+
+Đã cleanup đúng manifest `0a59f708-244e-5d0d-80d1-c3907727db17`:100user,1event,1lịch,4vùng và4.254reservation thử đãCANCELLED. Trước khi dọn,4.254job/delivery đềuSKIPPED, attempts0. Guard ngoài scope và kiểm10bảng demo/7invariants PASS trong lượt cleanup. Queue key chỉ dọn đúng ca tải, không sửa globalready hoặc policy. Recovery30phút đã kết thúc:API tự3→2/ASG6→5; hậu kiểmDB20:15:14 ngày21/11 đạt, xem báo cáoC3.
+
+Gói phiên nêu trên là bằng chứng đã cấp/smoke và dùng cho C3, **không còn dùng đăng nhập sau cleanup**. Ảnh Mechanic trong evidence là snapshot trước khi thu hồi, không phải ca đang còn trên web. Các ca demo gốc và backup mã hóa vẫn giữ. Muốn Người3 đo một lượt mới cần chuẩn bị ca riêng/gói phiên mới và smoke lại, không dùng ZIP đã thu hồi.
+
+## Bàn giao cấp lại ngày22/11/2026 — Mechanic riêng mới
+
+**Gói hiện hành: `demo-load-mechanic22`.** Gói21/11 đã thu hồi sau đo và hết hạn, không dùng lại ID hoặc ZIP cũ. Kiểm DB lúc00:32:07 22/11/2026 xác nhận event/room/schedule cũ đều0; hai route hợp lệ phòng/ca trả404 khi kiểmHTTP lại, event cũ vắng trong /events, phù hợp receipt cleanup đúng scope. Cleanup đã dọn audit con synthetic, nên không nhận là còn applicationaudit xóa; receipt thực thi được giữ private. Mechanic demo gốc vẫn CANCELLED,4×17=68, không được chuyển thành ca tải.
+
+| Mục hiện hành | Giá trị |
+| --- | --- |
+| Event | `85118912-6af6-5df9-aaa6-fe84bb35b399` |
+| SESSION_ID | `bc3967ba-bb2c-528e-be60-a4eac4b8c15c` |
+| Room | `19cd2275-f986-511a-9d4f-189886579b6f` |
+| Manifest cleanup | `087bb044-3175-5793-96b7-5fa3a584ecdc` |
+| Sức chứa |4 vùng×45=180;25user riêng/vùng; mapping đủ100hàng trong manifest private |
+| Đóng đăng ký |00:00:00 25/11/2026, giờ Việt Nam; ca bắt đầu sau đóng1giờ |
+| Hạn phiên bảo thủ |**08:38:38 22/11/2026**, giờ Việt Nam; đọc expires_at từng phiên, không chỉnh hạn trong file |
+
+100user/token/CSRF riêng đã cấp mới, yêu cầu tối thiểu6giờ ở lúc cấp và smoke. SmokeAWS kiểm100 /me, normalpasswordlogin/logout, hold→confirm→QR→cancel, queueleave; emailSKIPPED/attempts0. Hạn là TTL thực của app, không kéo dài đến ngày đóng đăng ký. Nếu chạy muộn hoặc không đủ cả bài đo, cấp lại và smoke sát giờ; không dùng gói hết hạn.
+
+Gói private ở `.local/assessment/demo-load-mechanic22/delivery/`: ZIP gồm đúng `manifest.json`, `synthetic_sessions.json`, `smoke-result.json`, `README.md`. Mapping đủ user/ca/phòng/vùng nằm trong manifest; checksum ZIP ở `handoff-receipt.json`. Load-master ở `load/load-master.txt` của batch, tách khỏi ZIP; README nêu công thức HMAC và quy trình cấp tài khoản riêng. Không có master hoặc backupkey trong ZIP. Không nhận Người3 đã ký nhận hoặc lượt tải mới đã chạy.
+
+Backup vẫn là bản21/11 trước tải, giữ snapshotRDS available/encrypted và logicaldumpAES-GCM trênS3private. Ngày22/11 đã tải đúngversion, kiểm cipher/plainSHA, giải mã, restore thựcPG16.13:27bảng/hash/schema0002_platform/constraints khớp,7invariants0;27ảnh nguồn/bản sao theoversion/hash đạt. Đây là xác minh lại backup cũ, không gọi là snapshot toànDB mới22/11. `delivery/backup-proof/` chứa manifest/fingerprint/checksum/restoreverification/audit404/demoproof; dump và key không đưa vào ZIP. Chỉ bỏ qua metadata users.last_activity_at khi so10bảng nghiệp vụ demo; không nhận toàn27bảng production byte-identical sau vận hành.
+
+[Receipt công khai đã loại credentials](../../../evidence/assessment/demo-load-mechanic22/results.json). Ca riêng mới đang giữ cho lượt tải tiếp; cleanup sau khi dừng đo, không xóa ngay khi bàn giao. Các kết quả C3 ngày21/11 thuộc ca cũ, không chuyển sang gói22/11.

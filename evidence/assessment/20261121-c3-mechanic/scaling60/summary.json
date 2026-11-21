@@ -29,5 +29,19 @@
     "clock_statuses": [
       "SYNCHRONIZED"
     ]
+  },
+  "post_phase_demo": {
+    "verified": true,
+    "tables": 10,
+    "invariant_rows": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "db_clock": "2026-11-21T12:40:56.787841+00:00"
   }
 }

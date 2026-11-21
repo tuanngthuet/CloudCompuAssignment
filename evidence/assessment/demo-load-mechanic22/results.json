@@ -1,0 +1,184 @@
+{
+  "batch": "demo-load-mechanic22",
+  "ready": true,
+  "packaged_at_utc": "2026-11-21T17:48:46.712078+00:00",
+  "base_url": "https://labseat.id.vn",
+  "event_id": "85118912-6af6-5df9-aaa6-fe84bb35b399",
+  "session_id": "bc3967ba-bb2c-528e-be60-a4eac4b8c15c",
+  "room_id": "19cd2275-f986-511a-9d4f-189886579b6f",
+  "manifest_id": "087bb044-3175-5793-96b7-5fa3a584ecdc",
+  "capacity": 180,
+  "distinct_users": 100,
+  "distinct_sessions": 100,
+  "distinct_csrf": 100,
+  "assigned_per_room": [
+    25,
+    25,
+    25,
+    25
+  ],
+  "sessions_expire_at": "2026-11-22T01:38:38.182493+00:00",
+  "registration_close_at": "2026-11-25T00:00:00+07:00",
+  "zip_sha256": "caf50e13c22615cf2c6753c7a99076c1697e0f3c7239ff6b65f69dbc9f3ebbaf",
+  "master_in_zip": false,
+  "backup_key_in_zip": false,
+  "load_started": false,
+  "previous_batch_audit": {
+    "at_utc": "2026-11-21T17:32:07.638160+00:00",
+    "old_batch": "demo-load-mechanic21",
+    "old_counts": {
+      "events": 0,
+      "rooms": 0,
+      "lab_sessions": 0
+    },
+    "old_cleanup_receipt": "c3-aws-mechanic-20261121/load-cleanup-executed.private.json",
+    "audit_note": "Exact-scope cleanup deletes its synthetic child audit rows; cleanup execution receipt is retained. No surviving application deletion audit is asserted.",
+    "source_demo": {
+      "event_id": "35f3e9ce-9e36-5345-90eb-40b38b5d6dc6",
+      "room_id": "6109bc54-94ca-587a-abae-012152b5c769",
+      "status": "CANCELLED",
+      "capacity": 68,
+      "zones": 4
+    },
+    "demo_unchanged": {
+      "verified": true,
+      "tables": 10,
+      "invariant_rows": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "db_clock": "2026-11-21T17:32:03.896425+00:00"
+    },
+    "https_old_endpoints": {
+      "/rooms/ca17a86c-2c6a-5fc4-91f7-5e2c01cbaa64/seat-map": 404,
+      "/lab-sessions/3d7ca8f8-07fa-508e-abc7-3f0a7bf69d46/seats": 404
+    },
+    "readyz_status": 200,
+    "old_event_absent_from_public_events": true,
+    "new_event_present_on_production": true,
+    "new_endpoints": {
+      "/rooms/19cd2275-f986-511a-9d4f-189886579b6f/seat-map": 200,
+      "/lab-sessions/bc3967ba-bb2c-528e-be60-a4eac4b8c15c/seats": 200
+    },
+    "http_rechecked_at_utc": "2026-11-21T17:48:27.926411+00:00"
+  },
+  "smoke": {
+    "started_at_utc": "2026-11-21T17:42:28.699798+00:00",
+    "base_url": "https://labseat.id.vn",
+    "unique_users": 100,
+    "distinct_sessions": 100,
+    "distinct_seats": 4,
+    "capacity": 180,
+    "queue_enabled": true,
+    "layout_type": "image",
+    "normal_password_login_logout": "PASS",
+    "hold_confirm_qr": "PASS",
+    "email": {
+      "job": "SKIPPED",
+      "delivery": "SKIPPED",
+      "provider_attempts": 0
+    },
+    "cancel_queue_leave": "PASS",
+    "sessions_expire_at": "2026-11-22T01:38:38.182493+00:00",
+    "finished_at_utc": "2026-11-21T17:43:05.612251+00:00",
+    "verified": true,
+    "demo_unchanged": {
+      "verified": true,
+      "tables": 10,
+      "invariant_rows": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "db_clock": "2026-11-21T17:43:13.206075+00:00"
+    }
+  },
+  "demo_after_prepare": {
+    "verified": true,
+    "tables": 10,
+    "invariant_rows": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "db_clock": "2026-11-21T17:45:01.266980+00:00"
+  },
+  "artwork": {
+    "source_room_id": "6109bc54-94ca-587a-abae-012152b5c769",
+    "source_event_id": "35f3e9ce-9e36-5345-90eb-40b38b5d6dc6",
+    "source_layout_sha256": "90486d9f08423079f68a812be7c6ea0e433f132325b72c357e4c05726d6bc905",
+    "image_sha256": "275a4fab45dc28ee77530d2ece6a7642f6f867565a444afbd212a32a3533f41b",
+    "poster_sha256": "22b40371ad2246547bd4a33ebec323eee98652ce84119acf1e95ae3fd4906287",
+    "zones": 4,
+    "capacity": 180,
+    "source_capacity": 68,
+    "source_unchanged": true,
+    "preserved_cancelled_reservations": 0,
+    "demo_unchanged": {
+      "verified": true,
+      "tables": 10,
+      "invariant_rows": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "db_clock": "2026-11-21T17:37:07.450152+00:00"
+    }
+  },
+  "backup": {
+    "original_run": "demo-load-20261121a",
+    "logical_plain_sha256": "b4da172beb998ff9c95c14148a3ac757a3a7d0b54b8253442bcd652abcee27e8",
+    "encrypted_sha256": "d6266b629bf4f261846c991fbb91ddf23a779d182bcff4a09eb6455a951f7a12",
+    "source_fingerprint_sha256": "a0af988a455f2cd37d7cf9987749977be7e2c820c4dc3eb9a4e48c9136c9591a",
+    "demo_fingerprint_sha256": "b5b93662b72621544653b9364a91d871f1ac44c025f2a84cb1735e37b5c24675",
+    "rds_snapshot": {
+      "created_at": "2026-11-21T03:12:06.996+07:00",
+      "status": "available",
+      "private": true,
+      "encrypted": true,
+      "restore_tested": false,
+      "id": "labseat-demo-before-load-20261120t201159z"
+    },
+    "logical_restore_reverified": {
+      "verified": true,
+      "at_utc": "2026-11-21T17:32:09.745525+00:00",
+      "tables": 27,
+      "schema": "0002_platform",
+      "constraints_sha256": "8b9cd4fb33507ca251ac7efa5bdfd9563355ab6f0d8403997e94fca5496051d2",
+      "invariant_rows": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    "assets_reverified": {
+      "verified": true,
+      "count": 27,
+      "verified_at_utc": "2026-11-21T17:33:04.822200+00:00"
+    },
+    "note": "Retained pre-load backup from21/11, downloaded by exact S3version, decrypted/hash-checked and restored again22/11 before creating the new fixture. Not a new full-production snapshot at handoff time."
+  },
+  "delivery": "Private local package; no credentials/master/decryptionkey committed; no third-party receipt claimed",
+  "cleanup": "Pending after the next load run; do not delete the new fixture before measurement"
+}
