@@ -1,0 +1,24 @@
+{
+  "phase": "scaling60",
+  "result": "FAIL_SAFETY_ABORT",
+  "complete_15_minute_hold": false,
+  "recorded_requests": 5426,
+  "recorded_failed_requests": 189,
+  "recorded_failure_ratio": 0.034832288978990045,
+  "observed_response_span_seconds": 452.311402,
+  "recorded_rps_over_response_span": 11.99616011448679,
+  "latency_nearest_rank_ms": {
+    "p95": 5735.37053,
+    "p99": 55978.585216,
+    "max": 58420.368327
+  },
+  "status_counts": {
+    "200": 5237,
+    "500": 189
+  },
+  "route_counts": {
+    "/events": 2728,
+    "/lab-sessions": 2698
+  },
+  "note": "Derived from recorded NDJSON after SIGTERM; k6 summary export absent; not a completed steady-state benchmark"
+}

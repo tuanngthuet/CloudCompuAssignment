@@ -150,3 +150,11 @@ Các điều kiện bắt buộc trước khi khởi động C3:
 5. Runner k6 nằm ngoài ASG, thời gian UTC đồng bộ, CPU/RAM/network không bão hòa trong smoke; có baseline nhẹ và khả năng ghi request stream nhiều API task.
 
 **Bàn giao sang C2:** theo [kế hoạch bốn ngày](../../sprints/ke-hoach-nghiem-thu-4-ngay.md), bước tiếp theo là rà soát email runbook và `booking.js`/`platform.js`, chuẩn bị chế độ `SESSIONS_FILE` từ B2 và quy trình ghi nhận backend/task definition trước–sau. Việc đổi backend worker, phát job synthetic và khôi phục Brevo cần cửa sổ vận hành được nhóm phối hợp; chưa thực hiện trong C1.
+
+## Cập nhật metrics thực C3 ngày 21/11/2026
+
+Collector từ Người 3 tại commit `e2431f3`. Lượt 21/11 gồm `20261121T073249Z-C1-1f8bc6` trước baseline và `20261121T114346Z-C1-042424` khi tiếp tục. Raw inventory, metrics, activities và manifest được giữ private; bản public đã loại account, ARN, IP và instance ID.
+
+Các nhóm chỉ số được theo dõi gồm ECS desired/running/pending/CPU/RAM; ASG desired/in-service/activities/registered instances/CPU credits; ALB healthy targets/request/latency/error; RDS connections/CPU/free RAM; Redis; SQS/DLQ/age; trạng thái email `SKIPPED`; và CPU/RAM/clock drift của máy phát tải. Dữ liệu được đối chiếu theo timestamp UTC của từng phase, tách hoạt động tooling/deploy khỏi tải.
+
+Collector lấy mẫu mỗi 30 giây, trong khi CloudWatch dùng bucket 60 giây và có độ trễ. Giá trị `MISSING_OR_DELAYED` không được coi là 0; biểu đồ giữ `source_at` và các khoảng trống. `runner.csv` lấy mẫu mỗi 10 giây và hỗ trợ cgroup v1/v2. `summarize-c3.mjs` tạo RPS, latency, error và workflow theo phút UTC; `chart.py` vẽ biểu đồ tài nguyên từ `metrics.csv`. Không dùng riêng việc CPU tăng để kết luận EC2 đã autoscale. Xem [kết quả C3](load-report.md) và [runbook](runbook.md).

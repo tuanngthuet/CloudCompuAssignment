@@ -1,0 +1,618 @@
+{
+  "task_ids": [
+    "B3",
+    "B4",
+    "B5"
+  ],
+  "scope": "Person2 consumes C1 handoff; read-only observation smoke, no k6/load/fault/restore. C1 owner report is not changed or marked accepted.",
+  "source": {
+    "branch": "assessment/load-resilience",
+    "commit": "7fa878ac7e7995c25777680e44fe2da36d1e619c",
+    "report_url": "https://github.com/tuanngthuet/CloudCompuAssignment/blob/7fa878ac7e7995c25777680e44fe2da36d1e619c/docs/assessment/performance/observability.md",
+    "source_report_status": "BLOCKED",
+    "tool_files": [
+      {
+        "path": "scripts/assessment/observability/collect.py",
+        "source_sha256": "f5349b81976ed890e46b2415c8a771f7d2ae1e8720ea480dc04852178e20d398"
+      },
+      {
+        "path": "scripts/assessment/observability/chart.py",
+        "source_sha256": "a2e23993458db6959287c6e185177e2bd3b3c8d40b8278d14b6f2069dae95ce2"
+      },
+      {
+        "path": "scripts/assessment/observability/runner.ps1",
+        "source_sha256": "f4ce8289719f0017d10d4d7a94a543a1d3fb7ff4e9a0b2b36a3e1b84515d75a0"
+      },
+      {
+        "path": "scripts/assessment/observability/test_local.py",
+        "source_sha256": "adab6f1c3ff5da652e49057bb8560f2f88779df5233e2c82115439fd4aa0d28c"
+      }
+    ],
+    "workspace_commit": "cad42fe3ef51c544d80a60398dddc30996304ced"
+  },
+  "local_date": "2026-11-20 Asia/Saigon",
+  "dependency_map": {
+    "B3": "Indirect: correlate business probes and read-only invariants with timestamped C3/C4/C5/B4/B5 windows; this standalone smoke does not close X01-X03.",
+    "B4": "Direct: sprint lists C1 quota/capacity as an input; DB connections/reserve, RAM/CPU/ENI/placement and restore headroom.",
+    "B5": "Indirect via B4 restored private app; collection does not prove image DB reference or app rendering."
+  },
+  "tool_validation": {
+    "command": "python -m unittest discover -s <private exact C1 source> -p test_local.py -v",
+    "passed": 6,
+    "failed": 0,
+    "scope": "FakeAWS/offline source unit tests; no synthetic metrics published as AWS data."
+  },
+  "observation": {
+    "private_source_run_id": "20261119T172832Z-C1-bedfe3",
+    "requested_interval_seconds": 30,
+    "sample_times": [
+      "2026-11-19T17:29:15.732980Z",
+      "2026-11-19T17:29:45.734073Z",
+      "2026-11-19T17:30:15.735122Z",
+      "2026-11-19T17:30:46.516194Z"
+    ],
+    "sample_count": 4,
+    "rows": 252,
+    "status_counts": {
+      "OBSERVED": 211,
+      "MISSING": 8,
+      "MISSING_OR_DELAYED": 32,
+      "OVER_INTERVAL": 1
+    },
+    "missing_metrics": [
+      "alb.5xx",
+      "alb.elb_4xx",
+      "alb.elb_5xx",
+      "alb.target_4xx",
+      "alb.target_response_seconds",
+      "app.queue_wait_ms",
+      "app.redis_latency_ms",
+      "ecs.az_a.eni_remaining",
+      "ecs.az_b.eni_remaining",
+      "ecs.capacity_reservation"
+    ],
+    "collector_durations_seconds": [
+      25.14,
+      26.72,
+      30.78,
+      29.78
+    ],
+    "api_errors": [],
+    "ranges": {
+      "alb.healthy_cw": {
+        "min": 2.0,
+        "max": 2.0
+      },
+      "alb.healthy_targets": {
+        "min": 2.0,
+        "max": 2.0
+      },
+      "alb.request_count": {
+        "min": 0.0,
+        "max": 0.0
+      },
+      "alb.rps": {
+        "min": 0.0,
+        "max": 0.0
+      },
+      "alb.unhealthy_targets": {
+        "min": 0.0,
+        "max": 0.0
+      },
+      "app.outbox_pending": {
+        "min": 0.0,
+        "max": 0.0
+      },
+      "asg.desired": {
+        "min": 4.0,
+        "max": 4.0
+      },
+      "asg.desired_cw": {
+        "min": 4.0,
+        "max": 4.0
+      },
+      "asg.healthy": {
+        "min": 4.0,
+        "max": 4.0
+      },
+      "asg.in_service": {
+        "min": 4.0,
+        "max": 4.0
+      },
+      "asg.in_service_cw": {
+        "min": 4.0,
+        "max": 4.0
+      },
+      "asg.max": {
+        "min": 6.0,
+        "max": 6.0
+      },
+      "asg.min": {
+        "min": 2.0,
+        "max": 2.0
+      },
+      "collector.duration_seconds": {
+        "min": 25.14,
+        "max": 30.78
+      },
+      "dlq.ApproximateAgeOfOldestMessage": {
+        "min": 0.0,
+        "max": 0.0
+      },
+      "dlq.ApproximateNumberOfMessagesVisible": {
+        "min": 0.0,
+        "max": 0.0
+      },
+      "ec2.cpu_percent": {
+        "min": 1.3657049851906145,
+        "max": 3.1738695034463147
+      },
+      "ec2.node_0296b1ca4a.cpu_credits": {
+        "min": 576.0,
+        "max": 576.0
+      },
+      "ec2.node_42c9e6b1ba.cpu_credits": {
+        "min": 278.63571551666666,
+        "max": 280.56914198333334
+      },
+      "ec2.node_4d68ac84a6.cpu_credits": {
+        "min": 576.0,
+        "max": 576.0
+      },
+      "ec2.node_b13d4081b2.cpu_credits": {
+        "min": 576.0,
+        "max": 576.0
+      },
+      "ecs.api.desired": {
+        "min": 2.0,
+        "max": 2.0
+      },
+      "ecs.api.pending": {
+        "min": 0.0,
+        "max": 0.0
+      },
+      "ecs.api.running": {
+        "min": 2.0,
+        "max": 2.0
+      },
+      "ecs.az_a.instances": {
+        "min": 1.0,
+        "max": 1.0
+      },
+      "ecs.az_a.memory_remaining_mb": {
+        "min": 505.0,
+        "max": 1017.0
+      },
+      "ecs.az_a.running_tasks": {
+        "min": 1.0,
+        "max": 1.0
+      },
+      "ecs.az_b.instances": {
+        "min": 3.0,
+        "max": 3.0
+      },
+      "ecs.az_b.memory_remaining_mb": {
+        "min": 3051.0,
+        "max": 3051.0
+      },
+      "ecs.az_b.running_tasks": {
+        "min": 3.0,
+        "max": 3.0
+      },
+      "ecs.cpu_percent": {
+        "min": 2.537949766715368,
+        "max": 2.5731363941964345
+      },
+      "ecs.memory_percent": {
+        "min": 26.0888671875,
+        "max": 26.095377604166664
+      },
+      "ecs.pending_tasks_cw": {
+        "min": 0.0,
+        "max": 0.0
+      },
+      "ecs.publisher.desired": {
+        "min": 1.0,
+        "max": 1.0
+      },
+      "ecs.publisher.pending": {
+        "min": 0.0,
+        "max": 0.0
+      },
+      "ecs.publisher.running": {
+        "min": 1.0,
+        "max": 1.0
+      },
+      "ecs.registered_instances": {
+        "min": 4.0,
+        "max": 4.0
+      },
+      "ecs.running_tasks_cw": {
+        "min": 2.0,
+        "max": 2.0
+      },
+      "ecs.worker.desired": {
+        "min": 1.0,
+        "max": 1.0
+      },
+      "ecs.worker.pending": {
+        "min": 0.0,
+        "max": 0.0
+      },
+      "ecs.worker.running": {
+        "min": 1.0,
+        "max": 1.0
+      },
+      "queue.ApproximateAgeOfOldestMessage": {
+        "min": 0.0,
+        "max": 0.0
+      },
+      "queue.ApproximateNumberOfMessagesVisible": {
+        "min": 0.0,
+        "max": 0.0
+      },
+      "rds.connections": {
+        "min": 8.0,
+        "max": 8.0
+      },
+      "rds.cpu_percent": {
+        "min": 3.8386597165553646,
+        "max": 3.9129636736805216
+      },
+      "rds.read_latency_seconds": {
+        "min": 0.0,
+        "max": 0.0005369127516778524
+      },
+      "rds.write_latency_seconds": {
+        "min": 0.0,
+        "max": 0.030764331210191082
+      },
+      "redis.node_1.connections": {
+        "min": 6.0,
+        "max": 7.0
+      },
+      "redis.node_1.cpu_percent": {
+        "min": 0.3333333333333333,
+        "max": 0.3491271820448878
+      },
+      "redis.node_1.freeable_memory_bytes": {
+        "min": 358707200.0,
+        "max": 360996864.0
+      },
+      "redis.node_2.connections": {
+        "min": 5.0,
+        "max": 6.0
+      },
+      "redis.node_2.cpu_percent": {
+        "min": 0.2997002997002997,
+        "max": 0.3333333333333333
+      },
+      "redis.node_2.freeable_memory_bytes": {
+        "min": 375328768.0,
+        "max": 376504320.0
+      }
+    },
+    "status": "COLLECTED_WITH_LIMITS",
+    "metric_csv": "metrics.csv",
+    "metric_identity_policy": "EC2 IDs replaced by stable node_SHA256-prefix aliases; dimensions/private request JSON and activity descriptions kept private.",
+    "not_captured": [
+      "DB lock-wait series",
+      "Redis failover events/time",
+      "Request streams proving multiple API tasks served traffic",
+      "k6 workload and runner saturation/clock synchronization under load"
+    ]
+  },
+  "preflight": {
+    "account_match": true,
+    "region": "ap-southeast-2",
+    "collected_at_utc": "2026-11-19T17:28:32.683204Z",
+    "services": {
+      "labseat-lab-api": {
+        "desired": 2,
+        "running": 2,
+        "pending": 0,
+        "rollout": [
+          "COMPLETED"
+        ]
+      },
+      "labseat-lab-worker": {
+        "desired": 1,
+        "running": 1,
+        "pending": 0,
+        "rollout": [
+          "COMPLETED"
+        ]
+      },
+      "labseat-lab-publisher": {
+        "desired": 1,
+        "running": 1,
+        "pending": 0,
+        "rollout": [
+          "COMPLETED"
+        ]
+      }
+    },
+    "api_tasks": [
+      {
+        "az": "ap-southeast-2b",
+        "status": "RUNNING",
+        "health": "HEALTHY",
+        "digest": "sha256:8cf4b144a8c1260b22ad4a6be6277d5d3b66552cdeda407dab894258243256ee"
+      },
+      {
+        "az": "ap-southeast-2a",
+        "status": "RUNNING",
+        "health": "HEALTHY",
+        "digest": "sha256:8cf4b144a8c1260b22ad4a6be6277d5d3b66552cdeda407dab894258243256ee"
+      }
+    ],
+    "same_api_digest": true,
+    "healthy_targets": 2,
+    "asg": {
+      "min": 2,
+      "max": 6,
+      "desired": 4,
+      "in_service": 4,
+      "suspended_processes": []
+    },
+    "rds": {
+      "DBInstanceStatus": "available",
+      "MultiAZ": true,
+      "BackupRetentionPeriod": 1,
+      "LatestRestorableTime": "2026-11-19T17:23:02+00:00"
+    },
+    "queue": {
+      "visible": "0",
+      "in_flight": "0",
+      "visibility_timeout": "120",
+      "redrive_configured": true
+    },
+    "dlq": {
+      "visible": "0",
+      "in_flight": "0",
+      "visibility_timeout": "30",
+      "redrive_configured": false
+    },
+    "sns_confirmed_subscription_count": 1,
+    "alarm_states": {
+      "OK": 14
+    },
+    "capacity_provider": [
+      {
+        "name": "labseat-lab",
+        "status": "ACTIVE",
+        "managed_scaling": "ENABLED"
+      }
+    ]
+  },
+  "db_budget_supplement": {
+    "checked_at_utc": "2026-11-19 17:29:35.882333+00:00",
+    "schema_revision": "0002_platform",
+    "invariant_violations": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "track_commit_timestamp": "off",
+    "max_connections": 79,
+    "superuser_reserved_connections": 3,
+    "reserved_connections": 2,
+    "client_connections_all_databases": 9,
+    "client_connections_current_database": 9,
+    "configured_connection_budget": 66,
+    "planned_rolling_ceiling": 65,
+    "non_reserved_connection_limit": 74,
+    "headroom_after_budget": 8,
+    "budget_fits_non_reserved_limit": true,
+    "read_only": true,
+    "count_note": "Current connection counts include this read-only operator probe; not peak or load-test counts."
+  },
+  "capacity_quota_supplement": {
+    "checked_at_utc": "2026-11-19T17:33:50.533094+00:00",
+    "same_api_task_memory_mib": 512,
+    "same_api_task_cpu_units": 256,
+    "capacity": [
+      {
+        "instance_alias": "ec2-4d68ac84a6",
+        "az": "ap-southeast-2b",
+        "type": "t3.small",
+        "ecs_status": "ACTIVE",
+        "agent_connected": true,
+        "remaining_memory_mib": 505,
+        "remaining_cpu_units": 1536,
+        "eni_directly_reported_by_ecs": null,
+        "ec2_attached_network_interfaces": 3,
+        "type_max_network_interfaces": 3,
+        "trunking_capability_advertised": true,
+        "trunk_detected": false,
+        "non_trunk_eni_upper_bound": 0,
+        "same_api_task_slot_upper_bound": 0
+      },
+      {
+        "instance_alias": "ec2-b13d4081b2",
+        "az": "ap-southeast-2b",
+        "type": "t3.small",
+        "ecs_status": "ACTIVE",
+        "agent_connected": true,
+        "remaining_memory_mib": 1017,
+        "remaining_cpu_units": 1792,
+        "eni_directly_reported_by_ecs": null,
+        "ec2_attached_network_interfaces": 2,
+        "type_max_network_interfaces": 3,
+        "trunking_capability_advertised": true,
+        "trunk_detected": false,
+        "non_trunk_eni_upper_bound": 1,
+        "same_api_task_slot_upper_bound": 1
+      },
+      {
+        "instance_alias": "ec2-0296b1ca4a",
+        "az": "ap-southeast-2a",
+        "type": "t3.small",
+        "ecs_status": "ACTIVE",
+        "agent_connected": true,
+        "remaining_memory_mib": 1017,
+        "remaining_cpu_units": 1792,
+        "eni_directly_reported_by_ecs": null,
+        "ec2_attached_network_interfaces": 2,
+        "type_max_network_interfaces": 3,
+        "trunking_capability_advertised": true,
+        "trunk_detected": false,
+        "non_trunk_eni_upper_bound": 1,
+        "same_api_task_slot_upper_bound": 1
+      },
+      {
+        "instance_alias": "ec2-42c9e6b1ba",
+        "az": "ap-southeast-2b",
+        "type": "t3.small",
+        "ecs_status": "ACTIVE",
+        "agent_connected": true,
+        "remaining_memory_mib": 1529,
+        "remaining_cpu_units": 2048,
+        "eni_directly_reported_by_ecs": null,
+        "ec2_attached_network_interfaces": 1,
+        "type_max_network_interfaces": 3,
+        "trunking_capability_advertised": true,
+        "trunk_detected": false,
+        "non_trunk_eni_upper_bound": 2,
+        "same_api_task_slot_upper_bound": 2
+      }
+    ],
+    "rds_quotas": [
+      {
+        "AccountQuotaName": "DBInstances",
+        "Used": 1,
+        "Max": 40
+      },
+      {
+        "AccountQuotaName": "AllocatedStorage",
+        "Used": 20,
+        "Max": 100000
+      },
+      {
+        "AccountQuotaName": "ManualSnapshots",
+        "Used": 0,
+        "Max": 100
+      }
+    ],
+    "limits": [
+      "Estimated upper bounds from memory/CPU/physical ENI limits only; not proof of placement/private subnet free addresses/SG/network/IAM/quota readiness.",
+      "ECS ENI missing remains missing in C1 CSV; estimates do not backfill absent telemetry.",
+      "No scaling, capacity, subnet, instance or RDS changes made."
+    ]
+  },
+  "capacity_by_az": {
+    "ap-southeast-2b": {
+      "instances": 3,
+      "remaining_memory_mib": 3051,
+      "same_api_task_slots_upper_bound": 3,
+      "all_slot_bounds_known": true
+    },
+    "ap-southeast-2a": {
+      "instances": 1,
+      "remaining_memory_mib": 1017,
+      "same_api_task_slots_upper_bound": 1,
+      "all_slot_bounds_known": true
+    }
+  },
+  "worker_email_config": {
+    "task_revision": 10,
+    "email_backend": "disabled",
+    "note": "Read configuration only, no switch or email sent"
+  },
+  "runner_observation": {
+    "samples": [
+      {
+        "sample_at": "2026-11-19T17:28:03Z",
+        "cpu_percent": "25.1",
+        "available_memory_mb": "452",
+        "network_bytes_per_sec": "105648.29",
+        "status": "OBSERVED"
+      },
+      {
+        "sample_at": "2026-11-19T17:28:36Z",
+        "cpu_percent": "34.4",
+        "available_memory_mb": "517",
+        "network_bytes_per_sec": "854944.99",
+        "status": "OBSERVED"
+      },
+      {
+        "sample_at": "2026-11-19T17:29:07Z",
+        "cpu_percent": "29.99",
+        "available_memory_mb": "562",
+        "network_bytes_per_sec": "3836.17",
+        "status": "OBSERVED"
+      },
+      {
+        "sample_at": "2026-11-19T17:29:38Z",
+        "cpu_percent": "29.6",
+        "available_memory_mb": "522",
+        "network_bytes_per_sec": "7719.43",
+        "status": "OBSERVED"
+      },
+      {
+        "sample_at": "2026-11-19T17:30:11Z",
+        "cpu_percent": "11.84",
+        "available_memory_mb": "670",
+        "network_bytes_per_sec": "5469.81",
+        "status": "OBSERVED"
+      },
+      {
+        "sample_at": "2026-11-19T17:30:43Z",
+        "cpu_percent": "31",
+        "available_memory_mb": "619",
+        "network_bytes_per_sec": "15382.37",
+        "status": "OBSERVED"
+      },
+      {
+        "sample_at": "2026-11-19T17:31:15Z",
+        "cpu_percent": "58.6",
+        "available_memory_mb": "745",
+        "network_bytes_per_sec": "18476.02",
+        "status": "OBSERVED"
+      },
+      {
+        "sample_at": "2026-11-19T17:31:46Z",
+        "cpu_percent": "28.85",
+        "available_memory_mb": "1023",
+        "network_bytes_per_sec": "6690.87",
+        "status": "OBSERVED"
+      },
+      {
+        "sample_at": "2026-11-19T17:32:17Z",
+        "cpu_percent": "26.54",
+        "available_memory_mb": "1017",
+        "network_bytes_per_sec": "46145.47",
+        "status": "OBSERVED"
+      }
+    ],
+    "scope": "Local Windows host outside ASG, counters during observer smoke; no k6 run, NTP synchronization and load saturation not established."
+  },
+  "temporary_probe": {
+    "kind": "one ECS one-off DB read-only probe using source API task definition",
+    "state": "STOPPED",
+    "exit_code": 0,
+    "sql_source_sha256": "c386162169dd48328a444d1d0ae0e03ef952a8c5b887f23b08219106ca3179f8",
+    "overlapped_collector": true,
+    "note": "May temporarily change ECS remaining resources and DB connection counts; not an autoscaling or load event."
+  },
+  "limitations": [
+    "One collector iteration exceeded requested30s; missing metrics remain missing, not zero.",
+    "No C3 load, C4/C5 fault or B4/B5 restore executed in this smoke.",
+    "Capacity slot estimates are upper bounds, not proof of placement/AZ failover readiness.",
+    "SNS confirmed subscription count does not prove workload alarm notification delivery.",
+    "C1 still needs real k6 runner/clock/readiness and owner review; no C1 acceptance status changed."
+  ],
+  "completion_flags": {
+    "X01": "NOT_RUN",
+    "X02": "NOT_RUN",
+    "X03": "NOT_RUN",
+    "pitr_executed": false,
+    "images_verified": false,
+    "rpo_seconds": null,
+    "rto_seconds": null
+  }
+}

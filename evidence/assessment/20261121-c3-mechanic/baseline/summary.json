@@ -1,0 +1,66 @@
+{
+  "phase": "baseline",
+  "started_at_utc": "2026-11-21T07:34:00.136075+00:00",
+  "finished_at_utc": "2026-11-21T07:41:01.960779+00:00",
+  "result": "PASS",
+  "launch_type": "FARGATE",
+  "clock": {
+    "ClockErrorBound": 0.6614495,
+    "ReferenceTimestamp": "2026-11-21T07:33:09Z",
+    "ClockSynchronizationStatus": "SYNCHRONIZED"
+  },
+  "limits": {
+    "CPU": 2,
+    "Memory": 4096
+  },
+  "k6_version": "k6 v1.0.0 (commit/41b4984b75-dirty, go1.24.2, linux/amd64)",
+  "k6_exit_code": 0,
+  "source_sha256": {
+    "booking.js": "8d8445c57bd5cef1e41890df7376270e4b31a0293813f7b0f9a44d843a86e74a",
+    "ecs-scaling.js": "e7f31ff3f61f2320e19ab5d8a2a5c175b3fe669db79594a6b94f47d6deb53f0e",
+    "platform.js": "b2bade9d92e397059ff6f444eb97f72c65f88d25f8866f2f73e9bb509dec33c0",
+    "catalogue.js": "642cdc54adb3494f4ee8ccd02751f1ace2b50025ffbdf95ba335b48c070a0433",
+    "k6": "2ba13ec04f8ff874964e36ae44129cf6553d96cbf43f96d662adf7baa5904ed4"
+  },
+  "metrics": {
+    "checks": {
+      "passes": 7467,
+      "fails": 0,
+      "value": 1
+    },
+    "http_reqs": {
+      "count": 7467,
+      "rate": 17.764721456013994
+    },
+    "http_req_duration": {
+      "avg": 78.29719540337476,
+      "med": 33.535742,
+      "p(95)": 269.1711948999999,
+      "p(99)": 585.1458742000009,
+      "max": 1276.047924,
+      "thresholds": {
+        "p(95)<1000": false
+      }
+    },
+    "http_req_failed": {
+      "passes": 0,
+      "fails": 7467,
+      "thresholds": {
+        "rate<0.01": false
+      },
+      "value": 0
+    }
+  },
+  "threshold_export_note": "k6 threshold boolean false means the threshold did not fail",
+  "raw_sha256": "26dbfcec091a015152ba66dfca90dd6081582c8a43544c12cdcd5971e46a30d2",
+  "http_failure_count": 0,
+  "http_failure_examples": [],
+  "generator": {
+    "memory_peak_MiB": null,
+    "cpu_peak_percent_of_limit": null,
+    "samples": 42,
+    "clock_statuses": [
+      "SYNCHRONIZED"
+    ]
+  }
+}

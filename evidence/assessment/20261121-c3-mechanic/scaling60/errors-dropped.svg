@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="400" viewBox="0 0 1100 400">
+<rect width="1100" height="400" fill="white"/><text x="80" y="28" font-size="20">Errors and dropped iterations by UTC minute</text>
+<path d="M80 48V343H1060" fill="none" stroke="#444"/>
+<text x="10" y="56">69.00</text><text x="35" y="343">0</text>
+<text x="80" y="365">2026-11-21T12:27:00.000Z</text><text x="820" y="365">2026-11-21T12:35:00.000Z</text>
+<polyline fill="none" stroke="#b02121" stroke-width="2" points="80,343 202.5,343 325,343 447.5,343 570,343 692.5,206.18840579710144 815,48 937.5,48 1060,261.768115942029"/><polyline fill="none" stroke="#d04b31" stroke-width="2" points="80,343 202.5,343 325,343 447.5,343 570,343 692.5,343 815,343 937.5,343 1060,343"/><polyline fill="none" stroke="#7b42a8" stroke-width="2" points="80,343 202.5,343 325,343 447.5,343 570,343 692.5,343 815,343 937.5,343 1060,343"/><text x="80" y="390" fill="#b02121">HTTP failed</text><text x="320" y="390" fill="#d04b31">Unexpected errors</text><text x="560" y="390" fill="#7b42a8">Dropped iterations</text></svg>

@@ -1,0 +1,20 @@
+digraph G {
+graph [rankdir=TB, bgcolor="#ffffff", pad="0.35", nodesep="0.35", ranksep="0.45", fontname="DejaVu Sans", fontsize=20, labelloc=t, label="A4 • C4/C5 — chưa có bằng chứng chạy trong ZIP"];
+node [shape=box, style="rounded,filled", fillcolor="#fff4db", color="#58718a", fontname="DejaVu Sans", fontsize=12, margin="0.18,0.13"];
+edge [color="#58718a", fontname="DejaVu Sans", fontsize=10,style=dashed];
+base [label="Baseline + probe + timestamp\nKiểm headroom và phạm vi được phép"];
+c4 [label="C4: compute/AZ fault\nECS / ASG / ALB events"];
+c5r [label="C5: RDS failover\nDB events / reconnect / transactions"];
+c5c [label="C5: Redis failover\nRole / admission / dependency errors"];
+verify [label="Đối chiếu request và nghiệp vụ\nTrước / trong / sau • B3"];
+stable [label="Rollback / ổn định từng lượt\nC6 metrics + baseline cuối"];
+handoff [label="Bàn giao Người 2 chạy B4/B5\nA4 cập nhật theo kết quả thật"];
+base -> c4 [label="lượt riêng"];
+base -> c5r [label="lượt riêng"];
+base -> c5c [label="lượt riêng"];
+c4 -> verify [label=""];
+c5r -> verify [label=""];
+c5c -> verify [label=""];
+verify -> stable [label=""];
+stable -> handoff [label=""];
+}

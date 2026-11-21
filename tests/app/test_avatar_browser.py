@@ -23,13 +23,13 @@ def test_account_avatar_menu_guest_upload_reload_remove(width,height):
                     Path(folder).mkdir(parents=True,exist_ok=True);page.evaluate("document.activeElement?.blur();window.scrollTo({top:0,behavior:'instant'})");page.mouse.move(0,0);page.wait_for_timeout(220);page.screenshot(path=str(Path(folder)/f'{name}-{width}.png'),full_page=True)
             shot('guest-account')
             page.locator('#login-link').click();page.locator('#show-register').click();form=page.locator('#register');username='avatar-'+uuid.uuid4().hex[:10]
-            form.locator('[name=username]').fill(username);form.locator('[name=password]').fill('avatar-browser-password');form.locator('[name=password_confirm]').fill('avatar-browser-password');page.locator('#register-submit').click()
+            form.locator('[name=username]').fill(username);form.locator('[name=email]').fill(username+'@example.test');form.locator('[name=password]').fill('avatar-browser-password');form.locator('[name=password_confirm]').fill('avatar-browser-password');page.locator('#register-submit').click()
             pw.expect(page.locator('#account-toggle')).to_be_visible();pw.expect(page.locator('#identity')).to_have_text(username);pw.expect(page.locator('#account-avatar')).to_have_attribute('src','/static/user-default.svg')
             page.locator('#account-toggle').click();pw.expect(page.locator('#account-menu')).to_be_visible();assert page.locator('#account-menu').inner_text().splitlines()==['Tài khoản','Đăng xuất']
             page.keyboard.press('Escape');pw.expect(page.locator('#account-menu')).to_be_hidden();pw.expect(page.locator('#account-toggle')).to_be_focused()
             page.keyboard.press('ArrowDown');pw.expect(page.locator('#profile-link')).to_be_focused();page.keyboard.press('Enter')
             profile=page.locator('#profile-form');pw.expect(profile).to_be_visible();pw.expect(profile.locator('[name=full_name]')).to_be_enabled()
-            profile.locator('[name=full_name]').fill('Nguyễn Thiện Tuấn');profile.locator('[name=email]').fill('avatar-test@example.test');page.locator('#profile-save').click();pw.expect(page.locator('#identity')).to_have_text('Nguyễn Thiện Tuấn')
+            profile.locator('[name=full_name]').fill('Nguyễn Thiện Tuấn');page.locator('#profile-save').click();pw.expect(page.locator('#identity')).to_have_text('Nguyễn Thiện Tuấn')
             page.locator('#avatar-file').set_input_files({'name':'avatar.png','mimeType':'image/png','buffer':blob.getvalue()});pw.expect(page.locator('#avatar-message')).to_have_text('Đã lưu ảnh đại diện.')
             src=page.locator('#account-avatar').get_attribute('src');assert src.startswith('/me/avatar?v=');pw.expect(page.locator('#profile-avatar')).to_have_attribute('src',src)
             pw.expect(page.locator('#account-avatar')).to_have_js_property('naturalWidth',256)

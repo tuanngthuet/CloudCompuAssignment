@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="400" viewBox="0 0 1100 400">
+<rect width="1100" height="400" fill="white"/><text x="80" y="28" font-size="20">Actual HTTP requests per second by UTC minute</text>
+<path d="M80 48V343H1060" fill="none" stroke="#444"/>
+<text x="10" y="56">29.40</text><text x="35" y="343">0</text>
+<text x="80" y="365">2026-11-21T12:19:00.000Z</text><text x="820" y="365">2026-11-21T12:24:00.000Z</text>
+<polyline fill="none" stroke="#1769aa" stroke-width="2" points="80,261.05555555555554 276,113.22108843537416 472,62.38208616780046 668,48 864,54.6893424036281 1060,144.6609977324263"/><text x="80" y="390" fill="#1769aa">Actual RPS</text></svg>

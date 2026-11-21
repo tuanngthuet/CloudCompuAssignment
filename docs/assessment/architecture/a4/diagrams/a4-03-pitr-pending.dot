@@ -1,0 +1,20 @@
+digraph G {
+graph [rankdir=TB, bgcolor="#ffffff", pad="0.35", nodesep="0.35", ranksep="0.45", fontname="DejaVu Sans", fontsize=20, labelloc=t, label="A4 • Kế hoạch PITR — CHƯA THỰC THI"];
+node [shape=box, style="rounded,filled", fillcolor="#fff4db", color="#58718a", fontname="DejaVu Sans", fontsize=12, margin="0.18,0.13"];
+edge [color="#58718a", fontname="DejaVu Sans", fontsize=10,style=dashed];
+start [label="Bàn giao C4/C5 ổn định\nChốt cửa sổ riêng"];
+marker [label="Marker DB nguồn + incident_at\nDigest/schema/latest restorable"];
+restore [label="PITR vào DB MỚI\nPrivate • không ghi đè DB nguồn"];
+db [label="Kiểm DB restored\nInvariants + marker + ownership"];
+app [label="App restored riêng\nĐăng nhập / booking / check-in"];
+img [label="B5 tích hợp\nDB key + object + ảnh/cache qua app"];
+measure [label="Tất cả kiểm chứng đạt\nready_and_verified_at → RPO/RTO"];
+close [label="Lưu evidence → cleanup đúng tài nguyên"];
+start -> marker [label=""];
+marker -> restore [label=""];
+restore -> db [label=""];
+db -> app [label=""];
+app -> img [label=""];
+img -> measure [label=""];
+measure -> close [label=""];
+}

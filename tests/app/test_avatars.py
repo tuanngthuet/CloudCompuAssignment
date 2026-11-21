@@ -3,6 +3,7 @@ import os
 import pytest
 if not os.getenv('TEST_DATABASE_URL'):pytest.skip('Disposable DB required',allow_module_level=True)
 from test_profiles import client,student,VALID
+from test_db import clean_db
 from fastapi.testclient import TestClient
 from app.main import app
 from app.infrastructure.database.session import Session

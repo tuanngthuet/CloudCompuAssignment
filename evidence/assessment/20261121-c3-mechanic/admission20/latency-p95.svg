@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="400" viewBox="0 0 1100 400">
+<rect width="1100" height="400" fill="white"/><text x="80" y="28" font-size="20">p95 latency by UTC minute (ms)</text>
+<path d="M80 48V343H1060" fill="none" stroke="#444"/>
+<text x="10" y="56">481.15</text><text x="35" y="343">0</text>
+<text x="80" y="365">2026-11-21T12:12:00.000Z</text><text x="820" y="365">2026-11-21T12:17:00.000Z</text>
+<polyline fill="none" stroke="#1769aa" stroke-width="2" points="80,48 276,222.56136560824507 472,288.09969469957076 668,294.18781135949996 864,299.1883879407746 1060,292.3431606570168"/><polyline fill="none" stroke="#268b4a" stroke-width="2" points=""/><polyline fill="none" stroke="#d04b31" stroke-width="2" points=""/><text x="80" y="390" fill="#1769aa">HTTP p95 ms</text><text x="320" y="390" fill="#268b4a">Read p95 ms</text><text x="560" y="390" fill="#d04b31">Write p95 ms</text></svg>

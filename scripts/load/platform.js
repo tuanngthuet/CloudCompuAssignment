@@ -11,22 +11,23 @@ const identities = new SharedArray('private synthetic sessions', () => JSON.pars
 if (identities.length < 100) throw Error('Platform requires 100 synthetic sessions');
 const minimumExpiry = Date.now() + 20 * 60 * 1000;
 const tokens = new Set();
-const assignedSeats = new Set();
+const csrfTokens = new Set();
+const assignedSeats = new Map();
 for (let i = 0; i < 100; i++) {
   const u = identities[i];
   if (!u || typeof u.session_token !== 'string' || !u.session_token ||
       typeof u.csrf_token !== 'string' || !u.csrf_token ||
-      typeof u.seat_id !== 'string' || !u.seat_id || tokens.has(u.session_token)) {
+      typeof u.seat_id !== 'string' || !u.seat_id || tokens.has(u.session_token) || csrfTokens.has(u.csrf_token)) {
     throw Error('First 100 sessions need distinct tokens, CSRF and assigned seats');
   }
   tokens.add(u.session_token);
+  csrfTokens.add(u.csrf_token);
   const expires = u.expires_at || __ENV.SESSION_EXPIRES_AT;
   if (typeof expires !== 'string' || !/(Z|[+-]\d{2}:\d{2})$/.test(expires) ||
       !Number.isFinite(Date.parse(expires)) || Date.parse(expires) < minimumExpiry) {
     throw Error('Sessions must cover the 15 minute load plus five minutes');
   }
-  if (assignedSeats.has(u.seat_id)) throw Error('Assigned seats must be distinct across 100 VUs');
-  assignedSeats.add(u.seat_id);
+  assignedSeats.set(u.seat_id, (assignedSeats.get(u.seat_id) || 0) + 1);
 }
 
 const failures = new Rate('platform_unexpected_failure');
@@ -62,9 +63,15 @@ export function setup() {
   }
   const seatsResponse = http.get(base + `/lab-sessions/${sid}/seats`, { tags: { operation_class: 'preflight', route: 'availability' } });
   if (seatsResponse.status !== 200) throw Error('Unable to verify assigned seats');
-  const available = new Set(seatsResponse.json().items.filter(x => x.available).map(x => x.id));
+  const seats = new Map(seatsResponse.json().items.map(x => [x.id, x]));
+  for (const [seatId, count] of assignedSeats) {
+    const seat = seats.get(seatId);
+    if (!seat || !seat.available || !Number.isInteger(seat.remaining) || count > seat.remaining) {
+      throw Error('Assigned users exceed the remaining capacity of a room');
+    }
+  }
   for (let i = 0; i < 100; i++) {
-    if (!available.has(identities[i].seat_id)) throw Error('Some assigned seats are unavailable');
+    if (!seats.has(identities[i].seat_id)) throw Error('Some assigned seats are unavailable');
   }
   const seen = new Set();
   for (let i = 0; i < 100; i++) {

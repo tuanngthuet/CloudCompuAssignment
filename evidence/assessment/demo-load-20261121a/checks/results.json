@@ -1,0 +1,155 @@
+{
+  "run": "demo-load-20261121a",
+  "recorded_at_utc": "2026-11-20T20:52:53.042621+00:00",
+  "base_url": "https://labseat.id.vn",
+  "backup": {
+    "verified_before_fixture": true,
+    "verified_at": "2026-11-21T03:27:14.1843623+07:00",
+    "rds_snapshot": {
+      "created_at": "2026-11-21T03:12:06.996+07:00",
+      "status": "available",
+      "private": true,
+      "encrypted": true,
+      "restore_tested": false,
+      "id": "labseat-demo-before-load-20261120t201159z"
+    },
+    "logical_restore": {
+      "server_version": "16.13 (Debian 16.13-1.pgdg13+1)",
+      "schema": "0002_platform",
+      "verified": true,
+      "tables": 27,
+      "invariant_rows": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    "plaintext_sha256": "b4da172beb998ff9c95c14148a3ac757a3a7d0b54b8253442bcd652abcee27e8",
+    "encrypted_sha256": "d6266b629bf4f261846c991fbb91ddf23a779d182bcff4a09eb6455a951f7a12",
+    "cloud_readback_decrypt_matches_restored_bytes": true,
+    "assets": {
+      "verified": true,
+      "count": 27,
+      "verified_at_utc": "2026-11-20T20:48:59.051183+00:00"
+    },
+    "retention": "Keep for final demonstration; Person 2 retains private key and manifests"
+  },
+  "fixture": {
+    "batch": "demo-load-20261121a",
+    "manifest_id": "fcbac39e-8ef7-53a7-809a-e2f867cd7f66",
+    "event_id": "445a670a-f7ac-5eff-b995-cce188d104aa",
+    "load_session": "5e024221-c858-5443-be0e-4dbd01fd8800",
+    "room_id": "40086403-b7f1-5e9c-8810-d4324085638d",
+    "capacity": 120,
+    "open_at": "2026-11-21T03:31:45.320156+07:00",
+    "close_at": "2026-11-24T00:00:00+07:00",
+    "start_at": "2026-11-24T01:00:00+07:00",
+    "end_at": "2026-11-24T03:00:00+07:00",
+    "sessions_expire_at": "2026-11-21T11:40:52.10077+07:00"
+  },
+  "sessions": {
+    "count": 100,
+    "distinct_user_ids": 100,
+    "distinct_tokens": 100,
+    "distinct_csrf_tokens": 100,
+    "distinct_assigned_seats": 100,
+    "mapping_rows": 100,
+    "server_issued_at": "2026-11-21T03:40:51.850154+07:00"
+  },
+  "smoke": {
+    "started_at_utc": "2026-11-20T20:49:37.331221+00:00",
+    "base_url": "https://labseat.id.vn",
+    "unique_users": 100,
+    "distinct_sessions": 100,
+    "distinct_seats": 100,
+    "capacity": 120,
+    "queue_enabled": true,
+    "normal_password_login_logout": "PASS",
+    "hold_confirm_qr": "PASS",
+    "email": {
+      "job": "SKIPPED",
+      "delivery": "SKIPPED",
+      "provider_attempts": 0
+    },
+    "cancel_queue_leave": "PASS",
+    "sessions_expire_at": "2026-11-21T04:40:52.100770+00:00",
+    "finished_at_utc": "2026-11-20T20:50:12.577420+00:00",
+    "verified": true,
+    "demo_unchanged": {
+      "verified": true,
+      "tables": 10,
+      "invariant_rows": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "db_clock": "2026-11-20T20:50:20.593469+00:00"
+    }
+  },
+  "cleanup_dry_run": {
+    "execute": false,
+    "before": {
+      "users": 100,
+      "events": 1,
+      "schedules": 1,
+      "seats": 120,
+      "reservations": 2
+    },
+    "manifest_id": "fcbac39e-8ef7-53a7-809a-e2f867cd7f66",
+    "foreign_reference_checks": "PASS",
+    "demo_unchanged": {
+      "verified": true,
+      "tables": 10,
+      "invariant_rows": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "db_clock": "2026-11-20T20:52:29.210488+00:00"
+    }
+  },
+  "local_safety_tests": {
+    "tests": 2,
+    "failures": 0,
+    "errors": 0,
+    "seconds": "10.388",
+    "environment": "PostgreSQL 16.13 disposable restored backup, no AWS mutation"
+  },
+  "source": {
+    "base_commit": "49cbf2f",
+    "application_image_digest": "sha256:8cf4b144a8c1260b22ad4a6be6277d5d3b66552cdeda407dab894258243256ee",
+    "script_sha256": {
+      "demo_backup.py": "750fee0c0e1ad6d895eea27c835bd16d6a7ef6af64045d417b9e19f5c94e6bd4",
+      "isolated_load.py": "7c5e29a30bb03583efd3cf25f0dccd16e83e042fd8c79326d0e31f064e0a94c9",
+      "protect-backup.ps1": "4d01aa771bc75032a7ea9e7ed33779902041aefc146934e771feeda58fdf4d18",
+      "prepare-isolated-one-off.ps1": "5c77721d9ff2bb75078062ef59c07821f84634e96f105ac2749dc0697deacd98",
+      "run-isolated-load.ps1": "10eaf71dc3c369bfae168c36077679e8027fb611576e5929b17aa04051b52028",
+      "test_isolated_load.py": "1eb894237cbca2caba4715514a5153f0df5dfd4e33f116bb08b1d9cd062552aa"
+    }
+  },
+  "pending": [
+    "Person 3 privately receives and validates the current handoff",
+    "Choose measurement window/scenario; refresh and smoke sessions if TTL no longer sufficient",
+    "Actual load run by Person 3",
+    "After actual load stops: scoped AWS cleanup, cache expiry/cleanup, demo rows/assets/invariants check and real cleanup receipt"
+  ],
+  "limits": [
+    "RDS snapshot available; its own RDS restore was not tested. Logical dump restore was tested.",
+    "Demo business comparison covers original PK rows in ten core tables, excluding only users.last_activity_at. Full backup covers all 27 public tables.",
+    "No throughput/fault or restore-to-production claim. Queue remains enabled; email remains disabled."
+  ],
+  "fixture_status": "RETIRED: owned load batch deleted on AWS 2026-11-21; historical backup/configuration receipt only",
+  "current_dataset": "docs/assessment/functional/dataset.md"
+}

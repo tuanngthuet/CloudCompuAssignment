@@ -1,0 +1,28 @@
+{
+  "note": "Attached-interface headroom only; not a guarantee of every placement/AZ constraint",
+  "attached_ENIs": [
+    2,
+    3,
+    1,
+    3,
+    1,
+    1
+  ],
+  "ipv4_perENI": 4,
+  "instance_count": 6,
+  "maxENI_per_instance": 3,
+  "at_utc": "2026-11-21T12:30:19.4855152Z",
+  "placement": {
+    "constraints": [],
+    "strategy": [
+      {
+        "type": "spread",
+        "field": "attribute:ecs.availability-zone"
+      },
+      {
+        "type": "binpack",
+        "field": "MEMORY"
+      }
+    ]
+  }
+}

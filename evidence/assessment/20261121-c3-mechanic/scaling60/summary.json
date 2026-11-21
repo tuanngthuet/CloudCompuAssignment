@@ -1,0 +1,33 @@
+{
+  "phase": "scaling60",
+  "started_at_utc": "2026-11-21T12:27:49.252438+00:00",
+  "finished_at_utc": "2026-11-21T12:35:22.366411+00:00",
+  "result": "FAIL",
+  "launch_type": "FARGATE",
+  "clock": {
+    "ClockErrorBound": 11.062461999999998,
+    "ReferenceTimestamp": "2026-11-21T12:26:41Z",
+    "ClockSynchronizationStatus": "SYNCHRONIZED"
+  },
+  "limits": {
+    "CPU": 2,
+    "Memory": 4096
+  },
+  "k6_version": "k6 v1.0.0 (commit/41b4984b75-dirty, go1.24.2, linux/amd64)",
+  "error_type": "InterruptedError",
+  "source_sha256": {
+    "platform.js": "b2bade9d92e397059ff6f444eb97f72c65f88d25f8866f2f73e9bb509dec33c0",
+    "catalogue.js": "642cdc54adb3494f4ee8ccd02751f1ace2b50025ffbdf95ba335b48c070a0433",
+    "booking.js": "8d8445c57bd5cef1e41890df7376270e4b31a0293813f7b0f9a44d843a86e74a",
+    "ecs-scaling.js": "e7f31ff3f61f2320e19ab5d8a2a5c175b3fe669db79594a6b94f47d6deb53f0e",
+    "k6": "2ba13ec04f8ff874964e36ae44129cf6553d96cbf43f96d662adf7baa5904ed4"
+  },
+  "generator": {
+    "memory_peak_MiB": 215.76171875,
+    "cpu_peak_percent_of_limit": 1.1095463609172451,
+    "samples": 46,
+    "clock_statuses": [
+      "SYNCHRONIZED"
+    ]
+  }
+}

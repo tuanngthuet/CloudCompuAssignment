@@ -1,0 +1,110 @@
+{
+  "run_id": "20261119T034356Z-b3-functional",
+  "task_id": "B3",
+  "packaged_at_utc": "2026-11-19T03:43:56.607796+00:00",
+  "operator": "Codex for automated checks; user for inbox, reset/login and iPhone camera observations",
+  "source_commit": "a6e49640ddfac5e442e8a321d319018a4dc59ee4",
+  "workspace_change": "One necessary fixture import in tests/app/test_avatars.py; cosmetic parameter IDs reverted; no runtime release deployed by B3; browser.Dockerfile bookworm pin/download timeout for additional disposable browser checks",
+  "historical_api_task_definition": "labseat-lab-api:10",
+  "historical_api_image_digest": "sha256:8cf4b144a8c1260b22ad4a6be6277d5d3b66552cdeda407dab894258243256ee",
+  "schema_version": "0002_platform",
+  "schema_note": "Observed by read-only query on RDS during recovery preflight at 2026-11-19 04:01:04.661975+00:00; not retroactively captured at historical test execution.",
+  "recorded_ecs_task_ids": [
+    "arn:aws:ecs:ap-southeast-2:403030570855:task/labseat-lab/dec39bf583c540c2a85726d16a35716e",
+    "arn:aws:ecs:ap-southeast-2:403030570855:task/labseat-lab/18dcd76368854833a030275948688d52",
+    "arn:aws:ecs:ap-southeast-2:403030570855:task/labseat-lab/b4a947bc97a74255a89f73252f7db79a",
+    "arn:aws:ecs:ap-southeast-2:403030570855:task/labseat-lab/006584eb0fb74795b89f2d24b52fcb85"
+  ],
+  "environments": [
+    "AWS production HTTPS https://labseat.id.vn",
+    "Disposable PostgreSQL16/Redis7 regression",
+    "Edge browser and offline Node controller",
+    "Physical iPhone XR/iOS/Safari per user report"
+  ],
+  "new_existing_event_checks": "Two existing SAT schedules; no new event created in completion checks",
+  "status_counts": {
+    "PASS": 340,
+    "FAIL": 0,
+    "BLOCKED": 1,
+    "NOT_RUN": 3
+  },
+  "video": {
+    "status": "BLOCKED",
+    "provided_by": "user later",
+    "group_storage_url": null,
+    "duration_seconds": null,
+    "access": null
+  },
+  "user_images": [
+    {
+      "file": "screenshots/password-reset-success.png",
+      "source": "User 2026-11-19 10:23",
+      "sha256": "6e00670d36e8711af78d02037b0acd4cb27b1c88cf74751dd4b538187c2e1b4b"
+    },
+    {
+      "private_file": ".local/assessment/b3-user-evidence/sat-ticket-email-original.png",
+      "source": "User ticket email screenshot 2026-11-19 10:22",
+      "sha256": "5a9dec3250e59f187e9d71c0985af0432db898f10d45bf9ad6a7659bfe9d8350",
+      "public_copy": "screenshots/sat-ticket-email-redacted.png",
+      "reason": "Live ticket QR; mask before sharing",
+      "redaction": {
+        "tool": "built-in image_gen",
+        "type": "AI-assisted redacted derivative; not pixel-identical primary evidence",
+        "mask": "QR including quiet zone and registration UUID covered by opaque black rectangles",
+        "original_preserved_private": true,
+        "prompt": "Edit the real Gmail LABSEAT SAT confirmation screenshot. Cover only the full QR and registration UUID with opaque dark rectangles, label QR đã che / đã che. Preserve visible facts, text and layout. No fabricated UI or delivery state."
+      }
+    }
+  ],
+  "limitations": [
+    "Historical and completion runs consolidated without rerunning tests",
+    "C3 load executed; recovery/postchecks not yet complete at checkpoint; fault/restore NOT_RUN",
+    "User-provided video still pending"
+  ],
+  "files": [
+    {
+      "path": "checks/results.json",
+      "sha256": "21f4af1c805e2e7651a88a18f3aaff5214cc1b3a76eccb4f8becd2bcfcefad63"
+    },
+    {
+      "path": "screenshots/password-reset-success.png",
+      "sha256": "6e00670d36e8711af78d02037b0acd4cb27b1c88cf74751dd4b538187c2e1b4b"
+    },
+    {
+      "path": "screenshots/sat-ticket-email-redacted.png",
+      "sha256": "cd526cc948afbeabad7f6073a2fc8d4b94ca67828fce0085de437e3b477de8da"
+    },
+    {
+      "path": "summary.md",
+      "sha256": "1ae86afd96529f76335c609dd68278a1ee85a5a7a9bb40b456bb90934f297484"
+    },
+    {
+      "path": "screenshots/sat-existing-demo-confirmed.jpg",
+      "sha256": "65427a80f8cc768665cd8de334acf30dd24670a5bc6c46862d08ec0db8a8d671"
+    }
+  ],
+  "evidence_format": "Checks consolidated without altering results in checks/results.json; CSV references #/section JSON pointers.",
+  "recovery_status": "Preflight collected; actual B4/B5 restore NOT_RUN pending planned fault handoff per user instruction",
+  "additional_source_commit": "92668ab",
+  "c1_support_run_id": "20261119T172832Z-b4-c1-preflight",
+  "c1_source_commit": "7fa878ac7e7995c25777680e44fe2da36d1e619c",
+  "regression_retest": {
+    "json_pointer": "checks/results.json#/regression_retest_20261121",
+    "total_tests": 34,
+    "passed": 34,
+    "scope": "local disposable only; no new production image",
+    "test_source_sha256_lf": {
+      "tests/app/test_avatar_browser.py": "78ae3a5bc179b548c8354f90542df17dc339cd89b50a70e436d31e4fc7440f18",
+      "tests/app/test_camera_browser.py": "e7295f56459ebf6182fe8ac71d783192d9f399ca0e7f38eed874d8a3c8d7c7fa",
+      "tests/app/test_image_map_browser.py": "84edd043e7723ee72d7a0342228291b4aceef15d04125d2abdb2b4abbceda221",
+      "tests/app/test_profile_browser.py": "5b54fafc949f6e91b9f1ceb82c921d0dd7532cc6051ecfb7e2bd5fda6d22921c"
+    }
+  },
+  "existing_demo_retest_20261121": {
+    "environment": "AWS HTTPS + real browser",
+    "event": "Existing SAT demo",
+    "cases": 7,
+    "new_events_created": false,
+    "camera_retested": false
+  }
+}

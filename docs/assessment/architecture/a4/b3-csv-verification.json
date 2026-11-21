@@ -1,0 +1,32 @@
+{
+  "source_commit": "54b034e2f40d92ce4c00d4f9792706008a972279",
+  "source_path": "docs/assessment/functional/test-cases.csv",
+  "sha256_raw": "bfc3ff2ad7039004037bfe5cfdf560684d56bc4b22df1ddf403c6cedde6fe21a",
+  "rows": 337,
+  "counts": {
+    "PASS": 333,
+    "FAIL": 0,
+    "BLOCKED": 1,
+    "NOT_RUN": 3
+  },
+  "non_pass": [
+    {
+      "case_id": "V01",
+      "status": "BLOCKED"
+    },
+    {
+      "case_id": "X01",
+      "status": "NOT_RUN"
+    },
+    {
+      "case_id": "X02",
+      "status": "NOT_RUN"
+    },
+    {
+      "case_id": "X03",
+      "status": "NOT_RUN"
+    }
+  ],
+  "independently_recounted_from_supplied_archive": true,
+  "test_execution_by_a4": false
+}

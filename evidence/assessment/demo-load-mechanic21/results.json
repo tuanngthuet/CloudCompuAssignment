@@ -1,0 +1,66 @@
+{
+  "batch": "demo-load-mechanic21",
+  "manifest_id": "0a59f708-244e-5d0d-80d1-c3907727db17",
+  "event_id": "d3dd7bd8-d8de-5be2-a9aa-6ff6704ef361",
+  "load_session": "3d7ca8f8-07fa-508e-abc7-3f0a7bf69d46",
+  "room_id": "ca17a86c-2c6a-5fc4-91f7-5e2c01cbaa64",
+  "capacity": 180,
+  "layout_type": "image",
+  "open_at": "2026-11-21T07:02:19.746396+00:00",
+  "close_at": "2026-11-23T17:00:00+00:00",
+  "start_at": "2026-11-23T18:00:00+00:00",
+  "end_at": "2026-11-23T20:00:00+00:00",
+  "demo_unchanged": {
+    "verified": true,
+    "tables": 10,
+    "invariant_rows": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "db_clock": "2026-11-21T07:31:07.746388+00:00"
+  },
+  "smoke": {
+    "started_at_utc": "2026-11-21T07:15:20.958272+00:00",
+    "base_url": "https://labseat.id.vn",
+    "unique_users": 100,
+    "distinct_sessions": 100,
+    "distinct_seats": 4,
+    "capacity": 180,
+    "queue_enabled": true,
+    "layout_type": "image",
+    "normal_password_login_logout": "PASS",
+    "hold_confirm_qr": "PASS",
+    "email": {
+      "job": "SKIPPED",
+      "delivery": "SKIPPED",
+      "provider_attempts": 0
+    },
+    "cancel_queue_leave": "PASS",
+    "sessions_expire_at": "2026-11-21T15:13:07.074257+00:00",
+    "finished_at_utc": "2026-11-21T07:16:02.010375+00:00",
+    "verified": true,
+    "demo_unchanged": {
+      "verified": true,
+      "tables": 10,
+      "invariant_rows": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "db_clock": "2026-11-21T07:16:11.184819+00:00"
+    }
+  },
+  "current_scope": "Existing demo events for functional checks; isolated Mechanic event for load only",
+  "handoff_credentials": "PRIVATE; not included",
+  "full_load_assessment_complete": false,
+  "screenshot": "screenshots/mechanic-current.jpg"
+}

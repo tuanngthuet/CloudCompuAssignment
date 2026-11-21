@@ -14,7 +14,7 @@ const expiry = new Date(Date.now() + 60 * 60 * 1000).toISOString();
 const fixture = () => Array.from({ length: 100 }, (_, i) => ({
   session_token: `local-token-${i}`, csrf_token: `local-csrf-${i}`, seat_id: `seat-${i}`,
 }));
-function harness(data = fixture(), { queueEnabled = false, userId = token => token } = {}) {
+function harness(data = fixture(), { queueEnabled = false, userId = token => token, capacity = 45 } = {}) {
   const calls = [];
   const cookies = {};
   const counts = {};
@@ -24,7 +24,7 @@ function harness(data = fixture(), { queueEnabled = false, userId = token => tok
     get: url => {
       calls.push({ method: 'GET', url });
       if (url.endsWith('/me')) return response(200, { id: userId(cookies.labseat_session), role: 'student', account_status: 'ACTIVE', email_verified: true });
-      if (url.endsWith('/seats')) return response(200, { items: data.map(u => ({ id: u.seat_id, available: true })) });
+      if (url.endsWith('/seats')) return response(200, { items: [...new Set(data.map(u => u.seat_id))].map(id => ({ id, available: true, capacity, remaining: capacity })) });
       if (url.endsWith('/lab-sessions')) return response(200, {
         queue_policy: { enabled: queueEnabled }, server_time: new Date().toISOString(),
         items: [{ id: 'session-1', open_at: new Date(Date.now() - 60000).toISOString(),
@@ -41,7 +41,7 @@ function harness(data = fixture(), { queueEnabled = false, userId = token => tok
   };
   const context = vm.createContext({
     __ENV: { BASE_URL: 'https://local.example', SESSION_ID: 'session-1', SESSIONS_FILE: 'fixture.json', SESSION_EXPIRES_AT: expiry },
-    __VU: 1, __ITER: 0, Date, JSON, Number, String, Set, Error,
+    __VU: 1, __ITER: 0, Date, JSON, Number, String, Set, Map, Error,
     http, check: (r, predicates) => Object.values(predicates).every(fn => fn(r)), sleep: () => {},
     SharedArray: class { constructor(_name, loader) { return loader(); } },
     Counter: class { constructor(name) { this.name = name; } add(value) { counts[this.name] = (counts[this.name] || 0) + value; } },
@@ -69,9 +69,15 @@ test('platform rejects queue enabled before load', () => {
   const h = harness(fixture(), { queueEnabled: true });
   assert.throws(() => h.context.api.setup(), /admission disabled/);
 });
-test('platform rejects duplicate assigned seats', () => {
-  const data = fixture(); data[1].seat_id = data[0].seat_id;
-  assert.throws(() => harness(data), /Assigned seats must be distinct/);
+test('platform accepts distinct users sharing four rooms within capacity', () => {
+  const data = fixture().map((u,i) => ({ ...u, seat_id: `room-${i%4}` }));
+  harness(data).context.api.setup();
+  const insufficient = harness(data, { capacity: 17 });
+  assert.throws(() => insufficient.context.api.setup(), /exceed the remaining capacity/);
+});
+test('platform rejects duplicate CSRF tokens', () => {
+  const data=fixture();data[1].csrf_token=data[0].csrf_token;
+  assert.throws(() => harness(data), /distinct tokens, CSRF/);
 });
 test('platform rejects two sessions belonging to one user', () => {
   const h = harness(fixture(), { userId: () => 'same-user' });

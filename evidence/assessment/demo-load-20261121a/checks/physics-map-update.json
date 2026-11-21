@@ -1,0 +1,176 @@
+{
+  "task_scope": "Requested Physics floor plan for the existing isolated load schedule; not acceptance of six network maps",
+  "recorded_at_utc": "2026-11-21T02:14:49.769762+00:00",
+  "applied_via": "Scoped ORM ECS one-off in AWS VPC, current immutable API image; no runtime deployment",
+  "batch": "demo-load-20261121a",
+  "manifest_id": "fcbac39e-8ef7-53a7-809a-e2f867cd7f66",
+  "event_id": "445a670a-f7ac-5eff-b995-cce188d104aa",
+  "load_session": "5e024221-c858-5443-be0e-4dbd01fd8800",
+  "room_id": "40086403-b7f1-5e9c-8810-d4324085638d",
+  "map_change": {
+    "source_room_id": "5287d90a-0163-599b-a753-57bfb86023bc",
+    "source_layout_sha256": "852725f1dffa97294b28bd5e9c0051a80f3eb584187b16e64fc7048d5f4c4aff",
+    "image_sha256": "e72a5c027905f6e7cc490054bfe27c70af122c5c66b82b020e8142df6abc08e5",
+    "image_bytes": 911691,
+    "zones": 34,
+    "capacity": 1530,
+    "preserved_cancelled_reservations": 2,
+    "source_unchanged": true,
+    "demo_unchanged": {
+      "verified": true,
+      "tables": 10,
+      "invariant_rows": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "db_clock": "2026-11-21T02:03:35.163904+00:00"
+    }
+  },
+  "live_https_checks": {
+    "base_url": "https://labseat.id.vn",
+    "source_and_target_image_bytes_identical": true,
+    "image_sha256": "e72a5c027905f6e7cc490054bfe27c70af122c5c66b82b020e8142df6abc08e5",
+    "dimensions": [
+      1491,
+      1055
+    ],
+    "zone_geometry_labels_capacity_identical": true,
+    "zones": 34,
+    "capacity": 1530,
+    "all_rooms_free": true,
+    "load_event_public_with_own_poster": true,
+    "source_revision": 1,
+    "target_revision": 2,
+    "target_room_id": "40086403-b7f1-5e9c-8810-d4324085638d"
+  },
+  "ui_checks": {
+    "environment": "Real https://labseat.id.vn, in-app browser",
+    "admin_load_map_rendered": true,
+    "admin_display": "34 phòng · Đã khóa",
+    "poster_uploaded_and_saved_via_admin_ui": true,
+    "student_login": true,
+    "student_opened_load_card": true,
+    "student_admission_granted": true,
+    "student_selected_room": "HN582 (701-K1)",
+    "hold_button_enabled_after_selection": true,
+    "ui_created_reservation": false,
+    "student_released_queue_turn": true,
+    "admin_upload_detection_34_regions_claimed": false
+  },
+  "handoff": {
+    "unique_users": 100,
+    "unique_session_tokens": 100,
+    "unique_csrf_tokens": 100,
+    "mapping_rows": 100,
+    "distinct_room_ids": 34,
+    "max_assigned_users_per_room": 3,
+    "room_capacity": 45,
+    "total_capacity": 1530,
+    "expires_at": "2026-11-21T17:05:52.042183+07:00",
+    "zip_sha256": "7f7542cf6712a3f96efdcd97db1d498ecf6f00efa03785338c657e54cb97c3b2",
+    "recipient_acknowledged": false
+  },
+  "smoke": {
+    "started_at_utc": "2026-11-21T02:08:50.091808+00:00",
+    "base_url": "https://labseat.id.vn",
+    "unique_users": 100,
+    "distinct_sessions": 100,
+    "distinct_seats": 34,
+    "capacity": 1530,
+    "queue_enabled": true,
+    "layout_type": "image",
+    "normal_password_login_logout": "PASS",
+    "hold_confirm_qr": "PASS",
+    "email": {
+      "job": "SKIPPED",
+      "delivery": "SKIPPED",
+      "provider_attempts": 0
+    },
+    "cancel_queue_leave": "PASS",
+    "sessions_expire_at": "2026-11-21T10:05:52.042183+00:00",
+    "finished_at_utc": "2026-11-21T02:09:36.046198+00:00",
+    "verified": true,
+    "demo_unchanged": {
+      "verified": true,
+      "tables": 10,
+      "invariant_rows": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "db_clock": "2026-11-21T02:09:44.110922+00:00"
+    }
+  },
+  "cleanup_dry_run": {
+    "execute": false,
+    "before": {
+      "users": 100,
+      "events": 1,
+      "schedules": 1,
+      "seats": 34,
+      "reservations": 3
+    },
+    "manifest_id": "fcbac39e-8ef7-53a7-809a-e2f867cd7f66",
+    "foreign_reference_checks": "PASS",
+    "demo_unchanged": {
+      "verified": true,
+      "tables": 10,
+      "invariant_rows": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "db_clock": "2026-11-21T02:14:03.375949+00:00"
+    }
+  },
+  "tests": {
+    "environment": "Disposable PostgreSQL16.13 restored logical backup and local storage; not an AWS test run",
+    "passed": 3,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 0,
+    "seconds": "18.996"
+  },
+  "screenshots": [
+    {
+      "private_path": ".local/assessment/demo-load-20261121a/screenshots/load-physics-admin.jpg",
+      "sha256": "304e752b94f024fc353c48b1cab6d064531f60e72e1aac1364a74b3328027474"
+    },
+    {
+      "private_path": ".local/assessment/demo-load-20261121a/screenshots/load-physics-student.jpg",
+      "sha256": "572a2b6df14a50bb02bc2e7ea51480dcbc9673faa8a59d537548784dbe5780e6"
+    }
+  ],
+  "script_sha256": {
+    "isolated_load.py": "59f478be0d11b8b9479ad3a0ec07f1de4fd1ad2547fbc45f76b26170c7759217",
+    "prepare-isolated-one-off.ps1": "9cc0b8efb205a75348131dd6311cf72b14b5c816b51445303e9d8dbf15d1bc40",
+    "run-isolated-load.ps1": "e69d20000bdc682301f8a28c371175f5ebf1d1e0c16b5c31b579718eeea8cf07",
+    "test_isolated_load.py": "bff5df6d023afce801a89384330c5fdc523a21656000c218a3b3a2eedf5c1d31"
+  },
+  "pending": [
+    "Person3 receives and validates new package before measurement",
+    "Refresh sessions if window exceeds actual token expiry",
+    "After actual load: scope cleanup and demo/assets/invariants verification"
+  ],
+  "limits": [
+    "Grid receipt results.json is historical; this file records current Physics configuration",
+    "Demo source/image remain unchanged; new load room owns a separate image copy",
+    "Original demo-image distribution rights were not expanded; screenshots stay private",
+    "This change does not complete B2 six network-image upload/detection/manual-edit acceptance"
+  ],
+  "fixture_status": "RETIRED: owned load batch deleted on AWS 2026-11-21; historical backup/configuration receipt only",
+  "current_dataset": "docs/assessment/functional/dataset.md"
+}

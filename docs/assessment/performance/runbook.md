@@ -111,3 +111,27 @@ Năm ảnh Console do Người 3 cung cấp cho thấy:
 6. **Kiểm mail sau restore (`NOT_RUN`).** Quota nhóm là **300 mail/ngày**; đối chiếu số đã dùng trong ngày, quota Brevo còn lại và số mail nhóm cho phép trong cửa sổ trước khi gửi. Dùng **một** giao dịch synthetic mới qua API bình thường; xác minh job/attempt, callback/Brevo và Inbox/Spam theo tiêu chí B3. Không gửi nếu window/mail quota chưa được nhóm cho phép. Ghi worker baseline cuối, queue/DLQ, alarm/SNS và số mail đã dùng. Nếu kiểm này chưa thực hiện, restore cấu hình có thể PASS riêng nhưng C2 tổng thể vẫn BLOCKED.
 
 Manifest C2 cần run ID, phase `baseline/disabled/smoke/drain/restored/mail-check`, owner, commit script, digest/schema, account/region đã làm sạch, mốc UTC, trước/sau task definition, queue/job counts, Brevo attempts/quota, kết quả và cleanup/rollback. Lưu các bản gốc private; gói công khai chỉ có dữ liệu đã làm sạch và hash. **Trạng thái hiện tại: BLOCKED** — k6 v2.4.0 đã được xác minh bằng đường dẫn tuyệt đối và profile AWS CLI `tv2-compute` dùng được cho preflight đọc; chưa có session B2 mới hoặc bằng chứng job synthetic `SKIPPED`/Brevo/restore. Windows Time vẫn chưa đồng bộ.
+
+# C3 — Thực thi AWS và cleanup
+
+Chỉ target `https://labseat.id.vn` và batch `demo-load-mechanic21`. Trước khi tải, kiểm backup/TTL/mapping trong [tài liệu dữ liệu](../functional/dataset.md), worker email disabled ổn định, B3 smoke, clock, targets, DB và limits. Không chạy đồng thời fault/restore; giữ credentials và raw logs private.
+
+## Thứ tự
+
+1. Chạy baseline 5 VU bằng `scripts/assessment/observability/cloud-runner.ps1 -Phase baseline`.
+2. Queue operator `begin`, chờ `recovery_not_before`, rồi `disable`; kiểm OFF và chạy `-Phase platform` 15 phút. Sau đó `enable` và kiểm ready/baseline policy.
+3. Khi queue ON, chạy `-Phase admission20`, rồi `-Phase admission50`, mỗi mức 5 phút.
+4. Chạy `-Phase scaling60`; chỉ tăng 100/150/200 khi chưa thấy EC2 scale-out, TTL/gates/headroom vẫn đạt. Giữ 15 phút mỗi mức và không chỉnh desired thủ công.
+5. Chạy `-Phase recovery` 30 phút; có thể quan sát đến 45 phút và đối chiếu activities, task, instance thực.
+
+`cloud-runner.ps1` trả receipt riêng ở bước Start. Chờ task `STOPPED`, sau đó dùng `-Stage Collect -Receipt <private-receipt> -Aws <aws.exe>`. Không Start lại khi chưa rõ task cũ. Bundle phải hash-verified; runner Fargate dùng 2048 CPU/4096 MiB ngoài ASG; ClockDrift phải `SYNCHRONIZED` với bound không quá 100 ms; TTL tối thiểu 2 giờ. Dùng Linux k6 binary đã kiểm chứng và không cài vào EC2 ứng dụng.
+
+## Cấp lại session và thu evidence
+
+Chạy `run-isolated-load.ps1 -Stage sessions -Batch demo-load-mechanic21 -MinimumValidSeconds 14400 -Execute`, rồi cùng batch chạy stage smoke. Yêu cầu SSM tunnel, TLS verify full và backup đã xác minh. Không kéo dài TTL trực tiếp trong file; gói bốn file private phải đúng manifest và không chứa backup key/master.
+
+Collector C1 dùng `collect.py`/`runner.ps1` với inventory thực, interval 30 giây và DB budget 51. Lệnh `node scripts/load/summarize-c3.mjs <private-metrics.ndjson> <public-phase-dir>` tạo CSV/SVG đã loại URL, token và PII; `chart.py` vẽ metrics tài nguyên và giữ nguyên các khoảng trống dữ liệu.
+
+## Kết thúc
+
+Sau khi toàn bộ load task dừng, chạy probe/invariants; cleanup dry-run rồi execute đúng batch và manifest `0a59f708-244e-5d0d-80d1-c3907727db17`; kiểm 10 bảng demo và 7 invariants, đồng thời giữ backup. Chuyển gói phiên sang `RETIRED`; gỡ Redis user tạm khỏi group, xóa hai SSM parameters và inline policy tạm; dọn task-definition revisions/S3 versions theo receipt sau khi tải artifact về; dừng monitor, collector và tunnel của lượt chạy. Ghi riêng mọi bước chưa làm và kết quả `FAIL`.

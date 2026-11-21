@@ -69,7 +69,7 @@ def media(tmp_path_factory):
 @pytest.fixture
 def camera_page(server, media):
     with sync_playwright() as p:
-        browser = p.chromium.launch(executable_path=os.getenv('CHROME_BIN', '/usr/bin/google-chrome'), headless=True,
+        browser = p.chromium.launch(executable_path=os.getenv('CHROME_BIN') or None, headless=True,
             args=['--no-sandbox', '--use-fake-device-for-media-stream', '--use-fake-ui-for-media-stream',
                   f'--use-file-for-fake-video-capture={media / "camera.y4m"}'])
         context = browser.new_context()
@@ -155,9 +155,13 @@ def test_navigation_stops_live_tracks(camera_page):
     page, server, _, _, errors = camera_page
     open_scanner(page, server)
     page.evaluate('window.jsQR=()=>null'); page.locator('#camera').click()
-    page.wait_for_function('() => cameraStream !== null && document.getElementById("preview").videoWidth > 0')
+    expect(page.locator('#preview')).to_have_js_property('videoWidth',640)
+    assert page.evaluate('cameraStream !== null')
     page.evaluate('window.testStream=cameraStream;location.hash="#booking"')
-    page.wait_for_function('() => window.testStream.getTracks().every(track=>track.readyState === "ended")')
+    for _ in range(100):
+        if page.evaluate('window.testStream.getTracks().every(track=>track.readyState === "ended")'):break
+        page.wait_for_timeout(50)
+    else:pytest.fail('Camera tracks remained live after leaving check-in')
     assert page.evaluate('cameraStream === null') and errors == []
 
 

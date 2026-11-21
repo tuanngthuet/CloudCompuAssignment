@@ -1,0 +1,44 @@
+{
+  "run_id": "20261119T043844Z-b4-preflight",
+  "task_id": "B4",
+  "source_commit": "bfd10f5bdbe0102ee205945810d32ae8824992a6",
+  "workspace_changes": [
+    "scripts/assessment/recovery/{preflight.py,db_checks.py,app_plan.py,restore_plan.py,test_tools.py}",
+    "docs/assessment/recovery/{preflight.md,rds-pitr.md,report.md}"
+  ],
+  "checked_at_utc": "2026-11-19T04:43:53.021475+00:00",
+  "status": "BLOCKED",
+  "resource_mutations": [
+    "Two temporary ECS source DB read-only probes; STOPPED/exit0. No restored DB/app/secret/cache/object or source data/config writes."
+  ],
+  "rpo_seconds": null,
+  "rto_seconds": null,
+  "files": [
+    {
+      "path": "checks/results.json",
+      "sha256": "d873ffe60409c0f534df3d3d14c3305008a75550f1176bb1f54873d58069b0b8"
+    },
+    {
+      "path": "summary.md",
+      "sha256": "f862ec1d628d6bb24e0778a34f8c43f7872766e171bc4034279a079d2d5c6c74"
+    }
+  ],
+  "source_sql_checked_at_utc": "2026-11-19 04:52:14.717118+00:00",
+  "prepared_script_sha256": {
+    "scripts/assessment/recovery/app_plan.py": "29a7e4be76d10a26687a08f9a6002a56a260ff100ff550fa395cfd5753ee4647",
+    "scripts/assessment/recovery/db_checks.py": "5b3b2f298e737373bfe5d2bd0620851653899bef187ef082046995b2aadb81a5",
+    "scripts/assessment/recovery/preflight.py": "8848e256e9c893f6a0a799784aa4f1f52037ee4892322e55ed1a641548384cfa",
+    "scripts/assessment/recovery/restore_plan.py": "bc8860e4b2f0aacd0347ce24e28a8eb71bfb2399809b4e13401efa10608d660d",
+    "scripts/assessment/recovery/test_tools.py": "5b1744ba98057cd904523931c7b8dd7bfc71cfe767a102f0a64811c51d884914"
+  },
+  "coverage": "Prepared tools and read-only source preflight only; no AWS PITR rehearsal or RPO/RTO measurement",
+  "report_sha256": {
+    "docs/assessment/recovery/preflight.md": "25918f87fd9feb8a253f429f6e4775f9de588e0106ebcd2100a816cceb8a4999",
+    "docs/assessment/recovery/rds-pitr.md": "80ee611f9cc2b100f66119499ee531445d812aabb65c4de1ffc1fa8ff31e6371",
+    "docs/assessment/recovery/report.md": "36d249dc1d676ecf5251d9679b845c50a3dc958627521fb99df7dc3380c6e723"
+  },
+  "hash_encoding": "UTF-8 text; normalize CRLF to LF before SHA-256, without other content changes",
+  "person1_source_commit": "ff2bb56091a5e846e4ebc662d2ea44d1d6fbecf6",
+  "c1_support_run_id": "20261119T172832Z-b4-c1-preflight",
+  "c1_source_commit": "7fa878ac7e7995c25777680e44fe2da36d1e619c"
+}

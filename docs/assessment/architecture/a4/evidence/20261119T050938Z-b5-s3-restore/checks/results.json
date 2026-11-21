@@ -1,0 +1,265 @@
+{
+  "run_id": "76e341cb-2c1e-4ec7-9113-9906e44d660c",
+  "task_id": "B5",
+  "started_at_utc": "2026-11-19T05:09:38.739888+00:00",
+  "region": "ap-southeast-2",
+  "bucket_alias": "labseat-private-assets",
+  "bucket_identity_sha256": "3c1ef13767867644d6e4274b48c56f4fd8886ad8b261580bcd8720dcf6f83d05",
+  "key_suffix": "assessment/b5/76e341cb-2c1e-4ec7-9113-9906e44d660c/rooms/fixture.png",
+  "full_key_sha256": "ae991f70b5a86c14ada41fed28f3b7b30d8625676bbd6e6af6d5e601fb5ba718",
+  "stages": [
+    {
+      "stage": "before",
+      "at_utc": "2026-11-19T05:09:49.248862+00:00",
+      "version_id": "JmiLVA.SywILMOOJXEcJ5o78aTnlRBx_",
+      "sha256": "17c0edfb565b41fbd252608537d227330abfd3aad8cf0a1d95db9f4fbea8e6ac",
+      "bytes": 18456,
+      "width": 800,
+      "height": 480,
+      "content_type": "image/png",
+      "cache_control": "no-store",
+      "evidence_file": "images/before.png"
+    },
+    {
+      "stage": "overwritten",
+      "at_utc": "2026-11-19T05:09:53.296444+00:00",
+      "version_id": "AlvyXV5nlHipTnOftRwvrm66j2mV0P22",
+      "sha256": "a7022db27680c96f426cdfb9ceecb72424948c8390146e882f7b24e7474f7a6a",
+      "bytes": 20565,
+      "width": 800,
+      "height": 480,
+      "content_type": "image/png",
+      "cache_control": "no-store",
+      "evidence_file": "images/overwritten.png"
+    },
+    {
+      "stage": "restored",
+      "at_utc": "2026-11-19T05:09:56.503532+00:00",
+      "version_id": "mU4g0DjmFqHmSSLfoJaW1q_8DVldRCqb",
+      "sha256": "17c0edfb565b41fbd252608537d227330abfd3aad8cf0a1d95db9f4fbea8e6ac",
+      "bytes": 18456,
+      "width": 800,
+      "height": 480,
+      "content_type": "image/png",
+      "cache_control": "no-store",
+      "evidence_file": "images/restored.png"
+    }
+  ],
+  "s3_status": "PASS",
+  "overall_status": "BLOCKED",
+  "db_reference": {
+    "status": "NOT_RUN",
+    "reason": "B4 restored DB/app not created"
+  },
+  "app_display": {
+    "status": "NOT_RUN",
+    "reason": "B4 restored app not created"
+  },
+  "images_verified": false,
+  "versioning": {
+    "Status": "Enabled"
+  },
+  "public_access_block": {
+    "BlockPublicAcls": true,
+    "IgnorePublicAcls": true,
+    "BlockPublicPolicy": true,
+    "RestrictPublicBuckets": true
+  },
+  "object_lock_default_retention": false,
+  "initial_key_empty": true,
+  "object_acl": [
+    {
+      "type": "CanonicalUser",
+      "permission": "FULL_CONTROL",
+      "public_group": false
+    }
+  ],
+  "anonymous_get_status": 403,
+  "cache_scope": "S3 authenticated GET returns Cache-Control no-store; browser/CDN cache and app display NOT_RUN",
+  "finished_at_utc": "2026-11-19T05:10:04.533372+00:00",
+  "account_verified": true,
+  "restore_method": {
+    "operation": "CopyObject",
+    "source_version_id": "JmiLVA.SywILMOOJXEcJ5o78aTnlRBx_",
+    "new_current_version_id": "mU4g0DjmFqHmSSLfoJaW1q_8DVldRCqb"
+  },
+  "evidence_scope": "Authenticated S3 GET object bytes only; no application screenshots, no DB reference verification, no restored app.",
+  "evidence_run_id": "20261119T050938Z-b5-s3-restore",
+  "review": {
+    "reviewed_at_utc": "2026-11-19T05:15:03.216220+00:00",
+    "cleanup_recheck": {
+      "checked_at_utc": "2026-11-19T05:15:03.216220+00:00",
+      "account_verified": true,
+      "operation": "ListObjectVersions, exact-key filter",
+      "remaining_versions": 0,
+      "remaining_delete_markers": 0,
+      "status": "PASS",
+      "mutations": []
+    },
+    "prompt_alignment": "S3 component meets overwrite/copy/hash/content-type/private/cleanup requirements; full B5 NOT complete until DB reference and real app display/cache are verified in the restored environment.",
+    "requirements": [
+      {
+        "requirement": "synthetic good version/key/hash",
+        "status": "PASS"
+      },
+      {
+        "requirement": "controlled wrong-image overwrite observed in S3 bytes",
+        "status": "PASS"
+      },
+      {
+        "requirement": "copy good version into current without deletion as restore method",
+        "status": "PASS"
+      },
+      {
+        "requirement": "downloaded SHA256/content type/PNG validation",
+        "status": "PASS"
+      },
+      {
+        "requirement": "private access",
+        "status": "PASS"
+      },
+      {
+        "requirement": "exact version cleanup after evidence",
+        "status": "PASS"
+      },
+      {
+        "requirement": "synthetic restored DB reference",
+        "status": "NOT_RUN"
+      },
+      {
+        "requirement": "real app display before/wrong/restored and app cache",
+        "status": "NOT_RUN"
+      },
+      {
+        "requirement": "B4 images_verified true and overall measurement",
+        "status": "NOT_RUN"
+      }
+    ],
+    "coordination": [
+      {
+        "owner": "Person 3",
+        "task": "C4/C5",
+        "deliver": "Fault run IDs/evidence, completion/rollback times and stable app/dependencies; no concurrent load/fault",
+        "consumer": "Person 2 schedules B4 rehearsal after this handoff"
+      },
+      {
+        "owner": "Person 2",
+        "task": "B4",
+        "deliver": "Private restored DB/app, pinned API digest, isolated secrets/cache/storage, synthetic record and accessible image route",
+        "consumer": "Person 2 runs integrated B5; this is not work assigned to Person 3"
+      },
+      {
+        "owner": "Person 2",
+        "task": "B5 remaining",
+        "deliver": "New integrated run: link synthetic DB record, observe good/wrong/restored image through app, compare DB key/hash/MIME/private/cache, capture evidence, cleanup",
+        "consumer": "Set images_verified=true only after all actual checks pass"
+      }
+    ],
+    "additional_context": "A1/A2/A3 main pinned source integrated into B4; fresh read-only S3 TLS/lifecycle/ownership/network context. DB reference and restored-app display remain NOT_RUN."
+  },
+  "person1_handoff_reference": "evidence/assessment/20261119T043844Z-b4-preflight/checks/results.json#/person1_handoff",
+  "b5_source_contract": {
+    "source_commit": "ba326f5e6d32a9e5a40f1ebdad959f5ab7215e2f",
+    "person1_main_commit": "ff2bb56091a5e846e4ebc662d2ea44d1d6fbecf6",
+    "source_files": [
+      {
+        "path": "app/modules/rooms/router.py",
+        "current_git_blob_sha256": "514fbfb3846f69c8a78f200dbe84001451ca622c117f03b09db15497d4ee7b4a",
+        "matches_main": true,
+        "source_url": "https://github.com/tuanngthuet/CloudCompuAssignment/blob/ba326f5e6d32a9e5a40f1ebdad959f5ab7215e2f/app/modules/rooms/router.py"
+      },
+      {
+        "path": "app/image_maps.py",
+        "current_git_blob_sha256": "8767818f7df1ed38112141a54a21b18e02b5affeac32e398ea8204bec1a1810d",
+        "matches_main": true,
+        "source_url": "https://github.com/tuanngthuet/CloudCompuAssignment/blob/ba326f5e6d32a9e5a40f1ebdad959f5ab7215e2f/app/image_maps.py"
+      },
+      {
+        "path": "app/infrastructure/storage/objects.py",
+        "current_git_blob_sha256": "002629cff56699cc39e36474fe8190ce7a49175d726cc7b23884120a1a1ddd4b",
+        "matches_main": true,
+        "source_url": "https://github.com/tuanngthuet/CloudCompuAssignment/blob/ba326f5e6d32a9e5a40f1ebdad959f5ab7215e2f/app/infrastructure/storage/objects.py"
+      },
+      {
+        "path": "app/infrastructure/storage/registry.py",
+        "current_git_blob_sha256": "48edb48d4ef53cbf321568c07abc410db8249c8be7e218a719a415da04be6de7",
+        "matches_main": true,
+        "source_url": "https://github.com/tuanngthuet/CloudCompuAssignment/blob/ba326f5e6d32a9e5a40f1ebdad959f5ab7215e2f/app/infrastructure/storage/registry.py"
+      },
+      {
+        "path": "app/modules/admin/router.py",
+        "current_git_blob_sha256": "491b6cbc7ac44507e471c3d1020dc54a7906e9d154fb6076e5a258aa4f35e740",
+        "matches_main": true,
+        "source_url": "https://github.com/tuanngthuet/CloudCompuAssignment/blob/ba326f5e6d32a9e5a40f1ebdad959f5ab7215e2f/app/modules/admin/router.py"
+      },
+      {
+        "path": "tests/app/test_image_cache.py",
+        "current_git_blob_sha256": "6a685486e8c4316c6763235a26a719501aac0adaf60c49a882af09e2722d663b",
+        "matches_main": true,
+        "source_url": "https://github.com/tuanngthuet/CloudCompuAssignment/blob/ba326f5e6d32a9e5a40f1ebdad959f5ab7215e2f/tests/app/test_image_cache.py"
+      }
+    ],
+    "database_reference_contract": {
+      "map": "room_layouts.layout.image_key via lab_sessions.room_id -> rooms.id -> room_layouts.room_id",
+      "room_image": "rooms.image_key",
+      "poster": "events.poster_key",
+      "object_registry": "storage_objects.key; no FK from image_key/poster_key; explicitly compare existence/state",
+      "key_resolution": "S3_PREFIX stripped of outer slashes + / + relative DB key; no duplicate prefix",
+      "synthetic_map_expected_state": "REFERENCED after publish via app, not DELETING/DELETED"
+    },
+    "image_contract": {
+      "room_image": "upload normalizes to JPEG; read route returns image/jpeg",
+      "image_map": "upload produces PNG at rooms/<room_id>/maps/<uuid>.png; read route returns image/png",
+      "baseline_hash": "Use uploaded normalized bytes retrieved from actual S3 object, not original local source image"
+    },
+    "cache_contract": {
+      "published_version_match": "public, max-age=86400",
+      "version_argument": "v is DB key basename, not S3 VersionId or SHA256",
+      "no_version_or_wrong_version": "no-store",
+      "admin_key_preview": "no-store; unpublished key requires admin",
+      "errors_and_sensitive": "no-store",
+      "same_key_overwrite": "URL/v basename remains unchanged; stale-cache risk must be measured in real restored app; do not claim an observed browser bug from mock tests",
+      "S3_metadata_not_forwarded": "Route sets response headers itself; S3 Cache-Control no-store alone does not prove app browser bypasses cache"
+    },
+    "offline_validation": {
+      "command": "python -m pytest tests/app/test_image_cache.py -q -p no:cacheprovider",
+      "environment": "Docker network none; repository read-only; FastAPI TestClient with DB/storage mocks; no real AWS/DB/browser",
+      "started_at_utc": "2026-11-19T05:26:12.550679+00:00",
+      "seconds": 3.22,
+      "passed": 4,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": [
+        {
+          "name": "test_only_current_version_of_public_image_is_cacheable[poster]",
+          "status": "PASS"
+        },
+        {
+          "name": "test_only_current_version_of_public_image_is_cacheable[map]",
+          "status": "PASS"
+        },
+        {
+          "name": "test_map_key_previews_never_get_public_cache_headers",
+          "status": "PASS"
+        },
+        {
+          "name": "test_errors_and_sensitive_responses_remain_uncached",
+          "status": "PASS"
+        }
+      ]
+    },
+    "not_proven": [
+      "Real restored DB reference, registry state and resolved object key",
+      "Browser/CDN behavior and visible image before/wrong/restored",
+      "Successful app image retrieval with recovery task IAM/network/SSL config"
+    ],
+    "images_verified": false
+  },
+  "c1_handoff_support": {
+    "source_commit": "7fa878ac7e7995c25777680e44fe2da36d1e619c",
+    "evidence": "evidence/assessment/20261119T172832Z-b4-c1-preflight/checks/results.json",
+    "scope": "Indirect via B4 restored private app; collection does not prove image DB reference or app rendering.",
+    "no_completion_status_promoted": true
+  }
+}

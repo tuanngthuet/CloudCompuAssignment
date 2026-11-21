@@ -1,0 +1,44 @@
+{
+  "run_id": "20261119T050938Z-b5-s3-restore",
+  "task_id": "B5",
+  "source_commit": "b0e9eef807edc116ce7c19973e69a2c3a06f4f5b",
+  "started_at_utc": "2026-11-19T05:09:38.739888+00:00",
+  "finished_at_utc": "2026-11-19T05:10:04.533372+00:00",
+  "status": "BLOCKED",
+  "s3_component": "PASS",
+  "images_verified": false,
+  "hash_encoding": "UTF-8 text: CRLF normalized to LF; image files: raw bytes",
+  "files": [
+    {
+      "path": "checks/results.json",
+      "sha256": "fd1ae40dc33f0c8eb1c0da7ce3b2b7268b0c0cff6793a396ba628ee07bf2df21"
+    },
+    {
+      "path": "cleanup-manifest.json",
+      "sha256": "5703d59660a7deadac7120028adf76f30fc9e3eccafda39644fe3ecb12bb2154"
+    },
+    {
+      "path": "images/before.png",
+      "sha256": "17c0edfb565b41fbd252608537d227330abfd3aad8cf0a1d95db9f4fbea8e6ac"
+    },
+    {
+      "path": "images/overwritten.png",
+      "sha256": "a7022db27680c96f426cdfb9ceecb72424948c8390146e882f7b24e7474f7a6a"
+    },
+    {
+      "path": "images/restored.png",
+      "sha256": "17c0edfb565b41fbd252608537d227330abfd3aad8cf0a1d95db9f4fbea8e6ac"
+    },
+    {
+      "path": "summary.md",
+      "sha256": "b7e8837a3e7ef227974af697988df4ac3f9d239f9ffcf2ebdc3e9254f7553235"
+    }
+  ],
+  "report_sha256": "fccf93f8b4fd4157c8f2be3e292be72baf2ef85688709856786525771fdb0b3d",
+  "object_run_id": "76e341cb-2c1e-4ec7-9113-9906e44d660c",
+  "reviewed_at_utc": "2026-11-19T05:15:03.216220+00:00",
+  "person1_source_commit": "ff2bb56091a5e846e4ebc662d2ea44d1d6fbecf6",
+  "source_contract_commit": "ba326f5e6d32a9e5a40f1ebdad959f5ab7215e2f",
+  "c1_support_run_id": "20261119T172832Z-b4-c1-preflight",
+  "c1_source_commit": "7fa878ac7e7995c25777680e44fe2da36d1e619c"
+}

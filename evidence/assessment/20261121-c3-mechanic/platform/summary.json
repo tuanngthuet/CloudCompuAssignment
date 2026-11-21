@@ -1,0 +1,136 @@
+{
+  "phase": "platform",
+  "started_at_utc": "2026-11-21T11:53:11.212477+00:00",
+  "finished_at_utc": "2026-11-21T12:08:27.531806+00:00",
+  "result": "PASS",
+  "launch_type": "FARGATE",
+  "clock": {
+    "ClockErrorBound": 0.5730744999999999,
+    "ReferenceTimestamp": "2026-11-21T11:53:07Z",
+    "ClockSynchronizationStatus": "SYNCHRONIZED"
+  },
+  "limits": {
+    "CPU": 2,
+    "Memory": 4096
+  },
+  "k6_version": "k6 v1.0.0 (commit/41b4984b75-dirty, go1.24.2, linux/amd64)",
+  "k6_exit_code": 0,
+  "source_sha256": {
+    "k6": "2ba13ec04f8ff874964e36ae44129cf6553d96cbf43f96d662adf7baa5904ed4",
+    "booking.js": "8d8445c57bd5cef1e41890df7376270e4b31a0293813f7b0f9a44d843a86e74a",
+    "platform.js": "b2bade9d92e397059ff6f444eb97f72c65f88d25f8866f2f73e9bb509dec33c0",
+    "ecs-scaling.js": "e7f31ff3f61f2320e19ab5d8a2a5c175b3fe669db79594a6b94f47d6deb53f0e",
+    "catalogue.js": "642cdc54adb3494f4ee8ccd02751f1ace2b50025ffbdf95ba335b48c070a0433"
+  },
+  "metrics": {
+    "platform_confirms_ok": {
+      "count": 1801,
+      "rate": 1.9756767209313488
+    },
+    "platform_write_ms": {
+      "p(99)": 752.853026179999,
+      "max": 1999.52375,
+      "avg": 83.78025367277465,
+      "med": 36.285697,
+      "p(95)": 406.08726399999995,
+      "thresholds": {
+        "p(95)<1000": false
+      }
+    },
+    "dropped_iterations": {
+      "rate": 0,
+      "count": 0,
+      "thresholds": {
+        "count==0": false
+      }
+    },
+    "platform_read_ms": {
+      "med": 23.076928,
+      "p(95)": 339.744526,
+      "p(99)": 719.947317,
+      "max": 1615.697849,
+      "avg": 63.46262505171113,
+      "thresholds": {
+        "p(95)<500": false
+      }
+    },
+    "http_reqs": {
+      "count": 27106,
+      "rate": 29.7349767893199
+    },
+    "platform_workflows_completed": {
+      "count": 1801,
+      "rate": 1.9756767209313488
+    },
+    "platform_unexpected_failure": {
+      "fails": 27003,
+      "passes": 1,
+      "thresholds": {
+        "rate<0.01": false
+      },
+      "value": 3.703155088135091e-05
+    },
+    "platform_holds_ok": {
+      "count": 1801,
+      "rate": 1.9756767209313488
+    },
+    "http_req_duration": {
+      "max": 1999.52375,
+      "avg": 67.33003441153281,
+      "med": 29.072644,
+      "p(95)": 353.51640425,
+      "p(99)": 726.8060659500002
+    },
+    "platform_cancels_ok": {
+      "rate": 1.9756767209313488,
+      "count": 1801
+    },
+    "http_req_failed": {
+      "passes": 1,
+      "fails": 27105,
+      "value": 3.6892200988710984e-05
+    },
+    "platform_workflows_started": {
+      "count": 1801,
+      "rate": 1.9756767209313488
+    },
+    "checks": {
+      "passes": 27003,
+      "fails": 1,
+      "value": 0.9999629684491187
+    }
+  },
+  "threshold_export_note": "k6 threshold boolean false means the threshold did not fail",
+  "raw_sha256": "10745e653fe519ef23eda8229ef731dbc9924380f26ec633d280bd80c98fd2f3",
+  "http_failure_count": 1,
+  "http_failure_examples": [
+    {
+      "at_utc": "2026-11-21T11:55:58.147548906Z",
+      "status": "502",
+      "route": "availability",
+      "operation_class": "platform"
+    }
+  ],
+  "generator": {
+    "memory_peak_MiB": 438.33984375,
+    "cpu_peak_percent_of_limit": 3.4004595404595404,
+    "samples": 91,
+    "clock_statuses": [
+      "SYNCHRONIZED"
+    ]
+  },
+  "post_phase_demo": {
+    "verified": true,
+    "tables": 10,
+    "invariant_rows": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "db_clock": "2026-11-21T12:10:12.082261+00:00"
+  }
+}

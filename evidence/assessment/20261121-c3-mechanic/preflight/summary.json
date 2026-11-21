@@ -1,0 +1,24 @@
+{
+  "phase": "preflight",
+  "started_at_utc": "2026-11-21T07:17:37.198400+00:00",
+  "finished_at_utc": "2026-11-21T07:17:37.977678+00:00",
+  "result": "PASS",
+  "launch_type": "FARGATE",
+  "clock": {
+    "ClockErrorBound": 0.556085,
+    "ReferenceTimestamp": "2026-11-21T07:17:16Z",
+    "ClockSynchronizationStatus": "SYNCHRONIZED"
+  },
+  "limits": {
+    "CPU": 2,
+    "Memory": 4096
+  },
+  "k6_version": "k6 v1.0.0 (commit/41b4984b75-dirty, go1.24.2, linux/amd64)",
+  "source_sha256": {
+    "ecs-scaling.js": "e7f31ff3f61f2320e19ab5d8a2a5c175b3fe669db79594a6b94f47d6deb53f0e",
+    "k6": "2ba13ec04f8ff874964e36ae44129cf6553d96cbf43f96d662adf7baa5904ed4",
+    "platform.js": "b2bade9d92e397059ff6f444eb97f72c65f88d25f8866f2f73e9bb509dec33c0",
+    "booking.js": "8d8445c57bd5cef1e41890df7376270e4b31a0293813f7b0f9a44d843a86e74a",
+    "catalogue.js": "642cdc54adb3494f4ee8ccd02751f1ace2b50025ffbdf95ba335b48c070a0433"
+  }
+}

@@ -20,7 +20,7 @@ def test_room_map_detect_delete_drag_edit_capacity_and_booking(width,height):
             page.goto(BASE+'/#login-panel');page.get_by_label('Tài khoản',exact=True).fill(name);page.get_by_label('Mật khẩu',exact=True).fill(os.environ['BROWSER_TEST_PASSWORD']);page.locator('#login button').click();pw.expect(page.locator('#login-panel')).to_be_hidden()
             if name!='admin':
                 csrf=next(c['value'] for c in context.cookies() if c['name']=='labseat_csrf')
-                response=context.request.put(BASE+'/me/profile',data={'full_name':'Học viên kiểm thử','cccd':'012345678901','phone':'','email':'map-test@example.test'},headers={'X-CSRF-Token':csrf});assert response.ok,response.text();page.reload()
+                response=context.request.put(BASE+'/me/profile',data={'full_name':'Học viên kiểm thử','cccd':'','phone':'','email':name+'@example.test'},headers={'X-CSRF-Token':csrf});assert response.ok,response.text();page.reload()
             return context,page
         def shot(page,name):
             assert page.evaluate('document.documentElement.scrollWidth<=innerWidth')
@@ -31,7 +31,9 @@ def test_room_map_detect_delete_drag_edit_capacity_and_booking(width,height):
             admin,operator=user('admin');now=datetime.now(timezone.utc);name='Ca sơ đồ phòng '+uuid.uuid4().hex[:8]
             form=operator.locator('#event-form');art=BytesIO();Image.new('RGB',(720,958),'#c5cbd8').save(art,'PNG')
             form.locator('[name=poster]').set_input_files({'name':'ca.png','mimeType':'image/png','buffer':art.getvalue()});form.locator('[name=name]').fill(name);form.locator('[name=venue]').fill('Khu thực hành')
-            for key,m in [('open_at',-60),('close_at',20),('start_at',30),('end_at',90)]:form.locator(f'[name={key}]').fill((now+timedelta(minutes=m)).astimezone(timezone(timedelta(hours=7))).strftime('%Y-%m-%dT%H:%M'))
+            # Reused seeded students need non-overlapping sessions across viewport cases.
+            shift=timedelta(hours=2*[1440,1024,768,390,320].index(width))
+            for key,m in [('open_at',-60),('close_at',20),('start_at',30),('end_at',90)]:form.locator(f'[name={key}]').fill((now+timedelta(minutes=m)+(shift if key!='open_at' else timedelta())).astimezone(timezone(timedelta(hours=7))).strftime('%Y-%m-%dT%H:%M'))
             operator.locator('#save-event').click();pw.expect(operator.locator('#event-save-status')).to_contain_text('Đã lưu ca')
             event=next(e for e in admin.request.get(BASE+'/events').json() if e['name']==name);room=event['schedule']['room_id']
             normalized=Image.open(BytesIO(admin.request.get(BASE+event['poster_url']).body()));assert normalized.size==(1280,720)
@@ -53,7 +55,13 @@ def test_room_map_detect_delete_drag_edit_capacity_and_booking(width,height):
             operator.locator('#image-region-label').fill('Phòng C');operator.locator('#image-region-capacity').fill('3');operator.locator('#image-region-apply').click();operator.locator('#image-map-save').click();pw.expect(operator.locator('#notice')).to_have_text('Đã lưu sơ đồ phòng.')
             layout=admin.request.get(BASE+f'/rooms/{room}/seat-map').json();assert layout['detector']=='quadrilateral-v1';assert [(r['label'],r['capacity'],r['kind']) for r in layout['elements']]==[('Phòng A',2,'zone'),('Phòng B',2,'zone'),('Phòng C',3,'zone')]
             shot(operator,'room-editor')
-            operator.reload();pw.expect(operator.locator('#editor-event option')).to_have_count(len(admin.request.get(BASE+'/events').json())+1);operator.locator('#editor-event').select_option(event['id']);operator.locator('#image-map-load').click();pw.expect(operator.locator('#image-editor-board path')).to_have_count(3)
+            operator.reload()
+            sessions=admin.request.get(BASE+'/lab-sessions').json()['items']
+            expected_events={e['id'] for e in admin.request.get(BASE+'/admin/events').json()
+                             if (e.get('schedule') or next((s for s in sessions if s.get('event_id')==e['id']),{})).get('room_id')}
+            pw.expect(operator.locator('#editor-event option')).to_have_count(len(expected_events)+1)
+            assert set(operator.locator('#editor-event option').evaluate_all('(options)=>options.map(option=>option.value)'))==expected_events|{''}
+            operator.locator('#editor-event').select_option(event['id']);operator.locator('#image-map-load').click();pw.expect(operator.locator('#image-editor-board path')).to_have_count(3)
             operator.locator('#image-editor-board [data-region-id^=m]').click();pw.expect(operator.locator('#image-region-label')).to_have_value('Phòng C');pw.expect(operator.locator('#image-region-capacity')).to_have_value('3')
             for username in ['student001','student002']:
                 _,page=user(username);page.goto(BASE+'/#booking');page.locator('#session-grid').get_by_role('button',name='Xem Ca thi · '+name,exact=True).click();page.locator('#event-session-list button').click();pw.expect(page.locator('#seats path')).to_have_count(3)
