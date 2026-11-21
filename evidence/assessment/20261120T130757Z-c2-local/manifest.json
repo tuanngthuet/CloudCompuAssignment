@@ -1,0 +1,28 @@
+{
+  "run_id": "20261120T130757Z-c2-local",
+  "task_id": "C2",
+  "owner": "person3",
+  "scope": "local simulated HTTP tests only; no AWS or Brevo calls",
+  "status": "LOCAL_PASS_AWS_BLOCKED",
+  "source_commit": "7fa878ac7e7995c25777680e44fe2da36d1e619c",
+  "source_worktree_modified": true,
+  "booking_script_sha256": "431721bf831ab39567bb59fca8467816bdfd3d14621358c325120a4bdb8141f8",
+  "test_script_sha256": "2d96932e0d65a3d30dc22f4842f1026a1f6588170379756ea33ea76f31434aa8",
+  "files": [
+    {
+      "path": "local-smoke.log",
+      "sha256": "4db9bfcc7b51ceca4c7c4fa3dddfe0e960b1f418fa23af97a5ca6a5ac37a8abb"
+    },
+    {
+      "path": "summary.md",
+      "sha256": "6c9920414fd5b7cdb4f857bc5c0234fa85c890b2b7a8247a4fe3dd962158332d"
+    }
+  ],
+  "checks": {
+    "booking_local_tests": "PASS_7_OF_7",
+    "booking_syntax": "PASS",
+    "k6_aws_smoke": "NOT_RUN",
+    "worker_disabled_and_restored": "NOT_RUN",
+    "brevo_no_send_verified": "NOT_RUN"
+  }
+}
