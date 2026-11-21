@@ -4,9 +4,9 @@
 
 Thực hiện đúng **Prompt AI B3** trong [sprint](../../sprints/ke-hoach-nghiem-thu-4-ngay.md#b3-kiểm-thử-chức-năng-regression-và-demo): dùng dataset B1/B2, kiểm nghiệp vụ LABSEAT thật, ma trận expected/actual/evidence; phân biệt local/emulation/thiết bị thật; email giới hạn; SQL invariants read-only. Không chạy truncate/reset trên AWS.
 
-**Chưa chốt toàn bộ B3.** Đã có kết quả chức năng/regression; X01–X03 chưa có cửa sổ tải/fault/restore và V01 chờ video người dùng cung cấp. Không đổi các mục đó thành PASS. Lần gom đầu ra `20261119T034356Z-b3-functional` không phải lần chạy lại test.
+**Chưa chốt toàn bộ B3.** Đã có kết quả chức năng/regression; X01 đang thu cửa sổ C3 thực và chưa chốt hậu kiểm hồi phục; X02/X03 chờ fault/restore, V01 chờ video người dùng cung cấp. Không đổi các mục đó thành PASS. Lần gom đầu ra `20261119T034356Z-b3-functional` không phải lần chạy lại test.
 
-**Cập nhật sau retest21/11/2026:** ma trận337 dòng hiện **333 PASS,0 FAIL,1 BLOCKED (V01),3 NOT_RUN (X01–X03)**. Các lỗi regression/fixture R001/R004/R006/R009 đã được xử lý và chạy lại đạt; chi tiết ở cuối báo cáo. Những số329 PASS/3 FAIL/2 BLOCKED bên dưới mô tả các lượt lịch sử trước retest, không phải tồn đọng hiện tại.
+**Cập nhật sau retest21/11/2026:** ma trận344 dòng hiện **340 PASS,0 FAIL,1 BLOCKED (V01),3 NOT_RUN (X01–X03)**. Có7case AWS bổ sung dùng SAT demo có sẵn;333PASS trước đó vẫn giữ môi trường/provenance riêng. Các lỗi regression/fixture R001/R004/R006/R009 đã được xử lý và chạy lại đạt; chi tiết ở cuối báo cáo. Những số329 PASS/3 FAIL/2 BLOCKED bên dưới mô tả các lượt lịch sử trước retest, không phải tồn đọng hiện tại.
 
 ## Cấu hình
 
@@ -23,9 +23,9 @@ Ma trận [test-cases.csv](test-cases.csv) dùng đúng cột sprint: `case_id,t
 
 - Regression: dùng suite có sẵn trong `tests/app` và `tests/app/ui.test.mjs`, chỉ trên runtime/DB/Redis disposable được guard cho phép. Sửa fixture avatar được giữ trong `tests/app/test_avatars.py`.
 - AWS: dùng tài khoản B1/B2 đúng quyền; kiểm API trực tiếp và UI, hold/confirm/cancel, QR, realtime hai browser, CSV. Khi chạy lại phải dùng tài khoản còn hợp lệ và có lịch sử đúng bài; không dùng session/password đã bị reset hoặc ca đã xóa.
-- Race suất cuối đã chạy bằng concurrent HTTP TestClient và DB disposable (R062 cùng các case concurrency), không ghi là race đã chạy trên AWS.
+- Race suất cuối lịch sử chạy disposable; lượt bổ sung21/11 đã chạy concurrent HTTPS thật trên SAT demo:45suất giữ nguyên,43vé thử chuẩn bị, hai contender tranh suất cuối cho200/409 sold_out. Đã hủy/dọn đúng vé thử; không nhận đây là bài tải C3.
 - Mail thật: cửa sổ riêng đã được người dùng cho phép, queue drain/quota trước gửi; hai API request bình thường qua publisher → SQS → worker Brevo, quan sát callback và người nhận. Không tự gửi lại job SKIPPED.
-- Trước/sau tải/fault/restore: dùng `scripts/tests/db-invariants.sql` và probe nghiệp vụ đúng window ID/phase/target. Không tự chạy C3/C4/C5/B4/B5 để thay phần việc người khác.
+- Trước/sau tải/fault/restore: dùng `scripts/tests/db-invariants.sql` và probe nghiệp vụ đúng window ID/phase/target. Chỉ lấy kết quả các cửa sổ đã thực sự chạy theo ủy quyền; không đổi trạng thái dựa trên runbook dự kiến.
 
 ## Kết quả thực tế và bằng chứng
 
@@ -43,7 +43,7 @@ Ma trận [test-cases.csv](test-cases.csv) dùng đúng cột sprint: `case_id,t
 | Probe tải/fault/restore | X01–X03 NOT_RUN; người dùng xác nhận chưa có lịch. | CSV |
 | Video student → admin/staff check-in | V01 BLOCKED, chờ người dùng cung cấp. Không nhận hai ảnh hoặc video cũ là video mới hoàn chỉnh. | [manifest](../../../evidence/assessment/20261119T034356Z-b3-functional/manifest.json), [kịch bản](demo-script.md) |
 
-Ma trận hiện **329 PASS, 3 FAIL, 3 NOT_RUN, 2 BLOCKED** (số dòng assertion/bằng chứng, không phải số yêu cầu độc lập). Toàn suite lịch sử: 275 PASS, 15 SKIP, 0 FAIL/ERROR; Node 39 PASS; API 33 PASS; browser 5 PASS. [Regression summary](../../../evidence/assessment/20261119T034356Z-b3-functional/checks/results.json#/regression_summary). 48 dòng kiểm deploy/migration/recovery/maintenance ngoài B3 đã bỏ khỏi ma trận; không xóa test gốc.
+Ma trận lịch sử trước retest: **329 PASS, 3 FAIL, 3 NOT_RUN, 2 BLOCKED** (số dòng assertion/bằng chứng, không phải số yêu cầu độc lập). Toàn suite lịch sử: 275 PASS, 15 SKIP, 0 FAIL/ERROR; Node 39 PASS; API 33 PASS; browser 5 PASS. [Regression summary](../../../evidence/assessment/20261119T034356Z-b3-functional/checks/results.json#/regression_summary). 48 dòng kiểm deploy/migration/recovery/maintenance ngoài B3 đã bỏ khỏi ma trận; không xóa test gốc.
 
 Hai ảnh người dùng đã nhận: [reset thành công](../../../evidence/assessment/20261119T034356Z-b3-functional/screenshots/password-reset-success.png) và email SAT có QR/nhãn Inbox. Bản email nguyên gốc chứa QR vé chưa check-in giữ private; nguồn/hash ở manifest. Đã thêm bản che QR/mã đăng ký theo yêu cầu người dùng; bản che là ảnh dẫn xuất có hỗ trợ AI, không thay thế bản gốc hoặc log giao thư. Không yêu cầu ảnh riêng cho mọi test khi đã có log hoặc video rõ ràng.
 
@@ -159,3 +159,13 @@ Tổng **34 PASS,0 FAIL/ERROR/SKIP** cho bốn module trong lượt retest; khô
 Để tái tạo: dựng môi trường disposable theo tests/app/browser.Dockerfile, migrate DB *_test và seed admin/6 student với SEED_PASSWORD=BROWSER_TEST_PASSWORD riêng; gán email synthetic duy nhất và email_verified_at cho user seed. Giữ DB/Redis fixture mới giữa các lượt để không kế thừa counters. Chạy từng module bằng `python -m pytest tests/app/test_avatar_browser.py -q -p no:cacheprovider --junitxml=<private>/avatar.xml` và tương tự camera/image_map/profile. Cần BROWSER_BASE_URL trỏ app local, BROWSER_TEST_ALLOWED=local-demo-only, RUN_CAMERA_BROWSER_TESTS=1, DATABASE_URL=TEST_DATABASE_URL, APP_ENV=test, EMAIL_BACKEND=disabled và storage local. Fixture xác minh email của profile là tiền điều kiện local; không nhận là mail thật đã gửi/nhận.
 
 Đã dọn đúng7 container và network có nhãn run; PostgreSQL dùng tmpfs, không tạo volume, không dọn tài nguyên khác. Logs/XML chẩn đoán giữ private, chỉ kết quả/hash đã làm sạch được gộp vào evidence hiện có; không thêm output công khai. C6/A4 đã dẫn ở trên là snapshot trước retest này; người3 cần dùng commit B3 mới khi tổng hợp. **Phần còn lại của B3 chỉ là V01 video và X01–X03 cần cửa sổ phối hợp.** B4/B5 không được chạy vượt thứ tự kế hoạch; trạng thái và RPO/RTO/images_verified giữ nguyên.
+
+## Kiểm lại bằng ca demo có sẵn trên AWS —21/11/2026
+
+Lượt14:23–14:30 dùng **Kì thi SAT - Ca demo**, student498 và staff04/admin có sẵn. UI giữ/xác nhận/hủy, API replay, QR PNG/ownership, CSV và staff lookup đều PASS. Phòng đã hết chỗ không chọn được. Race suất cuối trên capacity45 không sửa lịch/capacity: một200, một409 sold_out; sau hủy các vé thử, remaining trả về44 như trước. Đây là kiểm chức năng AWS, không phải số liệu chịu tải.
+
+[Bảy kết quả và cleanup](../../../evidence/assessment/20261119T034356Z-b3-functional/checks/results.json#/existing_demo_retest_20261121). Đã dọn45reservation thử đã hủy và45job SKIPPED, provider attempts0. Không đổi vé gốc/student475, event/lịch/vùng demo. Verify14:31:07:10bảng nghiệp vụ gốc không đổi (trừ metadata last_activity_at),7invariants0.
+
+![Xác nhận SAT demo có sẵn](../../../evidence/assessment/20261119T034356Z-b3-functional/screenshots/sat-existing-demo-confirmed.jpg)
+
+Sáu ca B2 WEB và ca tải Vật lý cũ đã thu hồi; không dùng ảnh của chúng làm bằng chứng hiện tại. C3 dùng Mechanic riêng180suất; Mechanic demo68suất giữ nguyên. Xem [dataset](dataset.md) để lấy ID/hạn phiên hiện hành. V01 vẫn chờ video; staff lookup lượt này không thay camera điện thoại thật. X01 chưa đóng vì mới có tải nền, chưa đủ các cửa sổ C3 và hậu kiểm; X02/X03 vẫn chưa chạy.

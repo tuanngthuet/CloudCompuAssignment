@@ -1,0 +1,115 @@
+{
+  "phase": "admission50",
+  "started_at_utc": "2026-11-21T12:19:34.236238+00:00",
+  "finished_at_utc": "2026-11-21T12:24:46.259839+00:00",
+  "result": "PASS",
+  "launch_type": "FARGATE",
+  "clock": {
+    "ClockErrorBound": 4.04718,
+    "ReferenceTimestamp": "2026-11-21T12:18:43Z",
+    "ClockSynchronizationStatus": "SYNCHRONIZED"
+  },
+  "limits": {
+    "CPU": 2,
+    "Memory": 4096
+  },
+  "k6_version": "k6 v1.0.0 (commit/41b4984b75-dirty, go1.24.2, linux/amd64)",
+  "k6_exit_code": 0,
+  "source_sha256": {
+    "platform.js": "b2bade9d92e397059ff6f444eb97f72c65f88d25f8866f2f73e9bb509dec33c0",
+    "catalogue.js": "642cdc54adb3494f4ee8ccd02751f1ace2b50025ffbdf95ba335b48c070a0433",
+    "booking.js": "8d8445c57bd5cef1e41890df7376270e4b31a0293813f7b0f9a44d843a86e74a",
+    "ecs-scaling.js": "e7f31ff3f61f2320e19ab5d8a2a5c175b3fe669db79594a6b94f47d6deb53f0e",
+    "k6": "2ba13ec04f8ff874964e36ae44129cf6553d96cbf43f96d662adf7baa5904ed4"
+  },
+  "metrics": {
+    "booking_waiting_poll": {
+      "rate": 5.231442360922882,
+      "count": 1625
+    },
+    "http_req_failed": {
+      "fails": 8266,
+      "passes": 1,
+      "value": 0.00012096286440062901
+    },
+    "booking_confirmed": {
+      "count": 1308,
+      "rate": 4.210908681899773
+    },
+    "booking_heartbeat": {
+      "count": 1600,
+      "rate": 5.1509586322933
+    },
+    "http_reqs": {
+      "count": 8267,
+      "rate": 26.614359383230443
+    },
+    "http_req_duration": {
+      "avg": 53.56524023478892,
+      "med": 27.501862,
+      "p(95)": 186.07150019999995,
+      "p(99)": 496.6160427600001,
+      "max": 1247.852546
+    },
+    "booking_admitted": {
+      "count": 1308,
+      "rate": 4.210908681899773
+    },
+    "booking_queue_wait_ms": {
+      "p(99)": 10809.500000000004,
+      "max": 15722,
+      "avg": 6153.716360856269,
+      "med": 5020,
+      "p(95)": 10113.949999999999
+    },
+    "booking_unexpected_error": {
+      "count": 1,
+      "rate": 0.0032193491451833122
+    },
+    "booking_cancelled": {
+      "count": 1308,
+      "rate": 4.210908681899773
+    },
+    "checks": {
+      "passes": 8215,
+      "fails": 1,
+      "thresholds": {
+        "rate>0.99": false
+      },
+      "value": 0.9998782862706913
+    }
+  },
+  "threshold_export_note": "k6 threshold boolean false means the threshold did not fail",
+  "raw_sha256": "96a12490d54b477b2cee7faef4a57f0b3f7e74f19e235c51f2b8483c1f1ce17c",
+  "http_failure_count": 1,
+  "http_failure_examples": [
+    {
+      "at_utc": "2026-11-21T12:19:51.55786202Z",
+      "status": "502",
+      "route": "queue/heartbeat",
+      "operation_class": "booking"
+    }
+  ],
+  "generator": {
+    "memory_peak_MiB": 289.38671875,
+    "cpu_peak_percent_of_limit": 2.2393756243756244,
+    "samples": 31,
+    "clock_statuses": [
+      "SYNCHRONIZED"
+    ]
+  },
+  "post_phase_demo": {
+    "verified": true,
+    "tables": 10,
+    "invariant_rows": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "db_clock": "2026-11-21T12:27:07.742557+00:00"
+  }
+}

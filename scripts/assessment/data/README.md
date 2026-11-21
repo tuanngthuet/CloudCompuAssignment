@@ -48,67 +48,25 @@ Các file private nằm tại `.local/assessment/b1b2-20261117a/`:
 
 Mapping đã được cập nhật sau các lần thay sơ đồ. Ở lần kiểm tra 18/11, nhãn, capacity và `seat_id` của lịch đại diện cả 12 ca khớp API; hai lịch mỗi ca khớp số vùng/sức chứa theo DB.
 
-## Bước 4. Tạo ít nhất 100 session distinct
+## Bước 4. Gói 100 phiên AWS hiện hành
 
-Helper hiện có:
+Dùng batch tải riêng `demo-load-mechanic21`, 100 user mới, 100 token và CSRF riêng; mapping 25 người mỗi vùng phòng, bốn vùng capacity45. Không dùng nhóm student301–400 hoặc lịch Chemistry/Physics demo làm gói tải hiện hành.
 
-- `app.assessment_seed.create_sessions()` gọi hàm `auth.create_session()` hiện có; DB giữ digest theo cơ chế app.
-- `prepare-handoff.ps1` gọi stage `sessions`, tạo manifest/accounts và chạy smoke.
-- Tài khoản tải là student301–student400. Token/CSRF chỉ ghi vào file private; không dùng login HTTP hàng loạt hoặc tắt rate limit.
+Gói private gồm manifest.json, synthetic-sessions.json, smoke-result.json, README.txt. Đã smoke 100 danh tính và vòng giữ–xác nhận–QR–hủy trên AWS thật; provider attempts0. Hạn phiên gói hiện tại là22:13:07 ngày21/11/2026, giờ Việt Nam. Kiểm expires_at thực trước mỗi phase; cấp lại rồi smoke khi cần, không sửa TTL trong file.
 
-File dùng trực tiếp có dạng:
+## Bước 5. Readiness và tách dữ liệu
 
-```json
-[
-  {"session_token": "<private>", "csrf_token": "<private>", "seat_id": "<uuid>"}
-]
-```
+Ca tải **Mechanic — Ca chịu tải riêng 21–22/11/2026**, SESSION_ID `3d7ca8f8-07fa-508e-abc7-3f0a7bf69d46`, mở đến00:00 ngày24/11/2026; tổng180suất. Ca Mechanic demo vẫn CANCELLED,68suất. Web kiểm chức năng dùng SAT và các ca demo có sẵn, không tạo thêm ca B2 WEB.
 
-**Trạng thái tại 21:57:08 ngày 18/11/2026 (UTC+7):** DB có 100 fixture session thuộc 100 user riêng, nhưng **0 session còn hiệu lực**. Hạn thực tế từ 04:26:46 đến 04:28:24 cùng ngày. Manifest ghi mốc bảo thủ `2026-11-18T04:26:45.24717+07:00`. Phải cấp lại sát giờ đo.
-
-**Đã sửa local21/11:** guard dùng UUID/type/quan hệ thay tên hiển thị; đã kiểm100 session trên bộ đổi tên/12 cấu hình sơ đồ. create_sessions kiểm event ACTIVE, user ACTIVE/verified và không pending email, số chỗ còn lại theo từng vùng, ca chưa bắt đầu và cửa sổ đủ dài. sessions_expire_at là min expires_at thực trong DB trừ1giây, không cộng8giờ từ đồng hồ client.
-
-## Bước 5. Kiểm readiness và tách lịch tải/UI
-
-| Mục | Giá trị đã đối chiếu ngày 18/11/2026 |
-| --- | --- |
-| Lịch tải | `a243bee7-1ea1-58df-94f9-7f7d6cabb7f6` — Practice 12, 1.890 chỗ |
-| Lịch UI | `8ee5859b-8331-5dd6-9eaa-27660cf38b46` — Practice 11, 1.530 chỗ |
-| Đóng đăng ký của hai lịch | 20:14:27 ngày 21/11/2026, UTC+7 |
-| Bắt đầu lịch tải | 14:14:27 ngày 25/11/2026, UTC+7 |
-| Bắt đầu lịch UI | 08:14:27 ngày 25/11/2026, UTC+7 |
-
-Trước mỗi lần bàn giao: kiểm cửa sổ còn đủ dài, ca chưa bắt đầu/chưa hủy, user ACTIVE/verified, vùng còn chỗ và TTL bao trùm bài đo. Hiện tách theo lịch/tài khoản trong một batch; không ghi là đã tạo hai batch độc lập.
-
-## Bước 6. Smoke đọc/ghi và bàn giao Người 3
-
-`smoke_sessions.py` đã có: tải ảnh, kiểm danh tính qua `/me`, vào hàng chờ, giữ rồi hủy một suất. Lượt bàn giao ban đầu đã thành công; không coi đó là bằng chứng gói mới vẫn chạy được.
-
-**Đã sửa local21/11:** smoke đối chiếu đúng tập seat UUID/nhãn/capacity từ schedule_rooms, không hard-code4–8 hoặc tên artwork; kiểm format/kích thước/bytes ảnh, timezone/TTL/cửa sổ từ server_time, distinct user/CSRF và số suất gán không vượt remaining. Luồng hold được hủy và rời queue trong finally. Bộ12 cấu hình gồm elec18/physics34/chemistry42 đã qua smoke100 user trên app local; không thay chứng cứ upload/nhận diện6 ảnh mạng qua admin.
-
-Sau khi xử lý guard và smoke, quy trình đã dùng trên Windows là giữ tunnel SSM đến RDS ở cổng 15432, rồi chạy:
-
-```powershell
-./scripts/assessment/data/prepare-handoff.ps1 -Batch b1b2-20261117a -MinimumValidSeconds 14400 -Execute
-```
-
-Có thể truyền `-Aws <đường-dẫn-aws.exe>`, `-Profile`, `-Region`, `-TunnelPort` theo môi trường. Helper cần Docker image client `labseat-assessment-b1b2:local` và quyền AWS phù hợp. Không đưa DATABASE_URL/token/password vào tài liệu hoặc log.
-
-Để kiểm riêng gói mới sau khi sửa helper:
-
-```text
-python scripts/assessment/data/smoke_sessions.py .local/assessment/b1b2-20261117a --base-url https://labseat.id.vn --minimum-valid-seconds 14400
-```
-
-Bàn giao qua kênh riêng cho Người 3: manifest, file session, tài khoản cần thiết, `SESSION_ID` lịch tải, TTL và kết quả smoke. `platform.js` nhận `SESSIONS_FILE` và `SESSION_ID`. Người 3 phải dùng được gói mà không tự sửa seed.
+Manifest liên kết index phiên với user/event/lịch/phòng/vùng. Trước bài đo kiểm user ACTIVE/verified, ca chưa bắt đầu, chỗ còn đủ và TTL bao trùm phase. Gói đã smoke AWS chưa đồng nghĩa Người3 đã xác nhận nhận gói. [Cấu hình/backup/giới hạn](../../../docs/assessment/functional/dataset.md).
 
 ## Điều kiện đóng B2
 
 - [ ] Nguồn/quyền dùng ảnh và phạm vi 6/12 ảnh được chốt.
 - [ ] Có bằng chứng luồng admin upload/nhận diện/chỉnh vùng theo tiêu chí đã chốt.
 - [x] 12 sơ đồ/poster hiện hành tải được; mapping đã đối chiếu ngày 18/11.
-- [x] Guard/helper smoke hoạt động local với ca đổi tên/12 cấu hình geometry/capacity; chưa chạy lại AWS sau sửa.
-- [ ] Cấp lại ≥100 session distinct, readiness/TTL đạt, smoke đọc/ghi mới thành công.
+- [x] Guard/helper kiểm disposable và gói Mechanic riêng đã smoke AWS; phân biệt hai nguồn bằng chứng.
+- [x] ≥100 phiên distinct, readiness/TTL và smoke đọc/ghi AWS đạt trong lượt21/11; phải kiểm lại hạn trước chạy.
 - [ ] Người 3 nhận và dùng được gói bàn giao; phiên bản source/script được chốt.
 
 Chưa đánh dấu B2 hoàn tất. Xem [bằng chứng số liệu](../../../evidence/assessment/b1b2-20261117a/summary.md).
@@ -119,7 +77,7 @@ Bảy test tích hợp trong test_tools.py đã PASS trên PostgreSQL16.16/Redis
 
 prepare-handoff.ps1 mặc định yêu cầu cửa sổ14400giây (4giờ); helper Python trực tiếp mặc định3600giây. Chọn thời lượng bao trùm bài đo cộng phần dự phòng; không sửa TTL app hoặc kéo dài expires_at trong file. Cấp gói production sát lịch C3 sau kiểm readiness, không phát lại token local đã bị cleanup. SQL verify-batch.sql nhận CSV UUID user_ids/event_ids/room_ids từ manifest; không còn tham số batch_prefix. Muốn kiểm production phải truyền danh sách từ manifest private đúng batch, không dùng ID theo tên tìm kiếm.
 
-Sáu nguồn mạng trong assets-sources.csv có trang cấp quyền cụ thể; file nguyên gốc chưa tải do HTTP429 ở request đầu. Các mục upload/nhận diện/chỉnh4–8 vùng, API proof của chính6 ảnh đó và ≥100 session AWS mới/Người3 smoke vẫn chưa hoàn thành. Không sửa sáu ca demo hoặc thay bộ12 ảnh hiện hành để lấp phần thiếu.
+Sáu ca dùng nguồn mạng đã được thu hồi theo yêu cầu người dùng; không còn là fixture nghiệm thu hiện hành. Kiểm web dùng ca demo có sẵn; ≥100 phiên AWS cho ca tải riêng đã smoke, còn xác nhận bàn giao độc lập của Người3 chưa có.
 
 ## Ca tải riêng có backup — cập nhật 21/11/2026
 
@@ -139,40 +97,32 @@ Yêu cầu mới đã được thực hiện bằng `demo_backup.py`, `protect-b
 
 ```powershell
 # Không prepare lại bộ demo. Ca tải hiện tại đã tồn tại; không cần chạy prepare nữa.
-./scripts/assessment/data/run-isolated-load.ps1 -Stage verify
-./scripts/assessment/data/run-isolated-load.ps1 -Stage sessions -MinimumValidSeconds 14400 -Execute
-./scripts/assessment/data/run-isolated-load.ps1 -Stage smoke -MinimumValidSeconds 14400 -Execute
+./scripts/assessment/data/run-isolated-load.ps1 -Stage verify -Batch demo-load-mechanic21
+./scripts/assessment/data/run-isolated-load.ps1 -Stage sessions -Batch demo-load-mechanic21 -MinimumValidSeconds 14400 -Execute
+./scripts/assessment/data/run-isolated-load.ps1 -Stage smoke -Batch demo-load-mechanic21 -MinimumValidSeconds 14400 -Execute
 ```
 
-`sessions` thu hồi/thay thế chỉ 100 phiên của batch tải rồi ghi TTL thực, không kéo dài TTL app. `smoke` kiểm 100 danh tính và một vòng đặt/hủy, kiểm worker email disabled ổn định trước khi xác nhận, rồi tạo lại ZIP private gồm đúng 4 file bàn giao. Nếu phiên hết hạn, chỗ đang chiếm hoặc demo/schema thay đổi, công cụ dừng; không sửa file hạn phiên để bỏ qua guard. Gói đầu hết hạn 11:40:52 ngày 21/11, giờ Việt Nam; chạy ngày mai phải cấp lại và smoke mới.
+`sessions` thu hồi/thay thế chỉ 100 phiên của batch tải rồi ghi TTL thực, không kéo dài TTL app. `smoke` kiểm 100 danh tính và một vòng đặt/hủy, kiểm worker email disabled ổn định trước khi xác nhận, rồi tạo lại ZIP private gồm đúng 4 file bàn giao. Nếu phiên hết hạn, chỗ đang chiếm hoặc demo/schema thay đổi, công cụ dừng; không sửa file hạn phiên để bỏ qua guard. Gói Mechanic hiện tại hết hạn22:13:07 ngày21/11/2026, giờ Việt Nam; chạy sau hạn hoặc không đủ cửa sổ phải cấp lại và smoke mới.
 
-Người 3 giải nén ZIP private, kiểm `manifest.mapping`, TTL và 100 phiên trước bài đo; truyền `BASE_URL=https://labseat.id.vn`, `SESSION_ID=5e024221-c858-5443-be0e-4dbd01fd8800`, `SESSIONS_FILE=<path/synthetic-sessions.json>` cho kịch bản hỗ trợ file phiên. `platform.js` hiện yêu cầu admission-off; queue đang bật nên cần phối hợp cửa sổ/chính sách trước khi chạy. `booking.js` dùng `ACCOUNTS_FILE`, không dùng trực tiếp gói phiên này. Không tự bật email, sửa script của Người 3 hoặc chạy tải trong bước chuẩn bị này. Người 2 cấp lại gói khi Người 3 cần; chưa nhận biên bản bàn giao từ Người 3 thì không ghi đã nghiệm thu.
+Người 3 giải nén ZIP private, kiểm `manifest.mapping`, TTL và 100 phiên trước bài đo; truyền `BASE_URL=https://labseat.id.vn`, `SESSION_ID=3d7ca8f8-07fa-508e-abc7-3f0a7bf69d46`, `SESSIONS_FILE=<path/synthetic-sessions.json>` cho kịch bản hỗ trợ file phiên. `platform.js` hiện yêu cầu admission-off; queue đang bật nên cần phối hợp cửa sổ/chính sách trước khi chạy. `booking.js` nhận trực tiếp `SESSIONS_FILE`; `ACCOUNTS_FILE` là chế độ đăng nhập tùy chọn khi không dùng phiên cấp sẵn. Không tự bật email, sửa script của Người 3 hoặc chạy tải trong bước chuẩn bị này. Người 2 cấp lại gói khi Người 3 cần; chưa nhận biên bản bàn giao từ Người 3 thì không ghi đã nghiệm thu.
 
 **Sau khi Người 3 xác nhận đã dừng bài tải:**
 
 ```powershell
 # Xem đúng phạm vi trước; chưa xóa khi thiếu -Execute.
-./scripts/assessment/data/run-isolated-load.ps1 -Stage cleanup -ManifestId fcbac39e-8ef7-53a7-809a-e2f867cd7f66
+./scripts/assessment/data/run-isolated-load.ps1 -Stage cleanup -Batch demo-load-mechanic21 -ManifestId 0a59f708-244e-5d0d-80d1-c3907727db17
 # Chỉ thực thi sau bài đo:
-./scripts/assessment/data/run-isolated-load.ps1 -Stage cleanup -ManifestId fcbac39e-8ef7-53a7-809a-e2f867cd7f66 -Execute
+./scripts/assessment/data/run-isolated-load.ps1 -Stage cleanup -Batch demo-load-mechanic21 -ManifestId 0a59f708-244e-5d0d-80d1-c3907727db17 -Execute
 ```
 
-Cleanup kiểm quan hệ chéo, chỉ xóa user/event/ca/phòng/120 seat và dữ liệu con của UUID scope mới; chạy lại an toàn. Đối chiếu demo nghiệp vụ và 7 invariants trong cùng lượt, giữ backup và ảnh demo. Không truncate/reset. Queue lease được rời qua API khi smoke; các key cache của ca riêng có TTL, nếu phải dọn ngay chỉ xóa 5 key suffix `seq/waiting/admitted/entries/seen` của đúng epoch + SESSION_ID qua operator được phép, không xóa `labseat:queue:ready` hoặc đổi policy toàn hệ thống. Đây là bước sau tải, chưa chạy trên AWS; dry-run hiện chỉ thấy scope mới và các reservation smoke đã hủy.
+Cleanup kiểm quan hệ chéo, chỉ xóa 100user/event/ca/phòng/4vùng của batch Mechanic và dữ liệu con của UUID scope mới; chạy lại an toàn. Đối chiếu demo nghiệp vụ và 7 invariants trong cùng lượt, giữ backup và ảnh demo. Không truncate/reset. Queue lease được rời qua API khi smoke; các key cache của ca riêng có TTL, nếu phải dọn ngay chỉ xóa 5 key suffix `seq/waiting/admitted/entries/seen` của đúng epoch + SESSION_ID qua operator được phép, không xóa `labseat:queue:ready` hoặc đổi policy toàn hệ thống. Đây là bước sau tải, chưa chạy trên AWS; dry-run hiện chỉ thấy scope mới và các reservation smoke đã hủy.
 
 Test an toàn của công cụ mới: `python -m pytest scripts/assessment/data/test_isolated_load.py -q -p no:cacheprovider` chỉ chạy khi APP_ENV=test, DATABASE_URL=TEST_DATABASE_URL kết thúc `_test`, host `backup-verify-db` disposable. Kiểm enum constraint normalization fail-closed, prepare idempotent, 100 phiên/chỗ riêng, từ chối cleanup khi có lịch ngoại scope, cleanup lặp lại và giữ nguyên toàn bộ 27 bảng. Không chạy test này vào DB demo.
 
-### Cập nhật ca tải sang sơ đồ Vật lý
+### Cấu hình hiện hành: Mechanic riêng, giữ nguyên demo
 
-Cấu hình hiện hành của cùng batch là **34 vùng ×45 suất =1.530**, thay cho lưới120. Chuyển bằng stage `physics-map` của `prepare-isolated-one-off.ps1` trên ECS/VPC; giữ UUID của34 seat đầu và hai reservation CANCELLED, xóa86 seat/slot không có lịch sử, sao chép ảnh vào key riêng và đối chiếu hash/geometry nguồn. Không gọi stage seed/reset; không bỏ khóa sơ đồ chung của app. Trang quản trị vẫn khóa sửa khi có lịch sử, student chọn phòng qua trang đăng ký.
+Batch `demo-load-mechanic21`, 4vùng ×45 =180 suất; poster/sơ đồ sao chép riêng từ Practice10. Nguồn demo vẫn4×17=68 và CANCELLED. Mapping100 dòng,25user/vùng; không yêu cầu100seat_id khác nhau vì vùng phòng có nhiều suất. `platform.js` kiểm100token/CSRF/user riêng và tổng người gán không vượt remaining capacity.
 
-```powershell
-# Chỉ đổi sơ đồ của batch tải; mặc định plan-only.
-./scripts/assessment/data/prepare-isolated-one-off.ps1 -Stage physics-map -Execute
-# Sau khi đổi, cấp lại và smoke để thay gói mapping cũ:
-./scripts/assessment/data/run-isolated-load.ps1 -Stage sessions -Execute
-./scripts/assessment/data/run-isolated-load.ps1 -Stage smoke -Execute
-```
+Stage `mechanic-map` có ownership/cross-scope/history guards, copy và kiểm hash ảnh. Không chạy stage này khi đang có vé hoạt động hoặc bài tải đang chạy. Ca Vật lý cũ đã cleanup; không chạy lại `physics-map` để tái tạo nó. Runner mặc định batch Mechanic; mọi lệnh bàn giao/cleanup vẫn nên ghi rõ `-Batch` và manifest.
 
-Helper nhận hai cấu hình được kiểm ownership: lưới120×1 hoặc `load-physics`34×45; manifest lấy UUID/nhãn/capacity thực từ DB. Cấp100 phiên cho100user khác nhau, phân bố vòng qua các phòng theo remaining capacity và từ chối user có đăng ký đang hoạt động. Smoke kiểm100 danh tính/token/CSRF riêng, tổng số người gán mỗi phòng không vượt remaining, ảnh thật và luồng đặt–QR–hủy. Runner giữ nguyên100 dòng mapping do helper sinh, không gán lại theo index120 chỗ cũ. Gói mới hết hạn17:05:52 ngày21/11, giờ Việt Nam; Người3 dùng bản này thay gói lưới cũ.
-
-Test bổ sung trên backup restore PostgreSQL16.13 kiểm clone ảnh/geometry, giữ ca Vật lý và lịch sử hủy, từ chối vé HELD, chạy lại không tăng revision và100 phiên trên34phòng. Test này cần `ASSESSMENT_PHYSICS_IMAGE` trỏ PNG nguồn cùng với storage local riêng; không gọi S3/AWS từ test disposable. Kết quả trước khi áp dụng AWS: **3 PASS,0 FAIL/ERROR/SKIP**.
+Ba test an toàn chọn lọc trên backup restore PostgreSQL16.13 đạt3PASS: enum fail-closed; fixture/session/cleanup guard; clone Mechanic/idempotency/100phiên và bảo toàn demo. Test disposable không thay smoke AWS. Xem cấu hình, hạn phiên và trạng thái cleanup thực tại [dataset](../../../docs/assessment/functional/dataset.md).

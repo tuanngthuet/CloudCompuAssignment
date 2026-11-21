@@ -1,6 +1,6 @@
 param(
-    [Parameter(Mandatory)][ValidateSet('prepare','sessions','verify','cleanup','smoke','physics-map')][string]$Stage,
-    [string]$Batch='demo-load-20261121a',
+    [Parameter(Mandatory)][ValidateSet('prepare','sessions','verify','cleanup','smoke','physics-map','mechanic-map')][string]$Stage,
+    [string]$Batch='demo-load-mechanic21',
     [string]$Aws='aws',
     [string]$Profile='labseat',
     [string]$Region='ap-southeast-2',
@@ -17,8 +17,8 @@ if($Region -ne 'ap-southeast-2'){throw 'Unexpected region'}
 $root=(Resolve-Path (Join-Path $PSScriptRoot '../../..')).Path
 $directory=Join-Path $root ".local/assessment/$Batch"
 if(-not (Test-Path -LiteralPath (Join-Path $directory 'backup-manifest.private.json'))){throw 'Verified demo backup is required first'}
-if(-not $Execute -and $Stage -in @('prepare','sessions','physics-map')){Write-Output "Plan only: $Stage isolated batch=$Batch; no AWS data change";return}
-if($Execute -and $Stage -in @('prepare','sessions','physics-map')){
+if(-not $Execute -and $Stage -in @('prepare','sessions','physics-map','mechanic-map')){Write-Output "Plan only: $Stage isolated batch=$Batch; no AWS data change";return}
+if($Execute -and $Stage -in @('prepare','sessions','physics-map','mechanic-map')){
     [IO.File]::WriteAllText((Join-Path $directory 'handoff-status.private.json'),(@{ready=$false;reason="Revalidate handoff after $Stage"}|ConvertTo-Json))
 }
 $account=& $Aws sts get-caller-identity --profile $Profile --region $Region --query Account --output text --no-cli-pager
@@ -74,7 +74,7 @@ SESSIONS_FILE=<absolute path to synthetic-sessions.json>
 Expiry: $expiry. Do not run after this expiry.
 manifest.mapping links each zero-based session index to its user/event/schedule/room/seat.
 Read smoke-result.json. Before the actual measurement, check 100 /me identities and readiness again.
-Queue is enabled. platform.js consumes SESSIONS_FILE but requires a separately coordinated admission-off window; booking.js instead requires ACCOUNTS_FILE and cannot consume this session file directly. Choose the approved scenario with Person 3 before measurement. This handoff does not change the global queue policy or start a load test.
+Check the actual queue policy before each phase. platform.js consumes SESSIONS_FILE and requires the coordinated admission-off window. booking.js consumes this session file with REQUIRE_QUEUE_ENABLED=1 for admission tests; ACCOUNTS_FILE remains its optional login mode. This handoff does not change the global queue policy or start a load test.
 If sessions expire or seats are occupied, ask Person 2 to verify the batch and regenerate sessions followed by smoke. Never edit expiry values manually.
 Do not commit, publish, log, or attach these cookies/CSRF tokens to the report. No backup key or account master is included.
 Tell Person 2 when measurement has stopped so the exact batch can be cleaned and demo data checked.

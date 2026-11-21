@@ -170,5 +170,7 @@
     "Demo source/image remain unchanged; new load room owns a separate image copy",
     "Original demo-image distribution rights were not expanded; screenshots stay private",
     "This change does not complete B2 six network-image upload/detection/manual-edit acceptance"
-  ]
+  ],
+  "fixture_status": "RETIRED: owned load batch deleted on AWS 2026-11-21; historical backup/configuration receipt only",
+  "current_dataset": "docs/assessment/functional/dataset.md"
 }

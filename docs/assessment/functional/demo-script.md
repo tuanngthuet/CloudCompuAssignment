@@ -2,6 +2,10 @@
 
 Theo đúng [B3 trong sprint](../../sprints/ke-hoach-nghiem-thu-4-ngay.md#b3-kiểm-thử-chức-năng-regression-và-demo). Website: https://labseat.id.vn. Chỉ dùng ca và tài khoản B1/B2 có sẵn; không tạo ca demo mới.
 
+## Phạm vi hiện hành —21/11/2026
+
+Video/chức năng dùng **SAT demo có sẵn** hoặc ca demo B1/B2 còn phù hợp thời gian trên web. Sáu ca `[B2 WEB]` và ca tải Vật lý cũ đã xóa, không quay lại hoặc dùng ảnh cũ như trạng thái hiện tại. Mechanic180suất chỉ phục vụ chịu tải riêng; Mechanic demo68suất giữ nguyên. Lượt SAT của student498 ngày21/11 đã hủy và dọn vé thử sau kiểm, nên ảnh xác nhận chỉ là receipt lịch sử của lượt đó, không phải vé còn hoạt động để quét.
+
 ## 1. Dữ liệu và chuẩn bị
 
 - Ca: **Kì thi SAT - Ca demo**, lịch `1a7402d1-a9df-5053-8282-a4ab4d33e813`, 14:14–16:14 ngày 23/11/2026, giờ Việt Nam. Đọc lại trạng thái/giờ thực tế khi quay; hạn đăng ký đã ghi nhận là 20:14 ngày 21/11/2026.

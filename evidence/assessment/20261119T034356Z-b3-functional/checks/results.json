@@ -1706,5 +1706,137 @@
     },
     "raw_artifacts": "Private .local/assessment/b3-retest-20261121; no raw XML/tracebacks/screenshots copied into public outputs.",
     "remaining": "V01 user video; X01-X03 coordinated load/fault/restore. No new production release from these test-only changes."
+  },
+  "existing_demo_retest_20261121": {
+    "base_url": "https://labseat.id.vn",
+    "environment": "Real AWS HTTPS API; no local app or mocked server",
+    "cases": [
+      {
+        "case": "Existing SAT demo UI hold-confirm and API replay QR ownership",
+        "status": "PASS",
+        "actual": {
+          "event_name": "Kì thi SAT - Ca demo",
+          "same_confirm_replay": true,
+          "qr_png_decodes": true,
+          "other_owner_http": 404,
+          "student_admin_csv_http": 403,
+          "new_event_created": false
+        },
+        "at_utc": "2026-11-21T07:23:20.763811+00:00"
+      },
+      {
+        "case": "Existing SAT admin CSV includes the new UI ticket",
+        "status": "PASS",
+        "actual": {
+          "own_ticket_found": true,
+          "row_count": 52
+        },
+        "at_utc": "2026-11-21T07:23:21.887984+00:00"
+      },
+      {
+        "case": "Existing SAT assigned staff lookup masks contact data",
+        "status": "PASS",
+        "actual": {
+          "assigned_staff04": true,
+          "contacts_redacted": true,
+          "checkin_enabled": true,
+          "policy_modified": false,
+          "camera_test": false
+        },
+        "at_utc": "2026-11-21T07:23:26.333149+00:00"
+      },
+      {
+        "case": "Existing SAT full room remains disabled without capacity edits",
+        "status": "PASS",
+        "actual": {
+          "full_rooms": 1,
+          "capacity_modified": false
+        },
+        "at_utc": "2026-11-21T07:23:27.482635+00:00"
+      },
+      {
+        "case": "Existing SAT UI cancel and API cancellation replay",
+        "status": "PASS",
+        "actual": {
+          "status": "CANCELLED",
+          "same_replay": true,
+          "demo_schedule_and_capacity_modified": false
+        },
+        "at_utc": "2026-11-21T07:25:03.443837+00:00"
+      },
+      {
+        "case": "Existing SAT final-seat concurrent race on unchanged room capacity",
+        "status": "PASS",
+        "actual": {
+          "original_capacity": 45,
+          "remaining_before": 44,
+          "synthetic_bookings_prepared": 43,
+          "parallel_statuses": [
+            200,
+            409
+          ],
+          "loser_code": "sold_out",
+          "remaining_after_race": 0,
+          "capacity_or_schedule_modified": false,
+          "new_events_created": false
+        },
+        "at_utc": "2026-11-21T07:27:04.566422+00:00"
+      },
+      {
+        "case": "Existing SAT final-seat trial cancelled only owned tickets and restored availability",
+        "status": "PASS",
+        "actual": {
+          "owned_cancelled": 44,
+          "remaining_restored": 44,
+          "original_tickets_modified": false
+        },
+        "at_utc": "2026-11-21T07:28:32.519952+00:00"
+      }
+    ],
+    "cleanup": {
+      "finished_at_utc": "2026-11-21T07:30:12.626635+00:00",
+      "deleted_owned_cancelled_reservations": 45,
+      "deleted_jobs": 45,
+      "provider_attempts": 0,
+      "demo_event_or_schedule_or_seat_mutations": 0,
+      "published_platform_events_left_for_normal_retention": true
+    },
+    "physical_camera_retested": false,
+    "new_demo_events_created": false
+  },
+  "c3_window_in_progress": {
+    "completed_business_probes": [
+      {
+        "case": "C3 after-platform-before-scaling existing SAT HTTPS workflow",
+        "status": "PASS",
+        "actual": {
+          "phase": "after-platform-before-scaling",
+          "existing_demo": true,
+          "login_session_valid": true,
+          "hold_confirm_qr_cancel": "PASS",
+          "availability_restored": true,
+          "demo_schedule_or_capacity_modified": false,
+          "email_window_opened": false
+        },
+        "at_utc": "2026-11-21T12:16:51.114569+00:00"
+      },
+      {
+        "case": "C3 after-active-load existing SAT HTTPS workflow",
+        "status": "PASS",
+        "actual": {
+          "phase": "after-active-load",
+          "existing_demo": true,
+          "login_session_valid": true,
+          "hold_confirm_qr_cancel": "PASS",
+          "availability_restored": true,
+          "demo_schedule_or_capacity_modified": false,
+          "email_window_opened": false
+        },
+        "at_utc": "2026-11-21T12:37:11.124465+00:00"
+      }
+    ],
+    "recovery_complete": false,
+    "x01_closed": false,
+    "load_report": "docs/assessment/performance/load-report.md"
   }
 }

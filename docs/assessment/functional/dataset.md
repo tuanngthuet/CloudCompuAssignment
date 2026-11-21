@@ -31,17 +31,9 @@ Tên ca đã được đổi trên web; dùng UUID trong manifest để xác đ�
 
 ## Bước 4. Tách dữ liệu chức năng và tải
 
-| Mục | Cấu hình hiện hành |
-| --- | --- |
-| Nhóm user tải | student301–student400 |
-| Lịch tải | `a243bee7-1ea1-58df-94f9-7f7d6cabb7f6`, Practice 12 |
-| Sức chứa lịch tải | 42 vùng × 45 = **1.890 chỗ** |
-| Lịch UI | `8ee5859b-8331-5dd6-9eaa-27660cf38b46`, Practice 11 |
-| Sức chứa lịch UI | 34 vùng × 45 = **1.530 chỗ** |
+Kiểm chức năng trên https://labseat.id.vn dùng các ca demo có sẵn trong batch `b1b2-20261117a`; lượt kiểm lại 21/11 dùng **Kì thi SAT - Ca demo**. Không còn dùng Practice 12 hoặc student301–400 làm gói chịu tải hiện hành.
 
-Hai lịch dùng cùng batch nhưng khác lịch/nhóm tài khoản. Đây là **tách logic**, chưa phải hai batch độc lập functional/load như prompt B1 nêu. Cần chốt phương án này hoặc tạo batch độc lập; không ghi là đã hoàn thành yêu cầu tách batch.
-
-Hai lịch đang mở đến 20:14:27 ngày 21/11/2026 (UTC+7). Lịch tải bắt đầu 14:14:27 ngày 25/11; lịch UI bắt đầu 08:14:27 ngày 25/11. Kiểm lại thời gian và capacity trước buổi đo; không tiếp tục dùng con số lịch tải 360 chỗ của bộ cũ.
+Ca tải tách riêng thuộc batch `demo-load-mechanic21`: **Mechanic — Ca chịu tải riêng 21–22/11/2026**, 100 user mới và 180 suất. Đây là bản sao poster/sơ đồ Mechanic; Practice 10 demo vẫn CANCELLED, 4 phòng ×17 =68 suất. Chi tiết và thời hạn phiên ở mục cập nhật cuối file.
 
 ## Bước 5. Tạo khoảng 300 reservation qua service nghiệp vụ
 
@@ -105,7 +97,7 @@ Công cụ có stage `cleanup`, yêu cầu `--execute --manifest-id <id>`, kiể
 - [x] Sửa ownership/truy vấn đếm theo UUID để hỗ trợ đổi tên; kiểm trên DB disposable.
 - [x] Kiểm idempotency/cleanup sau12 cấu hình sơ đồ, đổi tên và capacity17 trên DB disposable.
 - [ ] Có đủ fixture trạng thái và staff đúng lịch tại cửa sổ nghiệm thu.
-- [ ] Chốt việc tách batch functional/load và phiên bản source/script bàn giao.
+- [x] Đã tách batch tải AWS riêng; kiểm TTL và smoke lại trước mỗi bài đo.
 
 Chưa đánh dấu hoàn tất toàn bộ B1. Tài liệu này chỉ ghi đúng phần công việc B1; phần ảnh/session và các điểm còn thiếu của B2 nằm trong hướng dẫn bàn giao ở thư mục data.
 
@@ -113,11 +105,11 @@ Chưa đánh dấu hoàn tất toàn bộ B1. Tài liệu này chỉ ghi đúng 
 
 Bộ kiểm `python -m pytest scripts/assessment/data/test_tools.py -q -p no:cacheprovider` đạt **7 PASS,0 FAIL/ERROR/SKIP** trên DB/Redis disposable với APP_ENV=test, DATABASE_URL=TEST_DATABASE_URL kết thúc _test và email disabled. Gồm đủ508 user/12 event/24 lịch/300 reservation, hash app, seed/book idempotent; UUID/type/FK guard từ chối sai identity/quan hệ;12 cấu hình ảnh idempotent và capacity17;100 phiên distinct/digest/CSRF, TTL từ expires_at thực; smoke100 user/12 map và hold-cancel qua HTTP; bảy invariants zero rows trước cleanup; cleanup giới hạn batch và chạy lại an toàn. [Bằng chứng](../../../evidence/assessment/b1b2-20261117a/summary.md).
 
-Chưa sửa trạng thái/thời gian ca demo hoặc tạo batch production mới: các fixture sắp mở/hết chỗ/check-in phải được kiểm và bố trí đúng cửa sổ, còn tách batch functional/load độc lập chưa được áp dụng vào bộ demo một batch hiện hành. Không gọi khả năng dùng hai batch ID/namespace khác nhau của helper là bằng chứng AWS đã tách batch. B3 hiện không còn FAIL regression; B4/B5 vẫn chờ fault ổn định. Không sửa endpoint/secret/APP_ENV hay bật email production trong lượt này.
+Các kết quả disposable trong mục này là lịch sử. Ca demo giữ nguyên; việc tách batch AWS đã thực hiện và được mô tả ở mục cập nhật bên dưới. Fixture trạng thái phải kiểm đúng thời điểm trình diễn, không dùng sáu ca thử đã thu hồi để nhận là hoàn tất. B3 hiện không còn FAIL regression; B4/B5 vẫn chờ fault ổn định. Không sửa endpoint/secret/APP_ENV hay bật email production trong lượt này.
 
 ## Cập nhật sau yêu cầu sao lưu và tách ca tải — 21/11/2026
 
-Mục này thay thế riêng trạng thái “chưa tách batch production” ở trên. Bộ demo `b1b2-20261117a` được giữ nguyên; batch tải mới là `demo-load-20261121a`. Không chạy lại seed/reset bộ demo, không đổi lịch/ảnh/tài khoản demo để dùng làm ca tải.
+Mục này thay thế riêng trạng thái “chưa tách batch production” ở trên. Bộ demo `b1b2-20261117a` được giữ nguyên; batch tải hiện hành là `demo-load-mechanic21`; batch `demo-load-20261121a` đã thu hồi. Không chạy lại seed/reset bộ demo, không đổi lịch/ảnh/tài khoản demo để dùng làm ca tải.
 
 ### Backup trước khi tạo dữ liệu tải
 
@@ -131,22 +123,31 @@ Dump đã mã hóa AES-256-GCM, upload vào S3 private rồi tải xuống, gi�
 
 Đối chiếu constraints giữ raw DDL và chỉ chuẩn hóa hai enum check của `users` khi pg_dump chuyển vị trí cast varchar/text tương đương. Kiểm demo sau thao tác so sánh các PK gốc của 10 bảng nghiệp vụ; chỉ bỏ qua `users.last_activity_at` là metadata đăng nhập. Backup đầy đủ vẫn chứa trường này và toàn bộ 27 bảng. Không gọi kiểm nghiệp vụ này là byte-identical toàn DB: phiên đăng nhập/outbox/audit vận hành có thể phát sinh bình thường.
 
-### Ca tải và gói 100 phiên
+### Ca tải hiện hành và gói 100 phiên — đối chiếu AWS ngày 21/11
 
-- Event riêng: **Ca chịu tải riêng 21–22/11/2026 (không dùng demo)**, loại practice, ACTIVE.
-- `SESSION_ID`: `5e024221-c858-5443-be0e-4dbd01fd8800`; phòng riêng `40086403-b7f1-5e9c-8810-d4324085638d`.
-- 120 chỗ native grid, mỗi chỗ capacity 1; 100 student mới `demo-load-20261121a-s001`…`s100` được gán L001…L100, còn 20 chỗ dự phòng. Không dùng user hoặc phòng demo.
-- Mở từ **03:31 ngày 21/11**, đóng **00:00 ngày 24/11/2026**, giờ Việt Nam. Nếu bài đo vượt mốc này phải bố trí lại cửa sổ trước, không sửa demo.
-- 100 phiên distinct được cấp theo cơ chế app, TTL 8 giờ, gói đầu hết hạn **11:40:52 ngày 21/11/2026**. Phiên có thể bị thu hồi sớm; phải kiểm và cấp lại sát giờ đo nếu chạy muộn hơn.
-- Smoke thực trên `https://labseat.id.vn` lúc 03:45–03:46: 100 `/me` đúng 100 user, 100 seat mapping riêng; một lượt login/logout bằng mật khẩu và giữ → xác nhận → đọc QR → hủy → rời queue thành công. Email job/delivery đều SKIPPED, provider attempts 0.
-- Demo nghiệp vụ không đổi, 7 invariants bằng 0; cả 27 ảnh gốc và bản sao đã được đọc lại kiểm version/hash sau thao tác.
+| Mục | Giá trị đã kiểm |
+| --- | --- |
+| Ca tải riêng | Mechanic — Ca chịu tải riêng 21–22/11/2026 |
+| Batch / manifest | `demo-load-mechanic21` / `0a59f708-244e-5d0d-80d1-c3907727db17` |
+| Event | `d3dd7bd8-d8de-5be2-a9aa-6ff6704ef361` |
+| SESSION_ID | `3d7ca8f8-07fa-508e-abc7-3f0a7bf69d46` |
+| Phòng sơ đồ | `ca17a86c-2c6a-5fc4-91f7-5e2c01cbaa64` |
+| Vùng đăng ký | P.6225 (F1.08), P.6226 (F1.10), P.6227 (F1.12), P.6228 (F1.14) |
+| Sức chứa | 4 vùng ×45 =180 suất; 25 phiên được gán mỗi vùng |
+| Mở đăng ký | 14:02:19 ngày 21/11 đến 00:00 ngày 24/11/2026, giờ Việt Nam |
+| Thời gian ca | 01:00–03:00 ngày 24/11/2026, giờ Việt Nam |
+| User tải | 100 user mới `demo-load-mechanic21-s001`…`s100` |
+| Hạn phiên gói đã smoke | 22:13:07 ngày 21/11/2026, giờ Việt Nam; phải cấp lại và smoke nếu không đủ thời gian bài đo |
 
-Gói private `.local/assessment/demo-load-20261121a/handoff-person3.zip` gồm **manifest.json, synthetic-sessions.json, smoke-result.json, README.txt**. Manifest có mapping tường minh từng index phiên → user → event/ca/phòng/chỗ, thời gian mở/đóng và hạn phiên. Không có backup key hoặc master mật khẩu trong gói. Hướng dẫn cấp lại/kiểm/dọn nằm ở [README data](../../../scripts/assessment/data/README.md).
+Poster và ảnh được sao chép vào key riêng, đối chiếu SHA-256 với nguồn Mechanic demo. Chữ 17 thí sinh trên ảnh nguồn mô tả demo; capacity cấu hình riêng cho bài tải là45/vùng. Không sửa ảnh, lịch hoặc sức chứa Mechanic demo để phục vụ tải.
 
-Queue vẫn bật và email vẫn tắt. `platform.js` nhận file phiên nhưng cần cửa sổ admission-off do người chạy phối hợp; `booking.js` nhận file tài khoản, không nhận trực tiếp file phiên này. Chưa chạy bài tải, chưa nhận xác nhận Người 3 đã nhận/smoke gói và chưa dọn ca tải trên AWS. Sau bài đo cần Người 3 báo dừng để Người 2 chạy cleanup đúng manifest, kiểm lại demo và ghi kết quả thực; không đánh dấu bước tương lai là đã xong. Các fixture trạng thái/ảnh admin còn thiếu ở mục B1/B2 cũ vẫn giữ nguyên trạng thái.
+Gói private `.local/assessment/demo-load-mechanic21/handoff-person3.zip` gồm đúng **manifest.json, synthetic-sessions.json, smoke-result.json, README.txt**. Manifest có mapping phiên→user→ca→phòng→vùng và expires_at thực. Smoke trên AWS lúc14:15:20–14:16:02 ngày21/11 kiểm100 danh tính/token/CSRF riêng, đăng nhập/đăng xuất và giữ–xác nhận–QR–hủy; email SKIPPED, provider attempts0. Không công bố credentials hoặc nhận là Người3 đã ký nhận gói.
 
-### Cấu hình mới nhất — sơ đồ Vật lý cho ca tải
+Sau lượt kiểm SAT, verify AWS lúc14:31:07 xác nhận 10 bảng nghiệp vụ demo theo PK gốc không đổi (ngoại trừ metadata last_activity_at), cả7 invariants bằng0. Đây không phải xác nhận toàn bộ C3 hoặc hậu kiểm sau tải; C3 còn phải thu đủ bài đo và hậu kiểm. Bản logical backup gốc đã được giải mã/restore kiểm lại trên PostgreSQL16.13 trước khi tạo batch Mechanic.
 
-Theo yêu cầu tiếp theo của người dùng ngày 21/11, ca tải giữ nguyên event/lịch/phòng và thời gian mở/đóng, chuyển từ lưới 120 chỗ sang **ảnh Vật lý, 34 phòng HN582–HN615, mỗi phòng 45 suất, tổng 1.530 suất**. Ảnh được sao chép sang key riêng của phòng tải; ảnh/geometry/phòng Vật lý nguồn và bộ demo không đổi. Giữ nguyên hai reservation smoke đã hủy; chỉ gỡ 86 seat/slot lưới không có lịch sử. Có guard từ chối khi có vé đang hoạt động hoặc quan hệ ngoài scope. Poster kiểm thử riêng được tải qua giao diện admin để ca tải xuất hiện trong danh sách student.
+### Ca đã thu hồi và bằng chứng hiện tại
 
-Gói phiên mới thay gói lưới trước đó: vẫn **100 user/session/CSRF riêng**, mapping 100 dòng được phân bố trên 34 vùng phòng, tối đa 3 user được gán mỗi phòng trong gói này, thấp hơn capacity 45. Không còn yêu cầu 100 `seat_id` khác nhau: trong LABSEAT, seat là vùng phòng có nhiều suất. Gói cấp lại hết hạn **17:05:52 ngày 21/11/2026, giờ Việt Nam**; giữ cùng đường dẫn ZIP private và phải smoke lại sau mỗi lần cấp. Gói lưới 11:40:52 trước đó là lịch sử, không phát lại. Bằng chứng cấu hình mới được ghi riêng tại `evidence/assessment/demo-load-20261121a/checks/physics-map-update.json` để không sửa ngược receipt của lượt lưới.
+- Sáu ca `[B2 WEB]` đã xóa lúc13:59:28 ngày21/11: 6event,6lịch,6phòng,24vùng,5reservation thử; guard ngoài scope PASS, không xóa user demo. Các nguồn mạng đã đánh dấu WITHDRAWN trong assets-sources.csv; không dùng ảnh những ca này làm bằng chứng trạng thái web hiện tại.
+- Ca tải Vật lý cũ `demo-load-20261121a` đã cleanup theo manifest:100user,1event,1lịch,34vùng và3reservation thử đã hủy. Demo unchanged và7 invariants0. Gói phiên cũ không còn hợp lệ. **Giữ backup gốc** trong thư mục batch cũ để khôi phục demo.
+- B3 kiểm lại bằng SAT demo có sẵn;45reservation thử đã hủy và45job SKIPPED được dọn đúng scope, không đổi event/lịch/vùng hoặc vé gốc. Chi tiết ở [report.md](report.md).
+- Các fixture sắp mở/check-in và video chưa được kiểm đủ tại cửa sổ trình diễn vẫn ghi thiếu; không tạo thêm ca demo để thay yêu cầu này.

@@ -23,10 +23,10 @@
   ],
   "new_existing_event_checks": "Two existing SAT schedules; no new event created in completion checks",
   "status_counts": {
-    "PASS": 333,
+    "PASS": 340,
+    "FAIL": 0,
     "BLOCKED": 1,
-    "NOT_RUN": 3,
-    "FAIL": 0
+    "NOT_RUN": 3
   },
   "video": {
     "status": "BLOCKED",
@@ -58,13 +58,13 @@
   ],
   "limitations": [
     "Historical and completion runs consolidated without rerunning tests",
-    "No load/fault/restore coordinated window executed",
+    "C3 load executed; recovery/postchecks not yet complete at checkpoint; fault/restore NOT_RUN",
     "User-provided video still pending"
   ],
   "files": [
     {
       "path": "checks/results.json",
-      "sha256": "c74c86f6b4ac34ba51fe54affbb5aca71023fed86a6c7adcf4c440eff608773c"
+      "sha256": "21f4af1c805e2e7651a88a18f3aaff5214cc1b3a76eccb4f8becd2bcfcefad63"
     },
     {
       "path": "screenshots/password-reset-success.png",
@@ -76,7 +76,11 @@
     },
     {
       "path": "summary.md",
-      "sha256": "6a88c3b579ce397915bb1107c1bf37fe54cb02d9bcf5a434cf3d10f954a93066"
+      "sha256": "1ae86afd96529f76335c609dd68278a1ee85a5a7a9bb40b456bb90934f297484"
+    },
+    {
+      "path": "screenshots/sat-existing-demo-confirmed.jpg",
+      "sha256": "65427a80f8cc768665cd8de334acf30dd24670a5bc6c46862d08ec0db8a8d671"
     }
   ],
   "evidence_format": "Checks consolidated without altering results in checks/results.json; CSV references #/section JSON pointers.",
@@ -95,5 +99,12 @@
       "tests/app/test_image_map_browser.py": "84edd043e7723ee72d7a0342228291b4aceef15d04125d2abdb2b4abbceda221",
       "tests/app/test_profile_browser.py": "5b54fafc949f6e91b9f1ceb82c921d0dd7532cc6051ecfb7e2bd5fda6d22921c"
     }
+  },
+  "existing_demo_retest_20261121": {
+    "environment": "AWS HTTPS + real browser",
+    "event": "Existing SAT demo",
+    "cases": 7,
+    "new_events_created": false,
+    "camera_retested": false
   }
 }

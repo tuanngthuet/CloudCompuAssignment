@@ -14,7 +14,7 @@ if (os.getenv('APP_ENV') != 'test'
     pytest.skip('Explicit disposable database required', allow_module_level=True)
 
 from demo_backup import canonical_constraint, fingerprint
-from isolated_load import Scope, cleanup, manifest, prepare, sessions, physics_map, PHYSICS_ROOM
+from isolated_load import Scope, cleanup, manifest, prepare, sessions, physics_map, PHYSICS_ROOM, mechanic_map, MECHANIC_ROOM, MECHANIC_EVENT
 from app.infrastructure.database.session import Session
 from app.models import LabSession, RoomLayout, Reservation
 from app.modules.booking.service import now
@@ -62,6 +62,41 @@ def test_fixture_session_and_foreign_reference_cleanup_guards():
         assert after['tables'] == original['tables']
         assert after['constraints_sha256'] == original['constraints_sha256']
         assert after['invariant_rows'] == [0] * 7
+        db.rollback()
+
+
+@pytest.mark.skipif(not os.getenv('ASSESSMENT_MECHANIC_IMAGE'), reason='Restored Mechanic source assets required')
+def test_mechanic_clone_sessions_cleanup_preserve_demo(tmp_path):
+    from app.infrastructure.storage.objects import storage
+    from app.models import Event, Seat
+    from sqlalchemy import select
+    with Session() as db:
+        assert db.get_bind().url.host=='backup-verify-db'
+        original=fingerprint(db.connection().connection.driver_connection,business=True)
+        source=db.get(RoomLayout,MECHANIC_ROOM);source_event=db.get(Event,MECHANIC_EVENT)
+        before=deepcopy(source.layout);name=source_event.name;status=source_event.status
+        storage().put(source.layout['image_key'],Path(os.environ['ASSESSMENT_MECHANIC_IMAGE']).read_bytes(),'image/png')
+        storage().put(source_event.poster_key,Path(os.environ['ASSESSMENT_MECHANIC_POSTER']).read_bytes(),'image/jpeg')
+        scope=Scope('demo-load-mechanic-test');prepare(db,scope,'disposable-only-master',now(db)+timedelta(days=2))
+        row=Reservation(user_id=scope.users[0],session_id=scope.lab,seat_id=scope.seats[0],status='HELD',hold_expires_at=now(db)+timedelta(minutes=3))
+        db.add(row);db.flush()
+        with pytest.raises(RuntimeError,match='no live or foreign'):mechanic_map(db,scope,tmp_path)
+        row.status='CANCELLED';db.flush()
+        result=mechanic_map(db,scope,tmp_path)
+        assert result['capacity']==180 and result['source_capacity']==68
+        assert source.layout==before and source_event.name==name and source_event.status==status
+        assert all(s.capacity==17 for s in db.scalars(select(Seat).where(Seat.room_id==MECHANIC_ROOM)))
+        rev=db.get(RoomLayout,scope.room).revision
+        assert mechanic_map(db,scope,tmp_path)['unchanged'] and db.get(RoomLayout,scope.room).revision==rev
+        package,identities=sessions(db,scope,14400)
+        assert len(identities)==100 and package['capacity']==180 and len(package['seats'])==4
+        assert len({s['session_token'] for s in identities})==100
+        assert len({s['csrf_token'] for s in identities})==100
+        assert sorted(Counter(s['seat_id'] for s in identities).values())==[25]*4
+        assert all(s['seat_id']==package['mapping'][i]['seat_id'] for i,s in enumerate(identities))
+        cleanup(db,scope,execute=True)
+        after=fingerprint(db.connection().connection.driver_connection,business=True)
+        assert after['tables']==original['tables'] and after['invariant_rows']==[0]*7
         db.rollback()
 
 

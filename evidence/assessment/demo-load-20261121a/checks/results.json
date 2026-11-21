@@ -149,5 +149,7 @@
     "RDS snapshot available; its own RDS restore was not tested. Logical dump restore was tested.",
     "Demo business comparison covers original PK rows in ten core tables, excluding only users.last_activity_at. Full backup covers all 27 public tables.",
     "No throughput/fault or restore-to-production claim. Queue remains enabled; email remains disabled."
-  ]
+  ],
+  "fixture_status": "RETIRED: owned load batch deleted on AWS 2026-11-21; historical backup/configuration receipt only",
+  "current_dataset": "docs/assessment/functional/dataset.md"
 }

@@ -1,4 +1,4 @@
-param([ValidateSet('prepare','physics-map')][string]$Stage='prepare',[string]$Batch='demo-load-20261121a',[string]$Aws='aws',[string]$Profile='labseat',
+param([ValidateSet('prepare','physics-map','mechanic-map')][string]$Stage='prepare',[string]$Batch='demo-load-mechanic21',[string]$Aws='aws',[string]$Profile='labseat',
       [string]$Region='ap-southeast-2',[string]$ExpectedAccount='403030570855',
       [string]$CloseAt='2026-11-24T00:00:00+07:00',[switch]$Execute)
 $ErrorActionPreference='Stop'
@@ -10,7 +10,7 @@ $backupFile=Join-Path $directory 'backup-manifest.private.json'
 $backup=Get-Content -LiteralPath $backupFile -Raw|ConvertFrom-Json
 if(-not $backup.verified -or -not $backup.assets_verified){throw 'Verified backup required first'}
 if(-not $Execute){'Plan only: isolated load preparation in ECS/VPC; no change';return}
-if($Stage -eq 'physics-map'){
+if($Stage -in @('physics-map','mechanic-map')){
     [IO.File]::WriteAllText((Join-Path $directory 'handoff-status.private.json'),(@{ready=$false;reason='Reissue sessions and smoke after Physics map change'}|ConvertTo-Json))
 }
 function Read-AwsJson {
@@ -76,6 +76,8 @@ print('LOAD_PREPARED='+json.dumps(json.loads((out/'manifest.json').read_text()))
 if p['stage']=='physics-map':
  print('LOAD_PHYSICS_BEFORE='+json.dumps(json.loads((out/'physics-map-before.private.json').read_text())) if (out/'physics-map-before.private.json').exists() else 'LOAD_PHYSICS_BEFORE={}',flush=True)
  print('LOAD_PHYSICS_RESULT='+json.dumps(json.loads((out/'physics-map-result.json').read_text())),flush=True)
+if p['stage']=='mechanic-map':
+ print('LOAD_MECHANIC_RESULT='+json.dumps(json.loads((out/'mechanic-map-result.json').read_text())),flush=True)
 '@
     $source=$source.Replace('__PAYLOAD__',$payload64).Replace("`r`n","`n")
     $bundle=Join-Path $directory "$Stage-source.private.py"
@@ -113,12 +115,16 @@ if p['stage']=='physics-map':
             if($sealed.Count -ne 1){throw 'Missing encrypted master'}
             $master=[Text.Encoding]::UTF8.GetString($rsa.Decrypt([Convert]::FromBase64String(($sealed[0]-split '=',2)[1]),[Security.Cryptography.RSAEncryptionPadding]::OaepSHA256))
             [IO.File]::WriteAllText((Join-Path $out 'load-master.txt'),$master)
-        }else{
+        }elseif($Stage -eq 'physics-map'){
             foreach($entry in @(@('LOAD_PHYSICS_BEFORE=','physics-map-before.private.json'),@('LOAD_PHYSICS_RESULT=','physics-map-result.json'))){
                 $record=@($messages|Where-Object { $_.StartsWith($entry[0]) })
                 if($record.Count -ne 1){throw 'Missing Physics audit result'}
                 [IO.File]::WriteAllText((Join-Path $out $entry[1]),$record[0].Substring($entry[0].Length))
             }
+        }elseif($Stage -eq 'mechanic-map'){
+            $record=@($messages|Where-Object { $_.StartsWith('LOAD_MECHANIC_RESULT=') })
+            if($record.Count -ne 1){throw 'Missing Mechanic audit result'}
+            [IO.File]::WriteAllText((Join-Path $out 'mechanic-map-result.json'),$record[0].Substring('LOAD_MECHANIC_RESULT='.Length))
         }
         [IO.File]::WriteAllText((Join-Path $out 'manifest.json'),($committed[0]-split '=',2)[1])
         "$Stage committed; private manifest recovered; no plaintext credential was logged."

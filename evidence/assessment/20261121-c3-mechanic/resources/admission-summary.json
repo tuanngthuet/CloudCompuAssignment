@@ -1,0 +1,9 @@
+{
+  "samples": 240,
+  "waiting_sampled_max": 30,
+  "admitted_sampled_max": 10,
+  "active_reservations_sampled_max": 3,
+  "capacity": 10,
+  "sampling_seconds": 5,
+  "note": "Sampled maxima, not an exhaustive bound on every instant; read-only exact load-session scope"
+}

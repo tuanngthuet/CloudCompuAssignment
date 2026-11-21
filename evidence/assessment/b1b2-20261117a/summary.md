@@ -155,3 +155,13 @@ Sáu trang nguồn mạng được kiểm giấy phép và ghi trong CSV; tải 
   ]
 }
 ```
+
+## Đối chiếu web và thu hồi ca thử —21/11/2026
+
+Sáu ca `[B2 WEB]` dùng nguồn HNUE đã được xóa trên AWS lúc13:59:28:6event,6lịch,6phòng,24vùng và5reservation thử; không xóa user demo, guard ngoài scope PASS. Ảnh và bảng sáu ca thử cũ không còn dùng làm bằng chứng hiện hành. Nguồn ảnh trong assets-sources.csv được đánh dấu WITHDRAWN.
+
+B3 kiểm lại **Kì thi SAT - Ca demo** có sẵn: UI giữ/xác nhận/hủy; replay; QR/ownership; staff04 lookup; CSV; phòng hết chỗ; race suất cuối200/409 sold_out.45reservation thử đã hủy/45job SKIPPED được dọn lúc14:30:12, provider attempts0; không đổi lịch/capacity/vé gốc. Camera thật không được kiểm lại ở lượt này.
+
+Ca tải riêng hiện hành là **Mechanic — Ca chịu tải riêng 21–22/11/2026**, batch `demo-load-mechanic21`,4×45=180 suất,100phiên đã smoke. Mechanic demo4×17=68 giữ nguyên. Ca tải Vật lý cũ đã cleanup; backup gốc vẫn giữ. [Cấu hình và hạn phiên](../../../docs/assessment/functional/dataset.md).
+
+Verify AWS lúc14:31:07:10bảng nghiệp vụ demo theo PK gốc không đổi, chỉ bỏ qua users.last_activity_at;7invariants đều0. Không gọi đây là hậu kiểm hoàn tất C3 hoặc bằng chứng mọi fixture trạng thái đã đủ.
