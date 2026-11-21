@@ -1,5 +1,7 @@
 """Separate, backup-gated load fixture. Defaults to plan-only; never edits demo rows."""
 import argparse
+from collections import Counter
+from copy import deepcopy
 from datetime import datetime,timedelta,timezone
 import hashlib
 import hmac
@@ -20,6 +22,8 @@ from app.models import (AdminAudit,AuditEvent,AuthChallenge,EmailJob,Event,Idemp
 from app.modules.auth import service as auth
 from app.modules.booking.service import now
 from demo_backup import fingerprint
+
+PHYSICS_ROOM=UUID('5287d90a-0163-599b-a753-57bfb86023bc')
 
 
 def private(path,value):
@@ -77,13 +81,42 @@ def owned(db,scope,complete=False):
     if room and scope.name not in room.name:raise RuntimeError('Room ownership mismatch')
     if lab and (lab.event_id!=scope.event or lab.room_id!=scope.room):raise RuntimeError('Schedule ownership mismatch')
     if complete and not all((event,room,lab)):raise RuntimeError('Incomplete load fixture')
+    layout=db.get(RoomLayout,scope.room)
+    physics=bool(layout and layout.layout.get('assessment_artwork')=='load-physics')
+    expected=scope.seats[:34] if physics else scope.seats
+    capacity=45 if physics else 1
     seats=list(db.scalars(select(Seat).where(Seat.room_id==scope.room)))
-    if any(s.id not in scope.seats or s.capacity!=1 for s in seats):raise RuntimeError('Seat ownership/capacity mismatch')
-    if complete and {s.id for s in seats}!=set(scope.seats):raise RuntimeError('Load capacity is incomplete')
+    if any(s.id not in expected or s.capacity!=capacity for s in seats):raise RuntimeError('Seat ownership/capacity mismatch')
+    if complete and {s.id for s in seats}!=set(expected):raise RuntimeError('Load capacity is incomplete')
+    if physics and (layout.layout.get('source_room_id')!=str(PHYSICS_ROOM)
+            or {e['seat_id'] for e in layout.layout['elements']}!=set(map(str,expected))):
+        raise RuntimeError('Physics load layout ownership mismatch')
+
+
+def load_seats(db,scope):
+    rows={s.id:s for s in db.scalars(select(Seat).where(Seat.room_id==scope.room))}
+    return [rows[sid] for sid in scope.seats if sid in rows]
+
+
+def assign_seats(seats,occupied,count=100):
+    remaining={seat['seat_id']:seat['capacity']-occupied.get(UUID(seat['seat_id']),0) for seat in seats}
+    result=[]
+    while len(result)<count:
+        before=len(result)
+        for seat in seats:
+            sid=seat['seat_id']
+            if remaining[sid]>0:
+                result.append(UUID(sid));remaining[sid]-=1
+                if len(result)==count:return result
+        if len(result)==before:raise RuntimeError('Insufficient remaining capacity for the handoff')
+    return result
 
 
 def prepare(db,scope,master,close_at):
     owned(db,scope)
+    layout=db.get(RoomLayout,scope.room)
+    if layout and layout.layout.get('assessment_artwork')=='load-physics':
+        owned(db,scope,complete=True);return
     clock=now(db)
     if close_at.tzinfo is None or close_at<clock+timedelta(hours=4):raise ValueError('Load window must cover at least four hours')
     for i,uid in enumerate(scope.users):
@@ -116,10 +149,13 @@ def prepare(db,scope,master,close_at):
 
 def manifest(db,scope):
     owned(db,scope,complete=True);lab=db.get(LabSession,scope.lab)
+    seats=load_seats(db,scope)
+    layout=db.get(RoomLayout,scope.room)
     return {'batch':scope.name,'manifest_id':str(scope.id('manifest')),'event_id':str(scope.event),
         'load_session':str(scope.lab),'room_id':str(scope.room),'users':[{'id':str(uid),'username':scope.username(i),'role':'student'} for i,uid in enumerate(scope.users)],
-        'seats':[{'seat_id':str(uid),'code':f'L{i+1:03}','capacity':1} for i,uid in enumerate(scope.seats)],
-        'capacity':120,'open_at':lab.open_at.isoformat(),'close_at':lab.close_at.isoformat(),
+        'seats':[{'seat_id':str(seat.id),'code':seat.seat_code,'capacity':seat.capacity} for seat in seats],
+        'capacity':sum(seat.capacity for seat in seats),'layout_type':layout.layout.get('type','grid'),
+        'layout_revision':layout.revision,'open_at':lab.open_at.isoformat(),'close_at':lab.close_at.isoformat(),
         'start_at':lab.start_at.isoformat(),'end_at':lab.end_at.isoformat(),'checkin_enabled':False}
 
 
@@ -130,10 +166,15 @@ def sessions(db,scope,minimum):
     if db.get(Event,scope.event).status!='ACTIVE':raise RuntimeError('Load event is not active')
     occupied=dict(db.execute(select(Reservation.seat_id,func.count()).where(Reservation.session_id==scope.lab,
         or_(Reservation.status.in_(('CONFIRMED','CHECKED_IN')),(Reservation.status=='HELD')&(Reservation.hold_expires_at>clock))).group_by(Reservation.seat_id)).all())
+    if db.scalar(select(Reservation.id).where(Reservation.session_id==scope.lab,Reservation.user_id.in_(scope.users),
+            or_(Reservation.status.in_(('CONFIRMED','CHECKED_IN')),(Reservation.status=='HELD')&(Reservation.hold_expires_at>clock))).limit(1)):
+        raise RuntimeError('A load account already has an active reservation')
+    assigned=assign_seats(data['seats'],occupied)
+    codes={seat['seat_id']:seat['code'] for seat in data['seats']}
     result=[];expires=[]
     for i,uid in enumerate(scope.users):
-        user=db.get(User,uid);seat=scope.seats[i]
-        if user.status!='ACTIVE' or not user.email_verified_at or user.pending_email or occupied.get(seat,0):raise RuntimeError('Load user/seat is unavailable')
+        user=db.get(User,uid);seat=assigned[i]
+        if user.status!='ACTIVE' or not user.email_verified_at or user.pending_email:raise RuntimeError('Load user is unavailable')
         old=db.get(LoginSession,scope.id(f'login-{i}'))
         if old and old.user_id!=uid:raise RuntimeError('Session ownership mismatch')
         if old:db.delete(old);db.flush()
@@ -147,8 +188,54 @@ def sessions(db,scope,minimum):
     data.update(sessions_expire_at=(min(expires)-timedelta(seconds=1)).isoformat(),minimum_valid_seconds=minimum,issued_at_server=clock.isoformat())
     data['mapping']=[{'session_index':i,'user_id':str(uid),'username':scope.username(i),
         'event_id':str(scope.event),'load_session':str(scope.lab),'room_id':str(scope.room),
-        'seat_id':str(scope.seats[i]),'seat_code':f'L{i+1:03}'} for i,uid in enumerate(scope.users)]
+        'seat_id':str(assigned[i]),'seat_code':codes[str(assigned[i])]} for i,uid in enumerate(scope.users)]
     return data,result
+
+
+def physics_map(db,scope,output):
+    """Copy the demo Physics presentation into the owned, idle load room only."""
+    from app.infrastructure.storage.objects import storage
+    from app.infrastructure.storage.registry import track
+    owned(db,scope,complete=True)
+    lab=db.scalar(select(LabSession).where(LabSession.id==scope.lab).with_for_update())
+    target=db.scalar(select(RoomLayout).where(RoomLayout.room_id==scope.room).with_for_update())
+    source=db.get(RoomLayout,PHYSICS_ROOM)
+    if not source or source.layout.get('type')!='image':raise RuntimeError('Physics source layout is missing')
+    zones=source.layout['elements']
+    if len(zones)!=34 or any(z['kind']!='zone' for z in zones):raise RuntimeError('Unexpected Physics source regions')
+    if {z['label'].split(' ')[0] for z in zones}!={f'HN{i}' for i in range(582,616)}:
+        # Labels may also put the physical room first; require the HN code anywhere.
+        if {re.search(r'HN\d+',z['label']).group() for z in zones if re.search(r'HN\d+',z['label'])}!={f'HN{i}' for i in range(582,616)}:
+            raise RuntimeError('Physics room codes changed')
+    old=list(db.scalars(select(Reservation).where(Reservation.session_id==scope.lab)))
+    if any(row.user_id not in scope.users or row.status not in ('CANCELLED','EXPIRED') for row in old):
+        raise RuntimeError('Load room must have no live or foreign reservations before changing its map')
+    if any(row.seat_id not in scope.seats[:34] for row in old):raise RuntimeError('A removed seat has reservation history')
+    if db.scalar(select(SessionSeat.id).where(SessionSeat.seat_id.in_(scope.seats),SessionSeat.session_id!=scope.lab).limit(1)):
+        raise RuntimeError('A foreign schedule references load seats')
+    source_hash=hashlib.sha256(json.dumps(source.layout,sort_keys=True).encode()).hexdigest()
+    if target.layout.get('assessment_artwork')=='load-physics':
+        if target.layout.get('source_layout_sha256')!=source_hash:raise RuntimeError('Physics source changed after the load copy')
+        return {'unchanged':True,'source_layout_sha256':source_hash,'capacity':1530,'zones':34}
+    private(output/'physics-map-before.private.json',{'layout':target.layout,'revision':target.revision,
+        'seats':[{'id':str(s.id),'code':s.seat_code,'capacity':s.capacity} for s in load_seats(db,scope)],
+        'reservations':[{'id':str(r.id),'seat_id':str(r.seat_id),'status':r.status} for r in old]})
+    backend=storage();body=backend.get(source.layout['image_key']);digest=hashlib.sha256(body).hexdigest()
+    key=f'rooms/{scope.room}/maps/{scope.id("physics-image-"+digest)}.png'
+    backend.put(key,body,content_type='image/png')
+    if hashlib.sha256(backend.get(key)).hexdigest()!=digest:raise RuntimeError('Load image copy readback failed')
+    track(db,key,True)
+    copied=deepcopy(source.layout)
+    for i,zone in enumerate(copied['elements']):
+        seat=db.get(Seat,scope.seats[i]);seat.seat_code=zone['label'];seat.capacity=45
+        zone.update(id=str(scope.id(f'physics-zone-{i}')),seat_id=str(seat.id),capacity=45)
+    db.execute(delete(SessionSeat).where(SessionSeat.session_id==scope.lab,SessionSeat.seat_id.in_(scope.seats[34:])))
+    db.execute(delete(Seat).where(Seat.room_id==scope.room,Seat.id.in_(scope.seats[34:])))
+    copied.update(image_key=key,assessment_artwork='load-physics',source_room_id=str(PHYSICS_ROOM),source_layout_sha256=source_hash)
+    target.layout=copied;target.revision+=1;db.flush();owned(db,scope,complete=True)
+    if hashlib.sha256(json.dumps(source.layout,sort_keys=True).encode()).hexdigest()!=source_hash:raise RuntimeError('Physics source was modified')
+    return {'source_room_id':str(PHYSICS_ROOM),'source_layout_sha256':source_hash,'image_sha256':digest,
+        'image_bytes':len(body),'zones':34,'capacity':1530,'preserved_cancelled_reservations':len(old),'source_unchanged':True}
 
 
 def cleanup(db,scope,execute=False):
@@ -186,8 +273,9 @@ def smoke(scope,output,minimum,master):
     from PIL import Image
     data=json.loads((output/'manifest.json').read_text())
     identities=json.loads((output/'synthetic-sessions.json').read_text())
-    if len(identities)!=100 or any(len({item[key] for item in identities})!=100 for key in ('session_token','csrf_token','seat_id')):
-        raise RuntimeError('Require 100 distinct user sessions, CSRF tokens and assigned seats')
+    if len(identities)!=100 or any(len({item[key] for item in identities})!=100 for key in ('session_token','csrf_token')):
+        raise RuntimeError('Require 100 distinct user sessions and CSRF tokens')
+    assignments=Counter(item['seat_id'] for item in identities)
     expiry=datetime.fromisoformat(data['sessions_expire_at'])
     if expiry<datetime.now(timezone.utc)+timedelta(seconds=minimum):raise RuntimeError('Session handoff no longer covers the requested window')
     result={'started_at_utc':datetime.now(timezone.utc).isoformat(),'base_url':'https://labseat.id.vn'}
@@ -199,7 +287,8 @@ def smoke(scope,output,minimum,master):
         if not datetime.fromisoformat(selected['open_at'])<=clock<datetime.fromisoformat(selected['close_at'])-timedelta(seconds=minimum):raise RuntimeError('Load window is not ready')
         available=client.get(f'/lab-sessions/{scope.lab}/seats');available.raise_for_status()
         seats={x['id']:x for x in available.json()['items']}
-        if set(seats)!=set(map(str,scope.seats)) or any(seats[str(sid)]['capacity']!=1 for sid in scope.seats):raise RuntimeError('Seat mapping/capacity mismatch')
+        if set(seats)!={item['seat_id'] for item in data['seats']} or any(seats[item['seat_id']]['capacity']!=item['capacity'] for item in data['seats']):raise RuntimeError('Seat mapping/capacity mismatch')
+        if any(sid not in seats or count>seats[sid]['remaining'] for sid,count in assignments.items()):raise RuntimeError('Assigned users exceed remaining room capacity')
         seen=set()
         for i,identity in enumerate(identities):
             client.cookies.clear();client.cookies.set('labseat_session',identity['session_token'])
@@ -207,7 +296,12 @@ def smoke(scope,output,minimum,master):
             if user['id']!=str(scope.users[i]) or user['role']!='student' or user['account_status']!='ACTIVE' or not user['email_verified'] or user['id'] in seen:raise RuntimeError('Live user identity mismatch')
             if not seats[identity['seat_id']]['available']:raise RuntimeError('An assigned seat is unavailable')
             seen.add(user['id'])
-        result.update(unique_users=len(seen),distinct_sessions=100,distinct_seats=100,capacity=120,queue_enabled=listing.json()['queue_policy']['enabled'])
+        layout=client.get(f'/rooms/{scope.room}/seat-map');layout.raise_for_status()
+        if {item['seat_id'] for item in layout.json()['elements'] if item['kind'] in ('seat','zone')}!=set(seats):raise RuntimeError('Published layout mapping differs from live seats')
+        if data.get('layout_type')=='image':
+            picture=client.get(layout.json()['image_url']);picture.raise_for_status()
+            with Image.open(BytesIO(picture.content)) as image:image.verify()
+        result.update(unique_users=len(seen),distinct_sessions=100,distinct_seats=len(assignments),capacity=sum(s['capacity'] for s in seats.values()),queue_enabled=listing.json()['queue_policy']['enabled'],layout_type=layout.json().get('type','grid'))
         if master:
             client.cookies.clear();home=client.get('/');home.raise_for_status()
             pre=client.cookies.get('labseat_pre_csrf')
@@ -252,7 +346,7 @@ def smoke(scope,output,minimum,master):
 
 def main():
     p=argparse.ArgumentParser(description=__doc__)
-    p.add_argument('stage',choices=('prepare','sessions','verify','cleanup','smoke'))
+    p.add_argument('stage',choices=('prepare','sessions','verify','cleanup','smoke','physics-map'))
     p.add_argument('--batch',required=True);p.add_argument('--backup',type=Path,required=True)
     p.add_argument('--output',type=Path,required=True);p.add_argument('--close-at')
     p.add_argument('--minimum-valid-seconds',type=int,default=14400)
@@ -265,8 +359,8 @@ def main():
         raise ValueError('A verified database-and-image backup is required first')
     if args.minimum_valid_seconds<3600 or args.minimum_valid_seconds>28500:raise ValueError('Invalid minimum session TTL')
     if args.stage=='cleanup' and args.manifest_id!=str(scope.id('manifest')):raise ValueError('Cleanup requires the exact scope manifest ID')
-    if args.stage in ('prepare','sessions','smoke') and not args.execute:
-        print(json.dumps({'plan_only':True,'batch':scope.name,'users':100,'events':1,'schedules':1,'seats':120,'capacity':120}));return
+    if args.stage in ('prepare','sessions','smoke','physics-map') and not args.execute:
+        print(json.dumps({'plan_only':True,'batch':scope.name,'stage':args.stage,'users':100,'events':1,'schedules':1}));return
     master_path=args.output/'load-master.txt';args.output.mkdir(parents=True,exist_ok=True)
     master=master_path.read_text().strip() if master_path.exists() else None
     result=None;tokens=None
@@ -283,12 +377,17 @@ def main():
             prepare(db,scope,master,datetime.fromisoformat(args.close_at.replace('Z','+00:00')))
             result=manifest(db,scope)
         elif args.stage=='sessions':result,tokens=sessions(db,scope,args.minimum_valid_seconds)
+        elif args.stage=='physics-map':result=physics_map(db,scope,args.output)
         elif args.stage=='cleanup':result=cleanup(db,scope,args.execute)
         elif args.stage=='smoke':result=smoke(scope,args.output,args.minimum_valid_seconds,master)
         else:result=manifest(db,scope)
         result['demo_unchanged']=verify_demo(db,backup,args.local_verify)
     if args.stage=='sessions':private(args.output/'synthetic-sessions.json',tokens)
     if args.stage=='sessions' or (args.stage=='prepare' and not (args.output/'manifest.json').exists()):private(args.output/'manifest.json',result)
+    if args.stage=='physics-map':
+        with Session() as db:updated=manifest(db,scope)
+        updated['sessions_status']='REISSUE_REQUIRED_AFTER_MAP_CHANGE'
+        private(args.output/'manifest.json',updated)
     if args.stage=='prepare':private(args.output/'accounts.json',[{'username':scope.username(i),'role':'student','password':scope.password(master,i)} for i in range(100)])
     private(args.output/(args.stage+'-result.json'),result)
     print(json.dumps({'stage':args.stage,'batch':scope.name,'manifest_id':str(scope.id('manifest')),'execute':args.execute,'demo_unchanged':True,'capacity':result.get('capacity'),'sessions':len(tokens) if tokens else None,'counts':result.get('before')}),flush=True)

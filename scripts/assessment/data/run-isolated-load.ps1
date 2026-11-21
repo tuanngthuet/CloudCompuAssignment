@@ -1,5 +1,5 @@
 param(
-    [Parameter(Mandatory)][ValidateSet('prepare','sessions','verify','cleanup','smoke')][string]$Stage,
+    [Parameter(Mandatory)][ValidateSet('prepare','sessions','verify','cleanup','smoke','physics-map')][string]$Stage,
     [string]$Batch='demo-load-20261121a',
     [string]$Aws='aws',
     [string]$Profile='labseat',
@@ -17,7 +17,10 @@ if($Region -ne 'ap-southeast-2'){throw 'Unexpected region'}
 $root=(Resolve-Path (Join-Path $PSScriptRoot '../../..')).Path
 $directory=Join-Path $root ".local/assessment/$Batch"
 if(-not (Test-Path -LiteralPath (Join-Path $directory 'backup-manifest.private.json'))){throw 'Verified demo backup is required first'}
-if(-not $Execute -and $Stage -in @('prepare','sessions')){Write-Output "Plan only: $Stage isolated batch=$Batch, 100 users, 120 seats; no AWS data change";return}
+if(-not $Execute -and $Stage -in @('prepare','sessions','physics-map')){Write-Output "Plan only: $Stage isolated batch=$Batch; no AWS data change";return}
+if($Execute -and $Stage -in @('prepare','sessions','physics-map')){
+    [IO.File]::WriteAllText((Join-Path $directory 'handoff-status.private.json'),(@{ready=$false;reason="Revalidate handoff after $Stage"}|ConvertTo-Json))
+}
 $account=& $Aws sts get-caller-identity --profile $Profile --region $Region --query Account --output text --no-cli-pager
 if($LASTEXITCODE -or $account -ne $ExpectedAccount){throw 'Unexpected AWS identity'}
 if($Stage -eq 'smoke' -and $Execute){
@@ -58,8 +61,7 @@ if($Stage -eq 'smoke' -and $Execute){
     $manifestFile=Join-Path $load 'manifest.json'
     $manifest=Get-Content -LiteralPath $manifestFile -Raw|ConvertFrom-Json
     $expiry=if($manifest.sessions_expire_at -is [datetime]){$manifest.sessions_expire_at.ToString('o')}else{[string]$manifest.sessions_expire_at}
-    $mapping=@(for($i=0;$i -lt 100;$i++){@{session_index=$i;user_id=$manifest.users[$i].id;username=$manifest.users[$i].username;event_id=$manifest.event_id;load_session=$manifest.load_session;room_id=$manifest.room_id;seat_id=$manifest.seats[$i].seat_id;seat_code=$manifest.seats[$i].code}})
-    $manifest|Add-Member -NotePropertyName mapping -NotePropertyValue $mapping -Force
+    if($manifest.mapping.Count -ne 100){throw 'Expected explicit mapping for all 100 identities'}
     [IO.File]::WriteAllText($manifestFile,($manifest|ConvertTo-Json -Depth 15))
     $handoff=Join-Path $directory 'handoff'
     New-Item -ItemType Directory -Path $handoff -Force|Out-Null
@@ -80,5 +82,7 @@ Tell Person 2 when measurement has stopped so the exact batch can be cleaned and
     [IO.File]::WriteAllText((Join-Path $handoff 'README.txt'),$readme)
     $archive=Join-Path $directory 'handoff-person3.zip'
     Compress-Archive -LiteralPath @((Join-Path $handoff 'manifest.json'),(Join-Path $handoff 'synthetic-sessions.json'),(Join-Path $handoff 'smoke-result.json'),(Join-Path $handoff 'README.txt')) -DestinationPath $archive -Force
+    $status=@{ready=$true;batch=$Batch;zip_sha256=(Get-FileHash -LiteralPath $archive -Algorithm SHA256).Hash.ToLowerInvariant();files=@('manifest.json','synthetic-sessions.json','smoke-result.json','README.txt');expires_at=$expiry;recipient_acknowledged=$false;post_load_cleanup_performed=$false}
+    [IO.File]::WriteAllText((Join-Path $directory 'handoff-status.private.json'),($status|ConvertTo-Json -Depth 5))
     "Private handoff prepared: $archive; expires=$expiry"
 }

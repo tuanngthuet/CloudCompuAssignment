@@ -160,3 +160,19 @@ Người 3 giải nén ZIP private, kiểm `manifest.mapping`, TTL và 100 phiê
 Cleanup kiểm quan hệ chéo, chỉ xóa user/event/ca/phòng/120 seat và dữ liệu con của UUID scope mới; chạy lại an toàn. Đối chiếu demo nghiệp vụ và 7 invariants trong cùng lượt, giữ backup và ảnh demo. Không truncate/reset. Queue lease được rời qua API khi smoke; các key cache của ca riêng có TTL, nếu phải dọn ngay chỉ xóa 5 key suffix `seq/waiting/admitted/entries/seen` của đúng epoch + SESSION_ID qua operator được phép, không xóa `labseat:queue:ready` hoặc đổi policy toàn hệ thống. Đây là bước sau tải, chưa chạy trên AWS; dry-run hiện chỉ thấy scope mới và các reservation smoke đã hủy.
 
 Test an toàn của công cụ mới: `python -m pytest scripts/assessment/data/test_isolated_load.py -q -p no:cacheprovider` chỉ chạy khi APP_ENV=test, DATABASE_URL=TEST_DATABASE_URL kết thúc `_test`, host `backup-verify-db` disposable. Kiểm enum constraint normalization fail-closed, prepare idempotent, 100 phiên/chỗ riêng, từ chối cleanup khi có lịch ngoại scope, cleanup lặp lại và giữ nguyên toàn bộ 27 bảng. Không chạy test này vào DB demo.
+
+### Cập nhật ca tải sang sơ đồ Vật lý
+
+Cấu hình hiện hành của cùng batch là **34 vùng ×45 suất =1.530**, thay cho lưới120. Chuyển bằng stage `physics-map` của `prepare-isolated-one-off.ps1` trên ECS/VPC; giữ UUID của34 seat đầu và hai reservation CANCELLED, xóa86 seat/slot không có lịch sử, sao chép ảnh vào key riêng và đối chiếu hash/geometry nguồn. Không gọi stage seed/reset; không bỏ khóa sơ đồ chung của app. Trang quản trị vẫn khóa sửa khi có lịch sử, student chọn phòng qua trang đăng ký.
+
+```powershell
+# Chỉ đổi sơ đồ của batch tải; mặc định plan-only.
+./scripts/assessment/data/prepare-isolated-one-off.ps1 -Stage physics-map -Execute
+# Sau khi đổi, cấp lại và smoke để thay gói mapping cũ:
+./scripts/assessment/data/run-isolated-load.ps1 -Stage sessions -Execute
+./scripts/assessment/data/run-isolated-load.ps1 -Stage smoke -Execute
+```
+
+Helper nhận hai cấu hình được kiểm ownership: lưới120×1 hoặc `load-physics`34×45; manifest lấy UUID/nhãn/capacity thực từ DB. Cấp100 phiên cho100user khác nhau, phân bố vòng qua các phòng theo remaining capacity và từ chối user có đăng ký đang hoạt động. Smoke kiểm100 danh tính/token/CSRF riêng, tổng số người gán mỗi phòng không vượt remaining, ảnh thật và luồng đặt–QR–hủy. Runner giữ nguyên100 dòng mapping do helper sinh, không gán lại theo index120 chỗ cũ. Gói mới hết hạn17:05:52 ngày21/11, giờ Việt Nam; Người3 dùng bản này thay gói lưới cũ.
+
+Test bổ sung trên backup restore PostgreSQL16.13 kiểm clone ảnh/geometry, giữ ca Vật lý và lịch sử hủy, từ chối vé HELD, chạy lại không tăng revision và100 phiên trên34phòng. Test này cần `ASSESSMENT_PHYSICS_IMAGE` trỏ PNG nguồn cùng với storage local riêng; không gọi S3/AWS từ test disposable. Kết quả trước khi áp dụng AWS: **3 PASS,0 FAIL/ERROR/SKIP**.

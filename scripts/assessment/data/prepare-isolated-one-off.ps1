@@ -1,4 +1,4 @@
-param([string]$Batch='demo-load-20261121a',[string]$Aws='aws',[string]$Profile='labseat',
+param([ValidateSet('prepare','physics-map')][string]$Stage='prepare',[string]$Batch='demo-load-20261121a',[string]$Aws='aws',[string]$Profile='labseat',
       [string]$Region='ap-southeast-2',[string]$ExpectedAccount='403030570855',
       [string]$CloseAt='2026-11-24T00:00:00+07:00',[switch]$Execute)
 $ErrorActionPreference='Stop'
@@ -10,6 +10,9 @@ $backupFile=Join-Path $directory 'backup-manifest.private.json'
 $backup=Get-Content -LiteralPath $backupFile -Raw|ConvertFrom-Json
 if(-not $backup.verified -or -not $backup.assets_verified){throw 'Verified backup required first'}
 if(-not $Execute){'Plan only: isolated load preparation in ECS/VPC; no change';return}
+if($Stage -eq 'physics-map'){
+    [IO.File]::WriteAllText((Join-Path $directory 'handoff-status.private.json'),(@{ready=$false;reason='Reissue sessions and smoke after Physics map change'}|ConvertTo-Json))
+}
 function Read-AwsJson {
     $value=& $Aws @args --profile $Profile --region $Region --output json --no-cli-pager
     if($LASTEXITCODE){throw 'AWS operation failed'}
@@ -37,7 +40,7 @@ try {
         $files[$entry[1]]=[Convert]::ToBase64String([IO.File]::ReadAllBytes((Join-Path $root $entry[0])))
     }
     if($backup.demo_fingerprint){$files['out/'+$backup.demo_fingerprint]=[Convert]::ToBase64String([IO.File]::ReadAllBytes((Join-Path $directory $backup.demo_fingerprint)))}
-    $payload=@{files=$files;batch=$Batch;close_at=$CloseAt;public_key=$public}|ConvertTo-Json -Depth 12 -Compress
+    $payload=@{files=$files;stage=$Stage;batch=$Batch;close_at=$CloseAt;public_key=$public}|ConvertTo-Json -Depth 12 -Compress
     $payload64=[Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes($payload))
     $source=@'
 import base64,json,os,sys,tempfile,secrets,subprocess
@@ -58,19 +61,24 @@ from app.infrastructure.database.session import Session
 from app.models import User
 scope=Scope(p['batch'])
 with Session() as db:
- if db.get(User,scope.users[0]):raise RuntimeError('Scope exists; verify/recover the original private handoff, do not rotate its master')
-master=secrets.token_urlsafe(48)
-public=root/'public.pem';public.write_text(p['public_key'])
-sealed=subprocess.run(['openssl','pkeyutl','-encrypt','-pubin','-inkey',str(public),'-pkeyopt','rsa_padding_mode:oaep','-pkeyopt','rsa_oaep_md:sha256','-pkeyopt','rsa_mgf1_md:sha256'],input=master.encode(),capture_output=True,check=True).stdout
-print('LOAD_ENCRYPTED_MASTER='+base64.b64encode(sealed).decode(),flush=True)
+ if p['stage']=='prepare' and db.get(User,scope.users[0]):raise RuntimeError('Scope exists; verify/recover the original private handoff, do not rotate its master')
 out=root/'out/load';out.mkdir()
-(out/'load-master.txt').write_text(master)
-sys.argv=['isolated_load','prepare','--batch',p['batch'],'--backup',str(root/'out/backup-manifest.private.json'),'--output',str(out),'--close-at',p['close_at'],'--execute']
+if p['stage']=='prepare':
+ master=secrets.token_urlsafe(48)
+ public=root/'public.pem';public.write_text(p['public_key'])
+ sealed=subprocess.run(['openssl','pkeyutl','-encrypt','-pubin','-inkey',str(public),'-pkeyopt','rsa_padding_mode:oaep','-pkeyopt','rsa_oaep_md:sha256','-pkeyopt','rsa_mgf1_md:sha256'],input=master.encode(),capture_output=True,check=True).stdout
+ print('LOAD_ENCRYPTED_MASTER='+base64.b64encode(sealed).decode(),flush=True)
+ (out/'load-master.txt').write_text(master)
+sys.argv=['isolated_load',p['stage'],'--batch',p['batch'],'--backup',str(root/'out/backup-manifest.private.json'),'--output',str(out),'--execute']
+if p['stage']=='prepare':sys.argv+=['--close-at',p['close_at']]
 main()
 print('LOAD_PREPARED='+json.dumps(json.loads((out/'manifest.json').read_text())),flush=True)
+if p['stage']=='physics-map':
+ print('LOAD_PHYSICS_BEFORE='+json.dumps(json.loads((out/'physics-map-before.private.json').read_text())) if (out/'physics-map-before.private.json').exists() else 'LOAD_PHYSICS_BEFORE={}',flush=True)
+ print('LOAD_PHYSICS_RESULT='+json.dumps(json.loads((out/'physics-map-result.json').read_text())),flush=True)
 '@
     $source=$source.Replace('__PAYLOAD__',$payload64).Replace("`r`n","`n")
-    $bundle=Join-Path $directory 'prepare-source.private.py'
+    $bundle=Join-Path $directory "$Stage-source.private.py"
     [IO.File]::WriteAllText($bundle,$source)
     $digest=(Get-FileHash -LiteralPath $bundle -Algorithm SHA256).Hash.ToLowerInvariant()
     $key="rooms/assessment-code/$Batch/$digest.py"
@@ -78,33 +86,42 @@ print('LOAD_PREPARED='+json.dumps(json.loads((out/'manifest.json').read_text()))
     $upload=Read-AwsJson s3api put-object --bucket $bucket --key $objectKey --body $bundle --server-side-encryption AES256
     $launcher="import sys,hashlib;from app.infrastructure.storage.objects import storage;source=storage().get(sys.argv[1]);assert hashlib.sha256(source).hexdigest()==sys.argv[2];exec(compile(source,'protected_load.py','exec'),{'__name__':'__main__'})"
     $request=@{cluster='labseat-lab';taskDefinition=$api.taskDefinition;count=1;startedBy=$Batch;capacityProviderStrategy=$api.capacityProviderStrategy;networkConfiguration=$api.networkConfiguration;overrides=@{containerOverrides=@(@{name='app';command=@('python','-c',$launcher,$key,$digest)})}}
-    $requestFile=Join-Path $directory 'prepare-task.private.json'
+    $requestFile=Join-Path $directory "$Stage-task.private.json"
     [IO.File]::WriteAllText($requestFile,($request|ConvertTo-Json -Depth 25 -Compress))
     $stopped=$true
     try {
         $response=Read-AwsJson ecs run-task --cli-input-json "file://$requestFile"
         if($response.failures.Count -or $response.tasks.Count -ne 1){throw 'Prepare task not accepted'}
         $task=$response.tasks[0].taskArn;$stopped=$false
-        $task|Set-Content (Join-Path $directory 'prepare-task.txt')
+        $task|Set-Content (Join-Path $directory "$Stage-task.txt")
         Write-Output "Isolated prepare started in VPC: $task"
         & $Aws ecs wait tasks-stopped --cluster labseat-lab --tasks $task --profile $Profile --region $Region --no-cli-pager
         if($LASTEXITCODE){throw 'Wait failed; inspect task before retry'}
         $stopped=$true
         $state=(Read-AwsJson ecs describe-tasks --cluster labseat-lab --tasks $task).tasks[0]
-        [IO.File]::WriteAllText((Join-Path $directory 'prepare-task-state.private.json'),($state|ConvertTo-Json -Depth 30))
+        [IO.File]::WriteAllText((Join-Path $directory "$Stage-task-state.private.json"),($state|ConvertTo-Json -Depth 30))
         $log=$container.logConfiguration.options
         $stream=$log.'awslogs-stream-prefix'+'/app/'+$task.Split('/')[-1]
         $messages=(Read-AwsJson logs get-log-events --log-group-name $log.'awslogs-group' --log-stream-name $stream --start-from-head).events.message
-        [IO.File]::WriteAllText((Join-Path $directory 'prepare-log.private.json'),($messages|ConvertTo-Json -Depth 4))
+        [IO.File]::WriteAllText((Join-Path $directory "$Stage-log.private.json"),($messages|ConvertTo-Json -Depth 4))
         if(($state.containers|Where-Object name -eq app).exitCode -ne 0){throw 'Prepare failed; inspect private log, do not retry blindly'}
         $sealed=@($messages|Where-Object {$_ -like 'LOAD_ENCRYPTED_MASTER=*'})
         $committed=@($messages|Where-Object {$_ -like 'LOAD_PREPARED=*'})
-        if($sealed.Count -ne 1 -or $committed.Count -ne 1){throw 'Missing encrypted master or committed manifest'}
-        $master=[Text.Encoding]::UTF8.GetString($rsa.Decrypt([Convert]::FromBase64String(($sealed[0]-split '=',2)[1]),[Security.Cryptography.RSAEncryptionPadding]::OaepSHA256))
+        if($committed.Count -ne 1){throw 'Missing committed manifest'}
         $out=Join-Path $directory 'load';New-Item -ItemType Directory -Path $out -Force|Out-Null
-        [IO.File]::WriteAllText((Join-Path $out 'load-master.txt'),$master)
+        if($Stage -eq 'prepare'){
+            if($sealed.Count -ne 1){throw 'Missing encrypted master'}
+            $master=[Text.Encoding]::UTF8.GetString($rsa.Decrypt([Convert]::FromBase64String(($sealed[0]-split '=',2)[1]),[Security.Cryptography.RSAEncryptionPadding]::OaepSHA256))
+            [IO.File]::WriteAllText((Join-Path $out 'load-master.txt'),$master)
+        }else{
+            foreach($entry in @(@('LOAD_PHYSICS_BEFORE=','physics-map-before.private.json'),@('LOAD_PHYSICS_RESULT=','physics-map-result.json'))){
+                $record=@($messages|Where-Object { $_.StartsWith($entry[0]) })
+                if($record.Count -ne 1){throw 'Missing Physics audit result'}
+                [IO.File]::WriteAllText((Join-Path $out $entry[1]),$record[0].Substring($entry[0].Length))
+            }
+        }
         [IO.File]::WriteAllText((Join-Path $out 'manifest.json'),($committed[0]-split '=',2)[1])
-        'Prepare committed; private master recovered locally; no plaintext credential was logged.'
+        "$Stage committed; private manifest recovered; no plaintext credential was logged."
     }finally{
         if($stopped){$delete=@('s3api','delete-object','--bucket',$bucket,'--key',$objectKey);if($upload.VersionId){$delete+=@('--version-id',$upload.VersionId)};Read-AwsJson @delete|Out-Null}
     }
