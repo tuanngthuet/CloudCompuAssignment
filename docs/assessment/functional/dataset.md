@@ -176,8 +176,16 @@ Gói phiên nêu trên là bằng chứng đã cấp/smoke và dùng cho C3, **k
 
 100user/token/CSRF riêng đã cấp mới, yêu cầu tối thiểu6giờ ở lúc cấp và smoke. SmokeAWS kiểm100 /me, normalpasswordlogin/logout, hold→confirm→QR→cancel, queueleave; emailSKIPPED/attempts0. Hạn là TTL thực của app, không kéo dài đến ngày đóng đăng ký. Nếu chạy muộn hoặc không đủ cả bài đo, cấp lại và smoke sát giờ; không dùng gói hết hạn.
 
-Gói private ở `.local/assessment/demo-load-mechanic22/delivery/`: ZIP gồm đúng `manifest.json`, `synthetic_sessions.json`, `smoke-result.json`, `README.md`. Mapping đủ user/ca/phòng/vùng nằm trong manifest; checksum ZIP ở `handoff-receipt.json`. Load-master ở `load/load-master.txt` của batch, tách khỏi ZIP; README nêu công thức HMAC và quy trình cấp tài khoản riêng. Không có master hoặc backupkey trong ZIP. Không nhận Người3 đã ký nhận hoặc lượt tải mới đã chạy.
+Gói private hiện hành ở `.local/assessment/demo-load-mechanic22/delivery/mechanic22-runtime.private.zip`: ZIP gồm đúng `load/manifest.json`, `load/synthetic-sessions.json`, `load/smoke-result.json`, `handoff-status.private.json`. Mapping đủ100user/ca/phòng/vùng nằm trong manifest; SHA-256 của ZIP và4file ở `runtime-handoff-receipt.json`, cùng file `mechanic22-runtime.private.zip.sha256`. Gói flat tênunderscore trước đó đã được thay thế về định dạng; không dùng checksumZIP cũ. Load-master ở `load/load-master.txt` của batch, tách khỏi ZIP; README nêu công thức HMAC và quy trình cấp tài khoản riêng. Không có master hoặc backupkey trong ZIP. Không nhận Người3 đã ký nhận hoặc lượt tải mới đã chạy.
 
 Backup vẫn là bản21/11 trước tải, giữ snapshotRDS available/encrypted và logicaldumpAES-GCM trênS3private. Ngày22/11 đã tải đúngversion, kiểm cipher/plainSHA, giải mã, restore thựcPG16.13:27bảng/hash/schema0002_platform/constraints khớp,7invariants0;27ảnh nguồn/bản sao theoversion/hash đạt. Đây là xác minh lại backup cũ, không gọi là snapshot toànDB mới22/11. `delivery/backup-proof/` chứa manifest/fingerprint/checksum/restoreverification/audit404/demoproof; dump và key không đưa vào ZIP. Chỉ bỏ qua metadata users.last_activity_at khi so10bảng nghiệp vụ demo; không nhận toàn27bảng production byte-identical sau vận hành.
 
 [Receipt công khai đã loại credentials](../../../evidence/assessment/demo-load-mechanic22/results.json). Ca riêng mới đang giữ cho lượt tải tiếp; cleanup sau khi dừng đo, không xóa ngay khi bàn giao. Các kết quả C3 ngày21/11 thuộc ca cũ, không chuyển sang gói22/11.
+
+### Cập nhật runtime lúc02:02 ngày22/11/2026
+
+Kiểm lại trực tiếpHTTPS production từ02:00:43 đến02:02:06 giờVN:100/100 danh tính khớp mapping,100token/CSRF riêng,4vùng180suất còn đủ cho25user/vùng, readyz và sơ đồ/lịch hợp lệ. Đây là kiểm chỉ đọc; không cấp lại phiên hoặc chạy lại workflow/email/restore. Smoke đầy đủ00:42–00:43 và backuprestore00:32 vẫn giữ mốc gốc.
+
+Thời điểm hết hạn thực của100phiên trải từ **08:38:39.182493 đến08:40:14.112456 ngày22/11 (+07:00)**; hạn bảo thủ cả gói là **08:38:38.182493**, sớm hơn phiên đầu1giây. Không nhận phiên còn dùng được sau hạn này.
+
+SHA-256 ZIP runtime đúng4đường dẫn: `7b335641b91549711631f8bed5b1158c51df6d5091290cd49f22cb1afb5916f2`. Receipt công khai có checksum từng file và mapping4vùng; token, mapping100user chi tiết, master và keybackup vẫn giữ private. Backup/fingerprint/restoreproof trước đó được giữ nguyên, không dùng timestamp đóng gói thay timestamp kiểm DB/restore.

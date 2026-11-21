@@ -1,7 +1,7 @@
 {
   "batch": "demo-load-mechanic22",
   "ready": true,
-  "packaged_at_utc": "2026-11-21T17:48:46.712078+00:00",
+  "packaged_at_utc": "2026-11-21T19:02:07.019175+00:00",
   "base_url": "https://labseat.id.vn",
   "event_id": "85118912-6af6-5df9-aaa6-fe84bb35b399",
   "session_id": "bc3967ba-bb2c-528e-be60-a4eac4b8c15c",
@@ -19,7 +19,7 @@
   ],
   "sessions_expire_at": "2026-11-22T01:38:38.182493+00:00",
   "registration_close_at": "2026-11-25T00:00:00+07:00",
-  "zip_sha256": "caf50e13c22615cf2c6753c7a99076c1697e0f3c7239ff6b65f69dbc9f3ebbaf",
+  "zip_sha256": "7b335641b91549711631f8bed5b1158c51df6d5091290cd49f22cb1afb5916f2",
   "master_in_zip": false,
   "backup_key_in_zip": false,
   "load_started": false,
@@ -179,6 +179,76 @@
     },
     "note": "Retained pre-load backup from21/11, downloaded by exact S3version, decrypted/hash-checked and restored again22/11 before creating the new fixture. Not a new full-production snapshot at handoff time."
   },
-  "delivery": "Private local package; no credentials/master/decryptionkey committed; no third-party receipt claimed",
-  "cleanup": "Pending after the next load run; do not delete the new fixture before measurement"
+  "delivery": "Private runtimeZIP held locally; public receipt includes hashes/counts/roommapping only. No third-party receipt or new loadrun claimed.",
+  "cleanup": "Pending after the next load run; do not delete the new fixture before measurement",
+  "superseded_flat_zip_sha256": "caf50e13c22615cf2c6753c7a99076c1697e0f3c7239ff6b65f69dbc9f3ebbaf",
+  "zip_file": "mechanic22-runtime.private.zip",
+  "runtime_files_sha256": {
+    "load/manifest.json": "2e5afcf43f150fd9e7d085cca10b2061d3d974104ac5512589467cc3a4c433d5",
+    "load/synthetic-sessions.json": "f11663c6b6f111dbbd33c531b5a24c4ad549b46b02171006c8b60d9a6d749f4b",
+    "load/smoke-result.json": "bb3855e17393cc2c074dbcbfe6dfe45c85e04026a0a9ff464937fe4b617fea46",
+    "handoff-status.private.json": "eb7b9da8116faae5968cea8db27e4e16ebc00ac2f468b0e385a6d4649c652487"
+  },
+  "runtime_structure": "ZIP root contains load/ with3JSONfiles and handoff-status.private.json; flat underscorefilename package superseded",
+  "runtime_revalidation": {
+    "base_url": "https://labseat.id.vn",
+    "started_at_utc": "2026-11-21T19:00:43.968072+00:00",
+    "finished_at_utc": "2026-11-21T19:02:06.995611+00:00",
+    "verified": true,
+    "mode": "READ_ONLY_HTTPS_PRODUCTION",
+    "requests": 104,
+    "unique_users": 100,
+    "distinct_sessions": 100,
+    "distinct_csrf": 100,
+    "capacity": 180,
+    "minimum_remaining_room_capacity_verified": true,
+    "sessions_expire_at": "2026-11-22T01:38:38.182493+00:00",
+    "registration_close_at": "2026-11-24T17:00:00+00:00",
+    "queue_enabled": true,
+    "new_sessions_issued": false,
+    "business_data_mutated": false,
+    "scope_note": "100 current /me identities, live mapping/capacity/availability/readiness rechecked over productionHTTPS. Original full workflow/email smoke timestamps and backup/restore timestamps remain unchanged; no new DBreadback or restore claimed."
+  },
+  "actual_session_expiry_earliest_utc": "2026-11-22T01:38:39.182493+00:00",
+  "actual_session_expiry_latest_utc": "2026-11-22T01:40:14.112456+00:00",
+  "sessions_expire_at_note": "Conservative packet cutoff is one second before earliest actual session expiry; per-session expires_at in private runtime file is authoritative.",
+  "room_mapping": [
+    {
+      "event_id": "85118912-6af6-5df9-aaa6-fe84bb35b399",
+      "session_id": "bc3967ba-bb2c-528e-be60-a4eac4b8c15c",
+      "room_id": "19cd2275-f986-511a-9d4f-189886579b6f",
+      "seat_id": "342a80f9-619b-55db-9575-b1bfa7da868b",
+      "seat_code": "P.6225 (F1.08)",
+      "capacity": 45,
+      "assigned_sessions": 25
+    },
+    {
+      "event_id": "85118912-6af6-5df9-aaa6-fe84bb35b399",
+      "session_id": "bc3967ba-bb2c-528e-be60-a4eac4b8c15c",
+      "room_id": "19cd2275-f986-511a-9d4f-189886579b6f",
+      "seat_id": "71ed0ec7-0c08-5912-bbdb-91bad25290cc",
+      "seat_code": "P.6226 (F1.10)",
+      "capacity": 45,
+      "assigned_sessions": 25
+    },
+    {
+      "event_id": "85118912-6af6-5df9-aaa6-fe84bb35b399",
+      "session_id": "bc3967ba-bb2c-528e-be60-a4eac4b8c15c",
+      "room_id": "19cd2275-f986-511a-9d4f-189886579b6f",
+      "seat_id": "08a620b0-d577-5053-9cfa-ab1c1b383307",
+      "seat_code": "P.6227 (F1.12)",
+      "capacity": 45,
+      "assigned_sessions": 25
+    },
+    {
+      "event_id": "85118912-6af6-5df9-aaa6-fe84bb35b399",
+      "session_id": "bc3967ba-bb2c-528e-be60-a4eac4b8c15c",
+      "room_id": "19cd2275-f986-511a-9d4f-189886579b6f",
+      "seat_id": "f5f7b553-a66d-5095-ac96-dc5ea23a158b",
+      "seat_code": "P.6228 (F1.14)",
+      "capacity": 45,
+      "assigned_sessions": 25
+    }
+  ],
+  "ready_note": "Ready at packaged_at_utc; requires enough remaining TTL and smoke before actual load. This documentation update does not extend or reissue sessions."
 }
