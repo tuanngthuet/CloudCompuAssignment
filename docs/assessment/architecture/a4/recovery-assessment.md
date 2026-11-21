@@ -21,3 +21,7 @@ Retention 1 ngày, LatestRestorableTime, hash object S3 hoặc invariant DB ngu�
 Theo phần bàn giao Người 2, hai khoảng thời gian **25.793484s** và **3.207088s** khớp JSON gốc. JSON giữ timestamp chính xác tới microsecond; timeline A4 hiển thị tới millisecond. Không đổi hai khoảng này thành downtime hoặc RTO phục vụ.
 
 B4 vẫn BLOCKED và chưa có DB/app restored. Việc đối chiếu sơ đồ planned không chứng minh đã chạy PITR. Người 2 kiểm DB, nghiệp vụ và B5 trước khi ghi ready; không chuyển production sang DB restored. Không có số đo AWS mới trong lượt cập nhật tài liệu này.
+
+## Xác nhận từ ZIP mới 21/11
+
+B4/B5 vẫn chưa có record phục hồi end-to-end. C4/C5 chưa inject; C6 read-only với clock runner chưa đồng bộ không cung cấp incident/ready hợp lệ. Giữ RPO/RTO null và images_verified=false. Kết quả 333 PASS B3 sau retest local không đóng X03 sau restore.

@@ -25,3 +25,11 @@ Khi có cửa sổ thật, bàn giao run ID **và phase**, commit công cụ tá
 Người 2 chịu trách nhiệm DB identifier mới, DB/app private riêng và kiểm DB/nghiệp vụ/ảnh; **không chuyển production sang DB restored**. Chỉ ghi ready khi toàn bộ DB, nghiệp vụ và ảnh B5 đã đạt, rồi dùng record hợp lệ cho measure.py. Thứ tự C4/C5 ổn định → B4/B5 tích hợp → B3 sau restore → đo đủ bằng chứng → cập nhật A4 giữ nguyên.
 
 B5 tích hợp phải kiểm cùng object và DB reference qua app ở cả ba giai đoạn tốt/sai/phục hồi. Không dùng version đã cleanup hoặc sơ đồ A4 làm bằng chứng ảnh hiển thị qua app; không chạy lại S3 độc lập chỉ để phản hồi A4.
+
+## Ưu tiên sau khi đọc ZIP mới 21/11
+
+- Người 3 cập nhật số B3 trong C6 từ commit functional-recovery 54b034e: 333 PASS, 0 FAIL, 1 BLOCKED, 3 NOT_RUN. Không yêu cầu retest lại bốn mục local đã đạt.
+- Người 3 giải quyết clock, session B2 còn hạn, cửa sổ email và gate capacity/API overlap, rồi thực hiện C3/C4/C5 theo kế hoạch; C6 cần baseline hậu thử nghiệm thực tế. Không dùng snapshot 5 EC2 hoặc healthy 200 thay kết quả.
+- Người 2 còn V01 video và X01–X03 theo cửa sổ thực; B4/B5 tích hợp vẫn chờ bàn giao ổn định theo sprint. Email isolation B4 đi theo runbook B4, không thêm yêu cầu hoàn thành toàn bộ C2.
+- Tích hợp đúng commit A/B/C vào nhánh đích, kiểm lại link/hash trên cây Git đã tracked; không coi link mở được nhờ file untracked là PR đã đầy đủ.
+- Người 1 cập nhật kết luận observed khi có run thật. A4 hiện là bàn giao có giới hạn; chưa đổi sơ đồ planned thành nghiệm thu.

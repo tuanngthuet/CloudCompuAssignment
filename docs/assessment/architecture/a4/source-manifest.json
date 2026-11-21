@@ -95,7 +95,7 @@
       "sha256": "7248ec3a235d19420c7d8fa77219976b5596a041fc58ab48313e0197fd33c9b1"
     }
   ],
-  "document_revision": 2,
+  "document_revision": 3,
   "supplemental_sources": [
     {
       "kind": "user_supplied_text",
@@ -113,6 +113,211 @@
       "csv_rows_independently_recounted": false,
       "csv_commit_verified": null,
       "new_aws_execution": false
+    }
+  ],
+  "updated_date": "2026-11-21",
+  "current_sources": [
+    {
+      "archive": "A4-functional-recovery-new.zip",
+      "branch": "assessment/functional-recovery",
+      "archive_commit": "54b034e2f40d92ce4c00d4f9792706008a972279",
+      "sha256": "f80c97a34570c78c3a5770756b7b225409d7bd887708a285b7651a94189adbc0"
+    },
+    {
+      "archive": "A4-load-resilience-new.zip",
+      "branch": "assessment/load-resilience",
+      "archive_commit": "e2431f306df96abd8043680906e1286243dbf14a",
+      "sha256": "d709f288e0cba23bf9c8091ac93d217ee86c8c9a35b0788e069e50010ce435ec"
+    }
+  ],
+  "b3_current_verification": {
+    "source_commit": "54b034e2f40d92ce4c00d4f9792706008a972279",
+    "source_path": "docs/assessment/functional/test-cases.csv",
+    "sha256_raw": "bfc3ff2ad7039004037bfe5cfdf560684d56bc4b22df1ddf403c6cedde6fe21a",
+    "rows": 337,
+    "counts": {
+      "PASS": 333,
+      "FAIL": 0,
+      "BLOCKED": 1,
+      "NOT_RUN": 3
+    },
+    "non_pass": [
+      {
+        "case_id": "V01",
+        "status": "BLOCKED"
+      },
+      {
+        "case_id": "X01",
+        "status": "NOT_RUN"
+      },
+      {
+        "case_id": "X02",
+        "status": "NOT_RUN"
+      },
+      {
+        "case_id": "X03",
+        "status": "NOT_RUN"
+      }
+    ],
+    "independently_recounted_from_supplied_archive": true,
+    "test_execution_by_a4": false
+  },
+  "historical_sources_note": "sources and supplemental_sources retain earlier snapshot provenance; current_sources supersede current status.",
+  "reviewed_files": [
+    {
+      "source_commit": "54b034e2f40d92ce4c00d4f9792706008a972279",
+      "path": "evidence/assessment/20261119T043844Z-b4-preflight/summary.md",
+      "sha256_raw": "25a3a908c1bcdbf2b46250b0dba4aa835964fb3421eb9f750d45e22bea5faa7a"
+    },
+    {
+      "source_commit": "54b034e2f40d92ce4c00d4f9792706008a972279",
+      "path": "evidence/assessment/20261119T043844Z-b4-preflight/manifest.json",
+      "sha256_raw": "60825b5596fe4ba95e370b7f1cc7ed159a3183e6f328286629fdecd710f8784d"
+    },
+    {
+      "source_commit": "54b034e2f40d92ce4c00d4f9792706008a972279",
+      "path": "evidence/assessment/20261119T050938Z-b5-s3-restore/summary.md",
+      "sha256_raw": "e4963a01321696d4d277a48e7d66be236d7e9ed720a7f039abac47be7003cf72"
+    },
+    {
+      "source_commit": "54b034e2f40d92ce4c00d4f9792706008a972279",
+      "path": "evidence/assessment/20261119T050938Z-b5-s3-restore/manifest.json",
+      "sha256_raw": "c561ee9e9038e17bac4427e64ea09500cc83c0b91921bac20d1a0f822d73eaec"
+    },
+    {
+      "source_commit": "54b034e2f40d92ce4c00d4f9792706008a972279",
+      "path": "evidence/assessment/20261119T172832Z-b4-c1-preflight/summary.md",
+      "sha256_raw": "565e3b75ed5f361a246055bcb7f694dfa98b0c72c6b09627afd955f002e6e44c"
+    },
+    {
+      "source_commit": "54b034e2f40d92ce4c00d4f9792706008a972279",
+      "path": "evidence/assessment/20261119T172832Z-b4-c1-preflight/manifest.json",
+      "sha256_raw": "7a4bbf3e2fc33e1e16edd33cadb93453af56d8169dfdf7e7546b80c28dae5b95"
+    },
+    {
+      "source_commit": "54b034e2f40d92ce4c00d4f9792706008a972279",
+      "path": "evidence/assessment/20261119T034356Z-b3-functional/summary.md",
+      "sha256_raw": "4cde1ac410b723b4f6d008473fd49f3b78f9f525b8bb8a515bfff83497e0b40d"
+    },
+    {
+      "source_commit": "54b034e2f40d92ce4c00d4f9792706008a972279",
+      "path": "evidence/assessment/20261119T034356Z-b3-functional/manifest.json",
+      "sha256_raw": "fa1a06c69aba2c7c69e3a5da21b08ad4dd512cbb5d9e71c474fce002e9ee32fb"
+    },
+    {
+      "source_commit": "54b034e2f40d92ce4c00d4f9792706008a972279",
+      "path": "evidence/assessment/b1b2-20261117a/summary.md",
+      "sha256_raw": "28eccf3fc07ab255ed3bac211e17d76a8daca5bb944f583cf69b6c21adf89558"
+    },
+    {
+      "source_commit": "54b034e2f40d92ce4c00d4f9792706008a972279",
+      "path": "evidence/assessment/demo-load-20261121a/checks/results.json",
+      "sha256_raw": "783d28561b165dd8d826198bbaad2a783f4dc7286dce5fda3502c4d6e218506a"
+    },
+    {
+      "source_commit": "54b034e2f40d92ce4c00d4f9792706008a972279",
+      "path": "evidence/assessment/20261119T043844Z-b4-preflight/checks/results.json",
+      "sha256_raw": "c9ad41009d7a54073568a90f612381b4e8e4ee9020ae50cc49a89b83304d604f"
+    },
+    {
+      "source_commit": "54b034e2f40d92ce4c00d4f9792706008a972279",
+      "path": "evidence/assessment/20261119T050938Z-b5-s3-restore/checks/results.json",
+      "sha256_raw": "c08a6a64acd16cc623c01dbc2d2eb4f346e020104470fb4baa91a83dfc748402"
+    },
+    {
+      "source_commit": "54b034e2f40d92ce4c00d4f9792706008a972279",
+      "path": "evidence/assessment/20261119T172832Z-b4-c1-preflight/checks/results.json",
+      "sha256_raw": "7248ec3a235d19420c7d8fa77219976b5596a041fc58ab48313e0197fd33c9b1"
+    },
+    {
+      "source_commit": "54b034e2f40d92ce4c00d4f9792706008a972279",
+      "path": "evidence/assessment/20261119T034356Z-b3-functional/checks/results.json",
+      "sha256_raw": "aac9c37c5eee3e2fcf663e464df5ce3ddb9448b674682226114d6176505a70c1"
+    },
+    {
+      "source_commit": "54b034e2f40d92ce4c00d4f9792706008a972279",
+      "path": "docs/assessment/functional/report.md",
+      "sha256_raw": "1f0a290d9a318517202e416da300c1ff8e9f2a020035a032c1cb00c1e9d5e623"
+    },
+    {
+      "source_commit": "54b034e2f40d92ce4c00d4f9792706008a972279",
+      "path": "docs/assessment/functional/test-cases.csv",
+      "sha256_raw": "bfc3ff2ad7039004037bfe5cfdf560684d56bc4b22df1ddf403c6cedde6fe21a"
+    },
+    {
+      "source_commit": "54b034e2f40d92ce4c00d4f9792706008a972279",
+      "path": "docs/assessment/recovery/report.md",
+      "sha256_raw": "938af080a05428778c85db048929b829c231704409fc137b4f9c7a8ab2ac3fd2"
+    },
+    {
+      "source_commit": "54b034e2f40d92ce4c00d4f9792706008a972279",
+      "path": "docs/assessment/recovery/s3-restore.md",
+      "sha256_raw": "e71d9a7ec7755e67f3b637b5e40605b11dff62b08b1ac1059e58957d53c9e44d"
+    },
+    {
+      "source_commit": "e2431f306df96abd8043680906e1286243dbf14a",
+      "path": "evidence/assessment/20261120T1455Z-c4-preparation/summary.md",
+      "sha256_raw": "136fc37b2259eb887aefd3ca1fee93c6f23ed9088af2d14d8327f263107459cf"
+    },
+    {
+      "source_commit": "e2431f306df96abd8043680906e1286243dbf14a",
+      "path": "evidence/assessment/20261121-c6-readonly/summary.md",
+      "sha256_raw": "c5f6b748fe18e8c7622d29f6a97779ca1677caf43b7ed03ccb977b8678e5945f"
+    },
+    {
+      "source_commit": "e2431f306df96abd8043680906e1286243dbf14a",
+      "path": "evidence/assessment/20261120-c5-readiness/summary.md",
+      "sha256_raw": "9a7d0e2d78d6aa2becf75717785490f11c45daa7cc17bf2e47de7ad6c07b5a70"
+    },
+    {
+      "source_commit": "e2431f306df96abd8043680906e1286243dbf14a",
+      "path": "evidence/assessment/20261120-c4-cli-preflight/summary.md",
+      "sha256_raw": "5a1b626922ddbcee662e77dfd1f6c68f80e71047a503ec24b84c5f2d0aed0a15"
+    },
+    {
+      "source_commit": "e2431f306df96abd8043680906e1286243dbf14a",
+      "path": "evidence/assessment/20261120-c3-live-readonly/summary.md",
+      "sha256_raw": "150ff8d9d8d58380b3d3322963cbaaf510fb1fad0ea9b3e039c929dd439f5277"
+    },
+    {
+      "source_commit": "e2431f306df96abd8043680906e1286243dbf14a",
+      "path": "evidence/assessment/20261120-c4-capacity-recheck/summary.md",
+      "sha256_raw": "ac9e9020cb01706f196be091366580c5f5824a1145f1289a377e274705f078b2"
+    },
+    {
+      "source_commit": "e2431f306df96abd8043680906e1286243dbf14a",
+      "path": "evidence/assessment/20261120T130757Z-c2-local/summary.md",
+      "sha256_raw": "65a97eda679b9747150b98c56a783707400dc739bdf5c30b4044e56ce476afa7"
+    },
+    {
+      "source_commit": "e2431f306df96abd8043680906e1286243dbf14a",
+      "path": "evidence/assessment/20261120T130757Z-c2-local/manifest.json",
+      "sha256_raw": "01f8b295e042d7de5fe054354b8fa6bef5d82dc637aff12a03480cb5c73d0ef1"
+    },
+    {
+      "source_commit": "e2431f306df96abd8043680906e1286243dbf14a",
+      "path": "evidence/assessment/20261120T1432Z-c3-readiness/summary.md",
+      "sha256_raw": "ac348dbdadbe2a97bcc06f6921cb91462a929aff1fc4d66437d852912507df4e"
+    },
+    {
+      "source_commit": "e2431f306df96abd8043680906e1286243dbf14a",
+      "path": "docs/assessment/final-report.md",
+      "sha256_raw": "96180ee409a21fb0c5622d4b99f399f718275ac60f42e5b5288cb5b72fded561"
+    },
+    {
+      "source_commit": "e2431f306df96abd8043680906e1286243dbf14a",
+      "path": "docs/assessment/performance/load-report.md",
+      "sha256_raw": "29b79c5c329534a47f5d8b37718b60d7320513230e15dad6303917ca482debe4"
+    },
+    {
+      "source_commit": "e2431f306df96abd8043680906e1286243dbf14a",
+      "path": "docs/assessment/performance/runbook.md",
+      "sha256_raw": "2b84c5a5a684a675bd18e3549b9d0ae597e941362fa23e5fd2e7be0dd7a7b013"
+    },
+    {
+      "source_commit": "e2431f306df96abd8043680906e1286243dbf14a",
+      "path": "docs/assessment/performance/failover-report.md",
+      "sha256_raw": "5ddd6cc35ca4eb714ebd227cad438419983f9a628892331c9ef5bfb1eeb87b00"
     }
   ]
 }

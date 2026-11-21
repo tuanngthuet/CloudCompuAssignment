@@ -1,11 +1,19 @@
 {
-  "markdown_local_links": {
-    "checked": 23,
+  "local_markdown_links": {
+    "checked": 17,
     "all_exist": true
   },
-  "copied_evidence_hashes": true,
-  "unchanged_evidence_and_diagrams": 25,
+  "pinned_source_links_exist_in_archives": 14,
+  "web_link_access_tested": false,
+  "copied_historical_evidence_hashes_match": true,
+  "source_manifest_hashes_matched": 19,
+  "b3_csv_rows": 337,
+  "b3_status_counts": {
+    "PASS": 333,
+    "FAIL": 0,
+    "BLOCKED": 1,
+    "NOT_RUN": 3
+  },
   "png_svg_valid": true,
-  "b3_reported_counts_sum": 337,
-  "b3_csv_independently_recounted": false
+  "aws_calls": false
 }

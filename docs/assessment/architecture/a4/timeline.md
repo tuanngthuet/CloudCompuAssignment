@@ -1,4 +1,4 @@
-# Timeline bằng chứng
+# Timeline bằng chứng — lịch sử và cập nhật 21/11
 
 Các mốc thuộc hai lượt độc lập; không phải timeline một sự cố toàn hệ thống. B3 run ID là thời điểm gom báo cáo, không dùng làm thời điểm tất cả test.
 
@@ -21,3 +21,16 @@ Nguồn: [B5](evidence/20261119T050938Z-b5-s3-restore/checks/results.json) và [
 ## Ghi nhận đối chiếu tài liệu 20/11/2026
 
 Người 2 xác nhận timeline S3 phù hợp timestamp JSON gốc; bản hiển thị chỉ giữ millisecond. Lượt đối chiếu tài liệu không có timestamp thực thi AWS mới, nên không chèn thành sự kiện incident/restore vào bảng trên. Commit A4 được đối chiếu là `39f7ab1cd3cdd925e55fae5c13b0a6a541e8fa3a`, tách biệt commit test và digest runtime.
+
+## Cập nhật từ hai nhánh mới ngày 21/11
+
+| Nguồn/mốc | Sự kiện | Giới hạn |
+|---|---|---|
+| B3 retest bắt đầu 20/11 17:38:05.692824 UTC (21/11 00:38:05.692824 Việt Nam) | Lượt local disposable; 34 test cuối đạt | Không phải clock cho phép đo AWS availability/RTO |
+| AWS Activity 20/11 15:40:16Z | Managed scaling yêu cầu desired 4→5 | Không có C3 tải hoặc C4 inject trong lượt này |
+| AWS Activity 20/11 16:15:32Z | Managed scaling yêu cầu 5→4 | Không gọi là recovery C4 |
+| AWS Activity 20/11 16:17:22Z / 16:17:32Z | Launch/termination cân bằng AZ | Không ghép thành incident/rollback |
+| C5 readiness ngày phiên 20/11 | Đọc RDS/Redis/ECS | Clock runner chưa đồng bộ; không gán UTC chính xác |
+| C6 ngày phiên 21/11 | ASG 5 máy, 3 ở 2a và 2 ở 2b | Không có mốc UTC tin cậy cho toàn snapshot hoặc baseline hậu fault |
+
+Nguồn pin commit tại [evidence-review.md](evidence-review.md). Không ép thứ tự các snapshot bằng clock runner chưa đồng bộ; không nội suy incident/ready hoặc đo RTO từ các ngày phiên. Các mốc S3 ở bảng lịch sử giữ nguyên.

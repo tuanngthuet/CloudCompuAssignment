@@ -1,13 +1,13 @@
 digraph G {
-graph [rankdir=TB, bgcolor="#ffffff", pad="0.35", nodesep="0.35", ranksep="0.45", fontname="DejaVu Sans", fontsize=20, labelloc=t, label="A4 • Baseline quan sát, không phải diễn tập"];
+graph [rankdir=TB, bgcolor="#ffffff", pad="0.35", nodesep="0.35", ranksep="0.45", fontname="DejaVu Sans", fontsize=20, labelloc=t, label="A4 • C6 snapshot 21/11 — chưa xác nhận hậu fault"];
 node [shape=box, style="rounded,filled", fillcolor="#edf5fa", color="#58718a", fontname="DejaVu Sans", fontsize=12, margin="0.18,0.13"];
 edge [color="#58718a", fontname="DejaVu Sans", fontsize=10];
-alb [label="ALB\n2 targets healthy"];
-a [label="AZ 2a\n1 API • 1 EC2"];
-b [label="AZ 2b\n1 API • 3 EC2"];
-db [label="RDS Multi-AZ\nAvailable • retention 1 ngày"];
-redis [label="Redis primary / replica\nCấu hình HA từ C1"];
-bg [label="Worker 1 • Publisher 1\nemail disabled tại smoke"];
+alb [label="ALB: 2 targets healthy\nAPI service 2/2 • ASG 2/5/6"];
+a [label="AZ 2a\n1 target healthy • 3 EC2"];
+b [label="AZ 2b\n1 target healthy • 2 EC2"];
+db [label="RDS Multi-AZ\nAvailable • primary AZ 2b"];
+redis [label="Redis available • HA bật\nPrimary 2a / replica 2b"];
+bg [label="Worker 1 • Publisher 1\nWorker service → revision 10\nEMAIL_BACKEND=disabled"];
 alb -> a [label="target"];
 alb -> b [label="target"];
 a -> db [label="phụ thuộc DB"];
@@ -15,4 +15,6 @@ b -> db [label="phụ thuộc DB"];
 a -> redis [label="admission/events"];
 b -> redis [label="admission/events"];
 bg -> db [label="outbox/checkpoint"];
+note [label="Clock runner chưa đồng bộ\nChưa đối chiếu task digest/placement\nKhông phải baseline sau fault", fillcolor="#fff4db"];
 }
+
